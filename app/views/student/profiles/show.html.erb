@@ -1,0 +1,46 @@
+<div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden my-6">
+  <div class="bg-blue-500 p-6">
+    <h1 class="text-3xl text-white font-bold"><%= @user.first_name %></h1>
+    <p class="text-white mt-2"><%= @user.email %></p>
+    <p class="text-white mt-1"><%= @user.student_profile.phone %></p>
+    <p class="text-white mt-1"><%= @user.student_profile.address %></p>
+  </div>
+  
+  <div class="p-6">
+    <h2 class="text-2xl font-bold text-gray-700 mb-4">Education</h2>
+    <ul class="list-disc list-inside">
+      <% @user.student_profile.educations.each do |edu| %>
+        <li>
+          <strong><%= edu.degree_title %></strong> - <%= edu.institution_name %> (<%= edu.graduation_year %>)
+        </li>
+      <% end %>
+    </ul>
+
+    <h2 class="text-2xl font-bold text-gray-700 mt-6 mb-4">Projects/Portfolio</h2>
+    <ul class="list-disc list-inside">
+      <% @user.student_profile.projects.each do |project| %>
+        <li>
+          <strong><%= project.project_name %></strong>: <%= project.description %>
+        </li>
+      <% end %>
+    </ul>
+
+    <h2 class="text-2xl font-bold text-gray-700 mt-6 mb-4">Skills & Tools</h2>
+    <div class="flex flex-wrap gap-2">
+      <% @user.student_profile.skills.each do |skill| %>
+        <li class="px-3 py-1 bg-gray-200 rounded-full text-sm font-medium">
+          <strong><%= skill.title %></strong>: <%=skill.skill_list %>
+        </li>
+      <% end %>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-700 mt-6 mb-4">Activities, Honors & Awards</h2>
+    <ul class="list-disc list-inside">
+      <% @user.student_profile.activities_honors.each do |activity| %>
+        <li>
+            <strong><%= activity.title %></strong>: <%= activity.organization %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

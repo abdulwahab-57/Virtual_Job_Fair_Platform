@@ -1,0 +1,16 @@
+<div class="w-64 bg-gray-100 border-r h-full">
+    <div class="p-4">
+        <h1 class="text-2xl font-bold text-sky-600">V</h1>
+    </div>
+    <nav class="mt-4 space-y-2">
+        <%= link_to @home_path, class: 'flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200' do %>
+            <span class="material-icons mr-3">home</span> Home
+        <% end %>
+        <%= link_to '#', class: 'flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200' do %>
+            <span class="material-icons mr-3">email</span> Inbox
+        <% end %>
+        <%= link_to '#', class: 'flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200' do %>
+            <span class="material-icons mr-3">event</span> Events
+        <% end %>
+    </nav>
+</div>

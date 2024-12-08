@@ -1,0 +1,2 @@
+module CareerOfficer::ProfilesHelper
+end

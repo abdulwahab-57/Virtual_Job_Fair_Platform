@@ -1,0 +1,52 @@
+<div class="bg-white rounded-lg shadow-md p-6">
+  <div class="flex items-center">
+    <div class="w-16 h-16 bg-gray-200 rounded-full"></div>
+    <div class="ml-4">
+      <h1 class="text-xl font-bold"><%= @user.recruiter_profile.company_name || "Company Name" %></h1>
+      <p class="text-gray-600"><%= @user.recruiter_profile.industry || "Industry" %></p>
+    </div>
+    <button class="ml-auto bg-blue-500 text-white px-4 py-2 rounded">Message</button>
+  </div>
+
+  <div class="mt-6">
+    <div class="flex items-center text-gray-600">
+      <span class="mr-2">📍</span><%= @user.recruiter_profile.office_location || "Office Location" %>
+      <span class="mx-4">|</span>
+      <span class="mr-2">👥</span><%= @user.recruiter_profile.employee_count || "- Employees" %>
+      <span class="mx-4">|</span>
+      <span class="mr-2">📧</span><%= @user.email || "info@company.com" %>
+      <span class="mx-4">|</span>
+      <span class="mr-2">🌐</span><%= @user.recruiter_profile.company_website || "www.company.com" %>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold">About Company</h2>
+    <p class="text-gray-600"><%= "A short description of the company, its mission, values, and core business." %></p>
+  </div>
+
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold">Hiring Process</h2>
+    <p class="text-gray-600"><%= "Overview of the company's hiring process." %></p>
+  </div>
+
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold">People</h2>
+    <div class="flex items-center mt-2">
+      <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+      <div class="ml-4">
+        <p class="font-semibold"><%= "Representative Name" %></p>
+        <p class="text-gray-600"><%= "Designation" %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold">Gallery (Photos)</h2>
+    <div class="grid grid-cols-3 gap-4 mt-2">
+      <% 9.times do %>
+        <div class="bg-gray-200 w-full h-24"></div>
+      <% end %>
+    </div>
+  </div>
+</div>

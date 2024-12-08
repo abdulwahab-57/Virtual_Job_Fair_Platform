@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%= render "shared/head" %>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <%= render "shared/private_sidebar" %>
+
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col h-full">
+                <!-- Navbar -->
+                <%= render "shared/private_navbar" %>
+
+                    <!-- Main Content -->
+                    <div class="bg-grey-50 p-8 h-full">
+                        <%= yield %>
+                    </div>
+            </div>
+
+    </div>
+    <script>
+        const profileButton = document.getElementById('profile-button');
+        const profileMenu = document.getElementById('profile-menu');
+        profileButton.addEventListener('click', () => {
+            profileMenu.classList.toggle('hidden');
+        });
+        // Close dropdown when clicking outside
+        window.addEventListener('click', (event) => {
+            if (!profileButton.contains(event.target) && !profileMenu.contains(event.target)) {
+                profileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>
