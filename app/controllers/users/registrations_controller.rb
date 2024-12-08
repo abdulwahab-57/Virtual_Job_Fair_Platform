@@ -3,11 +3,23 @@ class Users::RegistrationsController < Devise::RegistrationsController
     super do |resource|
       case params[:user][:user_type]
       when "student"
-        resource.profile = Student.create!(roll_number: params[:user][:roll_number], graduation_year: params[:user][:graduation_year])
+        student = Student.create!(
+          roll_number: params[:user][:roll_number],
+          graduation_year: params[:user][:graduation_year]
+        )
+        resource.profile = student
       when "recruiter"
-        resource.profile = Recruiter.create!(company_name: params[:user][:company_name], designation: params[:user][:designation])
+        recruiter = Recruiter.create!(
+          company_name: params[:user][:company_name],
+          designation: params[:user][:designation]
+        )
+        resource.profile = recruiter
       when "careerOffice"
-        resource.profile = CareerOffice.create!(institution_name: params[:user][:institution_name], department: params[:user][:department])
+        career_office = CareerOffice.create!(
+          institution_name: params[:user][:institution_name],
+          department: params[:user][:department]
+        )
+        resource.profile = career_office
       end
       resource.save
     end
