@@ -1,29 +1,89 @@
-<h2>Sign up</h2>
-
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  <div>
+    <%= f.label :full_name %>
+    <%= f.text_field :full_name %>
   </div>
 
-  <div class="field">
+  <div>
+    <%= f.label :phone_number %>
+    <%= f.text_field :phone_number %>
+  </div>
+
+  <div>
+    <%= f.label :user_type, "User Type" %>
+    <%= f.select :user_type, [["Student", "student"], ["Recruiter", "recruiter"], ["Career Office", "careerOffice"]], {}, onchange: "toggleFields()" %>
+  </div>
+
+  <!-- Dynamic Fields for Student -->
+  <div id="studentFields" style="display: none;">
+    <%= f.fields_for :profile, Student.new do |student_form| %>  <!-- Nesting for Student -->
+      <div>
+        <%= student_form.label :roll_number %>
+        <%= student_form.text_field :roll_number %>
+      </div>
+
+      <div>
+        <%= student_form.label :graduation_year %>
+        <%= student_form.number_field :graduation_year %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Dynamic Fields for Recruiter -->
+  <div id="recruiterFields" style="display: none;">
+    <%= f.fields_for :profile, Recruiter.new do |recruiter_form| %> <!-- Nesting for Recruiter -->
+      <div>
+        <%= recruiter_form.label :company_name %>
+        <%= recruiter_form.text_field :company_name %>
+      </div>
+
+      <div>
+        <%= recruiter_form.label :designation %>
+        <%= recruiter_form.text_field :designation %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Dynamic Fields for Career Office -->
+  <div id="careerOfficeFields" style="display: none;">
+    <%= f.fields_for :profile, CareerOffice.new do |career_form| %> <!-- Nesting for CareerOffice -->
+      <div>
+        <%= career_form.label :institution_name %>
+        <%= career_form.text_field :institution_name %>
+      </div>
+
+      <div>
+        <%= career_form.label :department %>
+        <%= career_form.text_field :department %>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :email %>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
     <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
+    <%= f.password_field :password %>
   </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  <div>
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
   </div>
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
+  <div>
+    <%= f.submit "Sign Up" %>
   </div>
 <% end %>
 
-<%= render "devise/shared/links" %>
+<script>
+  function toggleFields() {
+    const userType = document.getElementById("user_user_type").value;
+    document.getElementById("studentFields").style.display = userType === "student" ? "block" : "none";
+    document.getElementById("recruiterFields").style.display = userType === "recruiter" ? "block" : "none";
+    document.getElementById("careerOfficeFields").style.display = userType === "careerOffice" ? "block" : "none";
+  }
+</script>
