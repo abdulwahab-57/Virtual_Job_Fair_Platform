@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -6,42 +6,117 @@
   <title>Dynamic Signup Page</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-  // Hide all dynamic fieldsets by default when the page loads
-  window.onload = function() {
-    // Hide all dynamic fieldsets initially
-    document.getElementById("studentFields").style.display = "none";
-    document.getElementById("recruiterFields").style.display = "none";
-    document.getElementById("careerOfficeFields").style.display = "none";
+    // Hide all dynamic fieldsets by default when the page loads
+    window.onload = function() {
+      // Hide all dynamic fieldsets initially
+      document.getElementById("studentFields").style.display = "none";
+      document.getElementById("recruiterFields").style.display = "none";
+      document.getElementById("careerOfficeFields").style.display = "none";
 
-    // Check the initial user type selection and display relevant fields if any
-    const userType = document.getElementById("user_user_type").value;
-    if (userType === "student") {
-      document.getElementById("studentFields").style.display = "block";
-    } else if (userType === "recruiter") {
-      document.getElementById("recruiterFields").style.display = "block";
-    } else if (userType === "careerOffice") {
-      document.getElementById("careerOfficeFields").style.display = "block";
+      // Check the initial user type selection and display relevant fields if any
+      const userType = document.getElementById("user_user_type").value;
+      if (userType === "student") {
+        document.getElementById("studentFields").style.display = "block";
+      } else if (userType === "recruiter") {
+        document.getElementById("recruiterFields").style.display = "block";
+      } else if (userType === "careerOffice") {
+        document.getElementById("careerOfficeFields").style.display = "block";
+      }
     }
-  }
 
-  // Function to toggle fieldsets based on selected user type
-  function toggleFields() {
-    const userType = document.getElementById("user_user_type").value;
+    // Function to toggle fieldsets based on selected user type
+    function toggleFields() {
+      const userType = document.getElementById("user_user_type").value;
 
-    // Hide all dynamic fieldsets by default
-    document.getElementById("studentFields").style.display = "none";
-    document.getElementById("recruiterFields").style.display = "none";
-    document.getElementById("careerOfficeFields").style.display = "none";
+      // Hide all dynamic fieldsets by default
+      document.getElementById("studentFields").style.display = "none";
+      document.getElementById("recruiterFields").style.display = "none";
+      document.getElementById("careerOfficeFields").style.display = "none";
 
-    // Show the relevant fieldset based on the selected user type
-    if (userType === "student") {
-      document.getElementById("studentFields").style.display = "block";
-    } else if (userType === "recruiter") {
-      document.getElementById("recruiterFields").style.display = "block";
-    } else if (userType === "careerOffice") {
-      document.getElementById("careerOfficeFields").style.display = "block";
+      // Show the relevant fieldset based on the selected user type
+      if (userType === "student") {
+        document.getElementById("studentFields").style.display = "block";
+      } else if (userType === "recruiter") {
+        document.getElementById("recruiterFields").style.display = "block";
+      } else if (userType === "careerOffice") {
+        document.getElementById("careerOfficeFields").style.display = "block";
+      }
     }
-  }
+
+    // Validate Password Confirmation
+    function validatePasswords() {
+      const password = document.getElementById("user_password").value;
+      const passwordConfirmation = document.getElementById("user_password_confirmation").value;
+      if (password !== passwordConfirmation) {
+        document.getElementById("passwordError").textContent = "Passwords do not match!";
+        return false;
+      } else {
+        document.getElementById("passwordError").textContent = "";
+        return true;
+      }
+    }
+
+    // Validate Pakistani Phone Number Format
+    function validatePhoneNumber() {
+      const phoneNumber = document.getElementById("user_phone_number").value;
+      const regex = /^03[0-9]{2}-[0-9]{7}$/;
+      if (!regex.test(phoneNumber)) {
+        document.getElementById("phoneNumberError").textContent = "Phone number must be in the format 03XX-XXXXXXX";
+        return false;
+      } else {
+        document.getElementById("phoneNumberError").textContent = "";
+        return true;
+      }
+    }
+
+    // Validate Email (any domain)
+    function validateEmail() {
+      const email = document.getElementById("user_email").value;
+      const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!regex.test(email)) {
+        document.getElementById("emailError").textContent = "Please enter a valid email address.";
+        return false;
+      } else {
+        document.getElementById("emailError").textContent = "";
+        return true;
+      }
+    }
+
+    // Validate Roll Number Format (21F-9498)
+    function validateRollNumber() {
+      const rollNumber = document.getElementById("profile_roll_number").value;
+      const regex = /^\d{2}[A-Za-z]-\d{4}$/;
+      if (!regex.test(rollNumber)) {
+        document.getElementById("rollNumberError").textContent = "Roll number must be in the format 21F-9498";
+        return false;
+      } else {
+        document.getElementById("rollNumberError").textContent = "";
+        return true;
+      }
+    }
+
+    // Validate all fields before submission
+    function validateForm() {
+      // Check for empty fields
+      const fullName = document.getElementById("user_full_name").value;
+      const email = document.getElementById("user_email").value;
+      const phoneNumber = document.getElementById("user_phone_number").value;
+      const password = document.getElementById("user_password").value;
+      const passwordConfirmation = document.getElementById("user_password_confirmation").value;
+
+      if (!fullName || !email || !phoneNumber || !password || !passwordConfirmation) {
+        alert("Please fill in all the required fields.");
+        return false;
+      }
+
+      // Proceed with further validations
+      const passwordValid = validatePasswords();
+      const phoneValid = validatePhoneNumber();
+      const emailValid = validateEmail();
+      const rollValid = validateRollNumber();
+
+      return passwordValid && phoneValid && emailValid && rollValid;
+    }
   </script>
 </head>
 <body class="bg-gray-100">
@@ -57,7 +132,7 @@
 
     <!-- Right Section (Form) -->
     <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-6">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'w-full max-w-lg bg-white p-8 rounded-lg shadow-md' }) do |f| %>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'w-full max-w-lg bg-white p-8 rounded-lg shadow-md', onsubmit: 'return validateForm()' }) do |f| %>
 
         <!-- Title -->
         <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Create Your Account</h2>
@@ -81,28 +156,31 @@
         <div class="mb-6">
           <%= f.label :email, class: 'block text-gray-700 text-sm font-bold mb-2' %>
           <%= f.email_field :email, placeholder: 'example@domain.com', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_email" %>
+          <p id="emailError" class="text-red-500 text-sm mt-2"></p>
         </div>
 
         <!-- Phone Number -->
         <div class="mb-6">
           <%= f.label :phone_number, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-          <%= f.text_field :phone_number, placeholder: '123-456-7890', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+          <%= f.text_field :phone_number, placeholder: '03XX-XXXXXXX', 
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_phone_number" %>
+          <p id="phoneNumberError" class="text-red-500 text-sm mt-2"></p>
         </div>
 
         <!-- Password -->
         <div class="mb-6">
           <%= f.label :password, class: 'block text-gray-700 text-sm font-bold mb-2' %>
           <%= f.password_field :password, placeholder: 'Enter your password', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_password" %>
         </div>
 
         <!-- Confirm Password -->
         <div class="mb-6">
           <%= f.label :password_confirmation, class: 'block text-gray-700 text-sm font-bold mb-2' %>
           <%= f.password_field :password_confirmation, placeholder: 'Confirm your password', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_password_confirmation" %>
+          <p id="passwordError" class="text-red-500 text-sm mt-2"></p>
         </div>
 
         <!-- Dynamic Fields for Student -->
@@ -110,8 +188,9 @@
           <%= f.fields_for :profile, Student.new do |student_form| %>
             <div class="mb-6">
               <%= student_form.label :roll_number, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-              <%= student_form.text_field :roll_number, placeholder: 'Enter your roll number', 
-                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+              <%= student_form.text_field :roll_number, placeholder: 'Roll Number i.e (17l-1234)', 
+                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "profile_roll_number" %>
+              <p id="rollNumberError" class="text-red-500 text-sm mt-2"></p>
             </div>
           <% end %>
         </div>
