@@ -1,89 +1,146 @@
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <div>
-    <%= f.label :full_name %>
-    <%= f.text_field :full_name %>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Signup Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  // Hide all dynamic fieldsets by default when the page loads
+  window.onload = function() {
+    // Hide all dynamic fieldsets initially
+    document.getElementById("studentFields").style.display = "none";
+    document.getElementById("recruiterFields").style.display = "none";
+    document.getElementById("careerOfficeFields").style.display = "none";
 
-  <div>
-    <%= f.label :phone_number %>
-    <%= f.text_field :phone_number %>
-  </div>
+    // Check the initial user type selection and display relevant fields if any
+    const userType = document.getElementById("user_user_type").value;
+    if (userType === "student") {
+      document.getElementById("studentFields").style.display = "block";
+    } else if (userType === "recruiter") {
+      document.getElementById("recruiterFields").style.display = "block";
+    } else if (userType === "careerOffice") {
+      document.getElementById("careerOfficeFields").style.display = "block";
+    }
+  }
 
-  <div>
-    <%= f.label :user_type, "User Type" %>
-    <%= f.select :user_type, [["Student", "student"], ["Recruiter", "recruiter"], ["Career Office", "careerOffice"]], {}, onchange: "toggleFields()" %>
-  </div>
-
-  <!-- Dynamic Fields for Student -->
-  <div id="studentFields" style="display: none;">
-    <%= f.fields_for :profile, Student.new do |student_form| %>  <!-- Nesting for Student -->
-      <div>
-        <%= student_form.label :roll_number %>
-        <%= student_form.text_field :roll_number %>
-      </div>
-
-      <div>
-        <%= student_form.label :graduation_year %>
-        <%= student_form.number_field :graduation_year %>
-      </div>
-    <% end %>
-  </div>
-
-  <!-- Dynamic Fields for Recruiter -->
-  <div id="recruiterFields" style="display: none;">
-    <%= f.fields_for :profile, Recruiter.new do |recruiter_form| %> <!-- Nesting for Recruiter -->
-      <div>
-        <%= recruiter_form.label :company_name %>
-        <%= recruiter_form.text_field :company_name %>
-      </div>
-
-      <div>
-        <%= recruiter_form.label :designation %>
-        <%= recruiter_form.text_field :designation %>
-      </div>
-    <% end %>
-  </div>
-
-  <!-- Dynamic Fields for Career Office -->
-  <div id="careerOfficeFields" style="display: none;">
-    <%= f.fields_for :profile, CareerOffice.new do |career_form| %> <!-- Nesting for CareerOffice -->
-      <div>
-        <%= career_form.label :institution_name %>
-        <%= career_form.text_field :institution_name %>
-      </div>
-
-      <div>
-        <%= career_form.label :department %>
-        <%= career_form.text_field :department %>
-      </div>
-    <% end %>
-  </div>
-
-  <div>
-    <%= f.label :email %>
-    <%= f.email_field :email %>
-  </div>
-
-  <div>
-    <%= f.label :password %>
-    <%= f.password_field :password %>
-  </div>
-
-  <div>
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation %>
-  </div>
-
-  <div>
-    <%= f.submit "Sign Up" %>
-  </div>
-<% end %>
-
-<script>
+  // Function to toggle fieldsets based on selected user type
   function toggleFields() {
     const userType = document.getElementById("user_user_type").value;
-    document.getElementById("studentFields").style.display = userType === "student" ? "block" : "none";
-    document.getElementById("recruiterFields").style.display = userType === "recruiter" ? "block" : "none";
-    document.getElementById("careerOfficeFields").style.display = userType === "careerOffice" ? "block" : "none";
+
+    // Hide all dynamic fieldsets by default
+    document.getElementById("studentFields").style.display = "none";
+    document.getElementById("recruiterFields").style.display = "none";
+    document.getElementById("careerOfficeFields").style.display = "none";
+
+    // Show the relevant fieldset based on the selected user type
+    if (userType === "student") {
+      document.getElementById("studentFields").style.display = "block";
+    } else if (userType === "recruiter") {
+      document.getElementById("recruiterFields").style.display = "block";
+    } else if (userType === "careerOffice") {
+      document.getElementById("careerOfficeFields").style.display = "block";
+    }
   }
-</script>
+  </script>
+</head>
+<body class="bg-gray-100">
+  <div class="flex flex-col lg:flex-row h-screen">
+    <!-- Left Section (Image) -->
+    <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-10">
+      <div class="text-center">
+        <img src="https://via.placeholder.com/400" alt="Image" class="rounded-full w-64 h-64 object-cover mx-auto">
+        <h1 class="text-2xl font-bold mt-6">Welcome to Our Platform</h1>
+        <p class="mt-4 text-sm lg:text-base">Discover opportunities, connect with employers, and shape your future.</p>
+      </div>
+    </div>
+
+    <!-- Right Section (Form) -->
+    <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-6">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'w-full max-w-lg bg-white p-8 rounded-lg shadow-md' }) do |f| %>
+
+        <!-- Title -->
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Create Your Account</h2>
+
+        <!-- User Type -->
+        <div class="mb-6">
+          <%= f.label :user_type, "User Type", class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= f.select :user_type, [["Select User Type", ""], ["Student", "student"], ["Recruiter", "recruiter"], ["Career Office", "careerOffice"]], {}, 
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 
+              onchange: "toggleFields()" %>
+        </div>
+
+        <!-- Full Name -->
+        <div class="mb-6">
+          <%= f.label :full_name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= f.text_field :full_name, placeholder: 'Enter your full name', 
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-6">
+          <%= f.label :email, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= f.email_field :email, placeholder: 'example@domain.com', 
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="mb-6">
+          <%= f.label :phone_number, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= f.text_field :phone_number, placeholder: '123-456-7890', 
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-6">
+          <%= f.label :password, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= f.password_field :password, placeholder: 'Enter your password', 
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-6">
+          <%= f.label :password_confirmation, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+          <%= f.password_field :password_confirmation, placeholder: 'Confirm your password', 
+              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+        </div>
+
+        <!-- Dynamic Fields for Student -->
+        <div id="studentFields" class="mt-6">
+          <%= f.fields_for :profile, Student.new do |student_form| %>
+            <div class="mb-6">
+              <%= student_form.label :roll_number, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+              <%= student_form.text_field :roll_number, placeholder: 'Enter your roll number', 
+                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Dynamic Fields for Recruiter -->
+        <div id="recruiterFields" class="mt-6">
+          <%= f.fields_for :profile, Recruiter.new do |recruiter_form| %>
+            <div class="mb-6">
+              <%= recruiter_form.label :company_name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+              <%= recruiter_form.text_field :company_name, placeholder: 'Enter company name', 
+                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Dynamic Fields for Career Office -->
+        <div id="careerOfficeFields" class="mt-6">
+          <%= f.fields_for :profile, CareerOffice.new do |career_form| %>
+            <div class="mb-6">
+              <%= career_form.label :institution_name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
+              <%= career_form.text_field :institution_name, placeholder: 'Enter institution name', 
+                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+            </div>
+          <% end %>
+        </div>
+
+        <%= f.submit "Sign Up", class: 'w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-blue-600 transition-all' %>
+      <% end %>
+    </div>
+  </div>
+</body>
+</html>
