@@ -37,6 +37,9 @@ gem "bootsnap", require: false
 # Devise 4.0 works with Rails 6.0 onwards. Run:
 gem "devise"
 
+# Install dotenv-rails
+gem "dotenv-rails", groups: [ :development, :test ]
+
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
