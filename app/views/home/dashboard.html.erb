@@ -1,0 +1,11 @@
+<h1 style="text-align: center; font-size: 2.5em; color: #2c3e50; font-family: Arial, sans-serif; margin-bottom: 20px;">Welcome to Your Dashboard</h1>
+
+<p style="text-align: center; font-size: 1.2em; color: #34495e; font-family: Arial, sans-serif;">Hello, <strong><%= current_user.email %></strong>!</p>
+
+<div style="text-align: center; margin-top: 30px;">
+  <%= link_to 'Logout', destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: 'btn btn-danger' %>
+</div>
+
+<div style="text-align: center; margin-top: 10px;">
+  <%= link_to 'Back to Home', root_path, class: 'btn btn-secondary' %>
+</div>
