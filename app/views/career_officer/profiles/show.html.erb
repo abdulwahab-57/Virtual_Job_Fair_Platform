@@ -1,30 +1,101 @@
-<div class="bg-white rounded-lg shadow-md p-6">
-  <div class="flex items-center">
-    <div class="w-16 h-16 bg-gray-200 rounded-full"></div>
-    <div class="ml-4">
-      <h1 class="text-xl font-bold"><%= @user.first_name || "Name" %></h1>
-      <p class="text-gray-600"><%= @user.career_officer_profile.designation || "Designation" %></p>
+<div class="flex flex-col max-w-[1121px]">
+    <div class="h-[240px]">
+        <img src="https://placehold.co/1121x240" alt="1121x240">
     </div>
-    <button class="ml-auto bg-blue-500 text-white px-4 py-2 rounded">Message</button>
-  </div>
-
-  <div class="mt-6">
-    <div class="flex items-center text-gray-600">
-      <span class="mr-2">📍</span><%= @user.career_officer_profile.office_location || "Office Location" %>
-      <span class="mx-4">|</span>
-      <span class="mr-2">📧</span><%= @user.email || "Email" %>
-      <span class="mx-4">|</span>
-      <span class="mr-2">📞</span><%= @user.career_officer_profile.phone || "Phone" %>
+    <div class="flex-1 flex gap-8">
+        <div class="relative w-[276px] px-[18px]">
+            <img src="https://placehold.co/232x232" alt="232x232"
+                class="absolute top-[-104px] left-1/2 -translate-x-1/2 border-2 border-white">
+            <div class="h-[128px]"></div>
+            <div class="flex flex-col gap-8 py-8">
+                <div class="flex flex-col gap-3">
+                    <div class="flex gap-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_10_26)">
+                                <path
+                                    d="M12 2C8.13 2 5 5.13 5 9C5 10.74 5.5 12.37 6.41 13.84C7.36 15.38 8.61 16.7 9.57 18.24C10.04 18.99 10.38 19.69 10.74 20.5C11 21.05 11.21 22 12 22C12.79 22 13 21.05 13.25 20.5C13.62 19.69 13.95 18.99 14.42 18.24C15.38 16.71 16.63 15.39 17.58 13.84C18.5 12.37 19 10.74 19 9C19 5.13 15.87 2 12 2ZM12 11.75C10.62 11.75 9.5 10.63 9.5 9.25C9.5 7.87 10.62 6.75 12 6.75C13.38 6.75 14.5 7.87 14.5 9.25C14.5 10.63 13.38 11.75 12 11.75Z"
+                                    fill="#005691" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_10_26">
+                                    <rect width="24" height="24" fill="white" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <span class="text-base text-[#333333] flex-1 break-all"><%= @user.career_officer_profile.office_location %></span>
+                    </div>
+                    <div class="flex gap-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_10_29)">
+                                <path
+                                    d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z"
+                                    fill="#005691" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_10_29">
+                                    <rect width="24" height="24" fill="white" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <span class="text-base text-[#333333] flex-1 break-all"><%= @user.email %></span>
+                    </div>
+                    <div class="flex gap-2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_10_32)">
+                                <path
+                                    d="M6.62 10.79C8.06 13.62 10.38 15.93 13.21 17.38L15.41 15.18C15.68 14.91 16.08 14.82 16.43 14.94C17.55 15.31 18.76 15.51 20 15.51C20.55 15.51 21 15.96 21 16.51V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z"
+                                    fill="#005691" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_10_32">
+                                    <rect width="24" height="24" fill="white" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <span class="text-base text-[#333333] flex-1 break-all"><%= @user.career_officer_profile.phone_number %></span>
+                    </div>
+                </div>
+                <button class="flex gap-2 p-4 items-center justify-center bg-[#0C71C3]">
+                    <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M13.0001 0C6.08134 0 0.452881 4.89248 0.452881 10.9056C0.452881 14.2851 2.27942 17.4966 5.35411 19.554C5.28517 20.1198 5.00062 21.536 3.82908 23.1984C3.72019 23.3532 3.70596 23.5557 3.79296 23.7242C3.87997 23.8927 4.05343 23.9989 4.24276 24C4.2537 24 4.26355 24 4.27504 24C7.25616 23.9995 9.26273 22.1576 9.90185 21.4769C10.9103 21.6985 11.9506 21.8112 13.0001 21.8112C19.9188 21.8112 25.5473 16.9193 25.5473 10.9056C25.5473 4.89193 19.9188 0 13.0001 0ZM6.98092 7.07524H19.0192C19.3213 7.07524 19.5664 7.31984 19.5664 7.62244C19.5664 7.92503 19.3213 8.16963 19.0192 8.16963H6.98092C6.67887 8.16963 6.43373 7.92503 6.43373 7.62244C6.43373 7.31984 6.67887 7.07524 6.98092 7.07524ZM4.79214 11.4528C4.49009 11.4528 4.24495 11.2082 4.24495 10.9056C4.24495 10.603 4.49009 10.3584 4.79214 10.3584H14.0945C14.3965 10.3584 14.6417 10.603 14.6417 10.9056C14.6417 11.2082 14.3965 11.4528 14.0945 11.4528H4.79214ZM19.0192 14.736H6.98092C6.67887 14.736 6.43373 14.4914 6.43373 14.1888C6.43373 13.8862 6.67887 13.6416 6.98092 13.6416H19.0192C19.3213 13.6416 19.5664 13.8862 19.5664 14.1888C19.5664 14.4914 19.3213 14.736 19.0192 14.736ZM21.208 11.4528H17.3776C17.0756 11.4528 16.8304 11.2082 16.8304 10.9056C16.8304 10.603 17.0756 10.3584 17.3776 10.3584H21.208C21.5101 10.3584 21.7552 10.603 21.7552 10.9056C21.7552 11.2082 21.5101 11.4528 21.208 11.4528Z"
+                            fill="#FEFEFF" />
+                    </svg>
+                    <span class="text-base font-bold text-white">Chat</span>
+                </button>
+            </div>
+        </div>
+        <div class="flex-1 flex flex-col py-8 gap-8">
+            <div class="flex">
+                <div class="flex-1">
+                    <h1 class="text-[32px] font-bold text-[#333333]"><%= @user.full_name %></h1>
+                    <h2 class="text-base text-[#AAAAAA]"><%= @user.career_officer_profile.designation %></h2>
+                </div>
+                <%= link_to @edit_profile_path, class: 'self-start text-center py-2 px-4 bg-[#0C71C3]' do %>
+                    <div class="flex gap-2">
+                        <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9.7352 0.5C9.57359 0.5 9.41181 0.561559 9.28865 0.685033L8.21053 1.76316L10.7368 4.28947L11.815 3.21135C12.0619 2.9644 12.0619 2.56457 11.815 2.31826L10.1817 0.685033C10.0583 0.561559 9.8968 0.5 9.7352 0.5ZM7.26316 2.71053L1.26316 8.71053C1.26316 8.71053 1.89789 8.71368 2.21053 9.02632C2.52316 9.33895 2.51645 9.96382 2.51645 9.96382C2.51645 9.96382 3.16042 9.97621 3.47368 10.2895C3.78695 10.6027 3.78947 11.2368 3.78947 11.2368L9.78947 5.23684L7.26316 2.71053ZM0.423109 9.97368L0 12.5L2.52632 12.0769L0.423109 9.97368Z"
+                                fill="#F5F5F5" />
+                        </svg>
+                        <span class="text-white text-xs font-medium">Edit Profile</span>
+                    </div>
+                <% end %>
+            </div>
+            <div class="flex flex-col gap-6 text-justify">
+                <div class="flex flex-col gap-3">
+                    <h1 class="text-2xl font-semibold text-[#333333]">Introduction</h1>
+                    <p class="text-base text-[#333333]">
+                        <%= @user.career_officer_profile.introduction %>
+                    </p>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <h1 class="text-2xl font-semibold text-[#333333]">Education</h1>
+                    <p class="text-base text-[#333333]">
+                        <%= @user.career_officer_profile.education %>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="mt-6">
-    <h2 class="text-lg font-semibold">Introduction</h2>
-    <p class="text-gray-600"><%= @user.career_officer_profile.introduction || "A brief bio highlighting the career officer's role, experience, and key areas of support." %></p>
-  </div>
-
-  <div class="mt-6">
-    <h2 class="text-lg font-semibold">Education</h2>
-    <p class="text-gray-600"><%= @user.career_officer_profile.education || "List of academic qualifications and relevant certifications." %></p>
-  </div>
-</div>
+</div>       

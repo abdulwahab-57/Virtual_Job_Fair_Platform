@@ -5,6 +5,7 @@ class CareerOfficer::BaseController < ApplicationController
   private
   def set_path
     @home_path = career_officer_path
-    @profile_path = career_officer_profile_path(18)
+    @show_profile_path = career_officer_profile_path(7)
+    @edit_profile_path = edit_career_officer_profile_path(7)
   end
 end

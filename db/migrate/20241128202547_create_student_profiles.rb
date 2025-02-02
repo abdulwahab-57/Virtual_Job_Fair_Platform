@@ -4,7 +4,7 @@ class CreateStudentProfiles < ActiveRecord::Migration[7.2]
       t.references :user, null: false, foreign_key: true
       t.date :date_of_birth
       t.string :email_personal, limit: 100
-      t.string :phone, limit: 20
+      t.string :phone_number, limit: 20
       t.text :address
       t.string :linkedin_url, limit: 255
       t.timestamps

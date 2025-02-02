@@ -14,7 +14,7 @@ class StudentProfile < ApplicationRecord
    validates :email_personal, allow_blank: true,
              format: { with: URI::MailTo::EMAIL_REGEXP },
              length: { maximum: 100 }
-   validates :phone, allow_blank: true,
+   validates :phone_number, allow_blank: true,
              format: { with: /\A\+?[\d\s-]{10,20}\z/ }
    validates :linkedin_url, allow_blank: true,
              format: { with: /\Ahttps?:\/\/(www\.)?linkedin\.com\/.*\z/ }

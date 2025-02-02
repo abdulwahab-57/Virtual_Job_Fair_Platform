@@ -3,12 +3,11 @@ class CreateCareerOfficerProfiles < ActiveRecord::Migration[7.2]
     create_table :career_officer_profiles do |t|
       t.references :user, null: false, foreign_key: true
       t.string :designation
-      t.string :phone
-      t.string :phone_extension
-      t.string :office_location
       t.text :introduction
       t.text :education
-      t.string :banner_image_url
+      t.string :office_location
+      t.string :phone_number
+      t.string :banner_image
       t.timestamps
     end
   end

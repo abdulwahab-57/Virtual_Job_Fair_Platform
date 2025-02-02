@@ -5,6 +5,7 @@ class Student::BaseController < ApplicationController
   private
   def set_path
     @home_path = student_path
-    @profile_path = student_profile_path(12)
+    @show_profile_path = student_profile_path(1)
+    @edit_profile_path = edit_student_profile_path(1)
   end
 end

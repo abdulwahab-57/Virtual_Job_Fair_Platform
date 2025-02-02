@@ -1,2 +1,46 @@
-<h1>CareerOfficer::Profiles#edit</h1>
-<p>Find me in app/views/career_officer/profiles/edit.html.erb</p>
+<div class="flex items-center justify-center">
+    <%= form_with(model: @user, url: career_officer_profile_path(@user.id), method: :put, class: "py-8 px-10 w-[720px] flex flex-col gap-3 bg-white") do |f| %>
+        <div class="flex flex-col gap-[2px]">
+            <%= f.label :full_name, "Full Name", class: "text-[#333333] text-base font-normal" %>
+            <%= f.text_field :full_name, class: 'p-3 transition-colors focus:text-[#333333] text-[#333333]/50 font-normal border-b border-[#BBBDD1]' %>
+        </div>
+
+        <%= f.fields_for :career_officer_profile, @user.career_officer_profile do |cof| %>
+            <div class="flex flex-col gap-[2px]">
+                <%= cof.label :designation, "Designation", class: "text-[#333333] text-base font-normal" %>
+                <%= cof.text_field :designation, class: 'p-3 transition-colors focus:text-[#333333] text-[#333333]/50 font-normal border-b border-[#BBBDD1]' %>
+            </div>
+
+            <div class="flex flex-col gap-[2px]">
+                <%= cof.label :introduction, "Introduction", class: "text-[#333333] text-base font-normal" %>
+                <%= cof.text_area :introduction, rows: 4, class: 'p-3 transition-colors focus:text-[#333333] text-[#333333]/50 font-normal border-b border-[#BBBDD1] resize-none' %>
+            </div>
+
+            <div class="flex flex-col gap-[2px]">
+                <%= cof.label :education, "Education", class: "text-[#333333] text-base font-normal" %>
+                <%= cof.text_area :education, rows: 4, class: 'p-3 transition-colors focus:text-[#333333] text-[#333333]/50 font-normal border-b border-[#BBBDD1] resize-none' %>
+            </div>
+
+            <div class="flex flex-col gap-[2px]">
+                <%= cof.label :office_location, "Office Location", class: "text-[#333333] text-base font-normal" %>
+                <%= cof.text_field :office_location, class: 'p-3 transition-colors focus:text-[#333333] text-[#333333]/50 font-normal border-b border-[#BBBDD1]' %>
+            </div>
+        <% end %>
+        
+        <div class="flex flex-col gap-[2px]">
+            <%= f.label :email, "Email", class: "text-[#333333] text-base font-normal" %>
+            <%= f.text_field :email, class: 'p-3 transition-colors focus:text-[#333333] text-[#333333]/50 font-normal border-b border-[#BBBDD1]' %>
+        </div>
+        
+        <%= f.fields_for :career_officer_profile, @user.career_officer_profile do |cof| %>
+            <div class="flex flex-col gap-[2px]">
+                <%= cof.label :phone_number, "Phone Number", class: "text-[#333333] text-base font-normal" %>
+                <%= cof.text_field :phone_number, class: 'p-3 transition-colors focus:text-[#333333] text-[#333333]/50 font-normal border-b border-[#BBBDD1]' %>
+            </div>
+        <% end %>
+
+        <div class="my-3">
+            <%= f.submit "Save Changes", class: "w-full px-4 py-2 text-white text-lg font-medium flex items-center justify-center bg-[#0C71C3] cursor-pointer" %>
+        </div>
+    <% end %>
+</div>

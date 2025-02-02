@@ -6,35 +6,22 @@
 </head>
 
 <body class="bg-gray-100 font-sans">
-    <div class="flex h-screen">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
         <%= render "shared/private_sidebar" %>
 
             <!-- Main Content Area -->
-            <div class="flex-1 flex flex-col h-full">
+            <div class="flex-1 flex flex-col">
                 <!-- Navbar -->
                 <%= render "shared/private_navbar" %>
 
                     <!-- Main Content -->
-                    <div class="bg-grey-50 p-8 h-full">
+                    <div class="bg-grey-50 p-8">
                         <%= yield %>
                     </div>
             </div>
 
     </div>
-    <script>
-        const profileButton = document.getElementById('profile-button');
-        const profileMenu = document.getElementById('profile-menu');
-        profileButton.addEventListener('click', () => {
-            profileMenu.classList.toggle('hidden');
-        });
-        // Close dropdown when clicking outside
-        window.addEventListener('click', (event) => {
-            if (!profileButton.contains(event.target) && !profileMenu.contains(event.target)) {
-                profileMenu.classList.add('hidden');
-            }
-        });
-    </script>
 </body>
 
 </html>

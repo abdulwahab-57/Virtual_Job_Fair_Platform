@@ -1,46 +1,142 @@
-<div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden my-6">
-  <div class="bg-blue-500 p-6">
-    <h1 class="text-3xl text-white font-bold"><%= @user.first_name %></h1>
-    <p class="text-white mt-2"><%= @user.email %></p>
-    <p class="text-white mt-1"><%= @user.student_profile.phone %></p>
-    <p class="text-white mt-1"><%= @user.student_profile.address %></p>
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-lg relative">
+ <div class="grid grid-cols-[20%_1fr] grid-rows-[auto] gap-x-4 gap-y-6">
+  <div class="col-start-1 row-start-1 justify-self-center">
+   <img src="https://placehold.co/160x160"/>
   </div>
-  
-  <div class="p-6">
-    <h2 class="text-2xl font-bold text-gray-700 mb-4">Education</h2>
-    <ul class="list-disc list-inside">
-      <% @user.student_profile.educations.each do |edu| %>
-        <li>
-          <strong><%= edu.degree_title %></strong> - <%= edu.institution_name %> (<%= edu.graduation_year %>)
-        </li>
-      <% end %>
-    </ul>
-
-    <h2 class="text-2xl font-bold text-gray-700 mt-6 mb-4">Projects/Portfolio</h2>
-    <ul class="list-disc list-inside">
-      <% @user.student_profile.projects.each do |project| %>
-        <li>
-          <strong><%= project.project_name %></strong>: <%= project.description %>
-        </li>
-      <% end %>
-    </ul>
-
-    <h2 class="text-2xl font-bold text-gray-700 mt-6 mb-4">Skills & Tools</h2>
-    <div class="flex flex-wrap gap-2">
-      <% @user.student_profile.skills.each do |skill| %>
-        <li class="px-3 py-1 bg-gray-200 rounded-full text-sm font-medium">
-          <strong><%= skill.title %></strong>: <%=skill.skill_list %>
-        </li>
-      <% end %>
+  <div class="col-start-2 row-start-1">
+    <div class="font-serif">
+      <h1 class="text-4xl font-medium">Muhammad Subhan Attique</h1>
+      <p class="text-2xl  font-medium">BS (Computer Science)</p>
     </div>
-
-    <h2 class="text-2xl font-bold text-gray-700 mt-6 mb-4">Activities, Honors & Awards</h2>
-    <ul class="list-disc list-inside">
-      <% @user.student_profile.activities_honors.each do |activity| %>
-        <li>
-            <strong><%= activity.title %></strong>: <%= activity.organization %>
-        </li>
-      <% end %>
-    </ul>
   </div>
+  <div class="col-start-1 row-start-2 bg-[#1499DC]">
+    <div class="text-right text-sm text-white px-4 pt-8">
+      <ul class="break-all space-y-4">
+        <li>
+          <p><strong>Date of Birth</strong></p>
+          <p>10/11/2002</p>
+        </li>
+        <li>
+          <p><strong>Telephone</strong></p>
+          <p>0308 4436860</p>
+        </li>
+        <li>
+          <p><strong>Email</strong></p>
+          <ul>
+            <li>f201121@cfd.nu.edu.pk</li>
+            <li>subhanarfat93@gmail.com</li>
+          </ul>
+        </li>
+        <li>
+          <p><strong>Address</strong></p>
+          <p>House#75, Shershah Block, Bahria Town, Lahore</p>
+        </li>
+        <li>
+          <p><strong>LinkedIn</strong></p>
+          <p>linkedin.com/in/subhan-attique-48a7a8274</p>
+        </li>
+        <li>
+          <p><strong>Preference for Job</strong></p>
+          <ul>
+            <li>Lahore</li>
+            <li>Islamabad</li>
+            <li>Rawalpindi</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-start-2 row-start-2">
+      <!-- Education Section -->
+      <section class="mb-6">
+        <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Education</h2>
+        <ul class="mt-2">
+          <li>
+            <p class="font-medium">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
+            <p class="text-sm ">BS (Computer Science) - 2024</p>
+          </li>
+          <li>
+            <p class="font-medium">Punjab Group of Colleges</p>
+            <p class="text-sm ">F.Sc - Pre Engineering - 2020</p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Projects Section -->
+      <section class="mb-6">
+        <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Projects/Portfolio</h2>
+        <ul class="mt-2">
+          <li>
+            <p class="font-medium">Zen-Filter</p>
+            <p class="text-sm ">A robust mobile app and browser extension to block explicit and violent
+              content. Features ad blockers, app statistics, and safe browsing capabilities, ensuring a secure digital
+              space.</p>
+          </li>
+          <li>
+            <p class="font-medium">Library Management System</p>
+            <p class="text-sm ">Streamlines library book issuance using HTML, CSS, JavaScript, Bootstrap, and
+              MySQL. Includes fines for late returns and a detailed book information display.</p>
+          </li>
+          <li>
+            <p class="font-medium">Land of Dead (Unity 3D)</p>
+            <p class="text-sm ">A 3D open-world survival game where players fight zombies using AI detection,
+              health systems, and a time cycle mechanism.</p>
+          </li>
+          <li>
+            <p class="font-medium">Analysis of Imtiaz Mall Dataset using Data Science Concepts</p>
+            <p class="text-sm ">Analyzed data using Python by cleaning, plotting graphs, adding new columns,
+              and making assumptions.</p>
+          </li>
+          <li>
+            <p class="font-medium">Store Inventory Management System in SQL</p>
+            <p class="text-sm ">Developed with C# Windows Forms and MySQL to implement a uniform store
+              management system.</p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Activities Section -->
+      <section class="mb-6">
+        <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Activities, Honors & Awards</h2>
+        <ul class="mt-2">
+          <li><span class="font-medium">Certified Social Media Manager</span>, Alms 360, Islamabad</li>
+          <li><span class="font-medium">Game Development Internship</span>, Mindstorm Studios</li>
+          <li><span class="font-medium">Teaching Assistant - Software Engineering</span>, FAST NU, Faisalabad</li>
+        </ul>
+      </section>
+
+      <!-- Skills Section -->
+      <section class="mb-6">
+        <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Skills & Tools</h2>
+        <ul class="mt-2">
+          <li>
+            <p class="font-medium">Programming Languages</p>
+            <p class="text-sm ">C, C++, Python, Javascript, C#, SQL, Bash</p>
+          </li>
+          <li>
+            <p class="font-medium">Tools and Frameworks</p>
+            <p class="text-sm ">MERN Stack, Unity 3D, Figma, Github, Jupyter Notebook, VS Code, MS Word, MS
+              Excel, MS Powerpoint</p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Interests Section -->
+      <section>
+        <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Interests & Hobbies</h2>
+        <p class="mt-2 text-sm ">Photography, Videography, Workouts, Gaming, Researching Conspiracies,
+          Watching Documentaries</p>
+      </section>
+  </div>
+</div>
+  <%= link_to @edit_profile_path, class: 'self-start text-center py-2 px-4 bg-[#0C71C3] absolute top-6 right-6' do %>
+    <div class="flex gap-2">
+        <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M9.7352 0.5C9.57359 0.5 9.41181 0.561559 9.28865 0.685033L8.21053 1.76316L10.7368 4.28947L11.815 3.21135C12.0619 2.9644 12.0619 2.56457 11.815 2.31826L10.1817 0.685033C10.0583 0.561559 9.8968 0.5 9.7352 0.5ZM7.26316 2.71053L1.26316 8.71053C1.26316 8.71053 1.89789 8.71368 2.21053 9.02632C2.52316 9.33895 2.51645 9.96382 2.51645 9.96382C2.51645 9.96382 3.16042 9.97621 3.47368 10.2895C3.78695 10.6027 3.78947 11.2368 3.78947 11.2368L9.78947 5.23684L7.26316 2.71053ZM0.423109 9.97368L0 12.5L2.52632 12.0769L0.423109 9.97368Z"
+                fill="#F5F5F5" />
+        </svg>
+        <span class="text-white text-xs font-medium">Edit Profile</span>
+    </div>
+  <% end %>                          
 </div>

@@ -8,8 +8,7 @@ class User < ApplicationRecord
   has_one :career_officer_profile, dependent: :destroy
 
   # Validations
-  validates :first_name, presence: true, length: { maximum: 50 }
-  validates :last_name, presence: true, length: { maximum: 50 }
+  validates :full_name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true,
             format: { with: URI::MailTo::EMAIL_REGEXP },
             length: { maximum: 100 }

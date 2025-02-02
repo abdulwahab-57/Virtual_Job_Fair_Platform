@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_28_203128) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_28_203054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,12 +31,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203128) do
   create_table "career_officer_profiles", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "designation"
-    t.string "phone"
-    t.string "phone_extension"
-    t.string "office_location"
     t.text "introduction"
     t.text "education"
-    t.string "banner_image_url"
+    t.string "office_location"
+    t.string "phone_number"
+    t.string "banner_image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_career_officer_profiles_on_user_id"
@@ -51,24 +50,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203128) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_profile_id"], name: "index_educations_on_student_profile_id"
-  end
-
-  create_table "gallery_images", force: :cascade do |t|
-    t.bigint "recruiter_profile_id", null: false
-    t.string "image_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["recruiter_profile_id"], name: "index_gallery_images_on_recruiter_profile_id"
-  end
-
-  create_table "hiring_team_members", force: :cascade do |t|
-    t.bigint "recruiter_profile_id", null: false
-    t.string "name"
-    t.string "designation"
-    t.string "profile_picture_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["recruiter_profile_id"], name: "index_hiring_team_members_on_recruiter_profile_id"
   end
 
   create_table "interests", force: :cascade do |t|
@@ -101,11 +82,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203128) do
     t.bigint "user_id", null: false
     t.string "company_name"
     t.string "industry"
+    t.string "about_company"
     t.string "office_location"
-    t.enum "employee_count", enum_type: "employee_range"
+    t.string "company_email"
     t.string "company_website"
-    t.string "company_logo_url"
-    t.string "banner_image_url"
+    t.enum "employee_count", enum_type: "employee_range"
+    t.string "company_logo"
+    t.string "company_banner_image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_recruiter_profiles_on_user_id"
@@ -124,7 +107,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203128) do
     t.bigint "user_id", null: false
     t.date "date_of_birth"
     t.string "email_personal", limit: 100
-    t.string "phone", limit: 20
+    t.string "phone_number", limit: 20
     t.text "address"
     t.string "linkedin_url", limit: 255
     t.datetime "created_at", null: false
@@ -133,8 +116,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203128) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name", limit: 50
-    t.string "last_name", limit: 50
+    t.string "full_name", limit: 50
     t.string "email", limit: 100
     t.enum "role", enum_type: "user_role"
     t.string "profile_picture_url"
@@ -145,8 +127,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203128) do
   add_foreign_key "activities_honors", "student_profiles"
   add_foreign_key "career_officer_profiles", "users"
   add_foreign_key "educations", "student_profiles"
-  add_foreign_key "gallery_images", "recruiter_profiles"
-  add_foreign_key "hiring_team_members", "recruiter_profiles"
   add_foreign_key "interests", "student_profiles"
   add_foreign_key "location_preferences", "student_profiles"
   add_foreign_key "projects", "student_profiles"
