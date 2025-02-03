@@ -1,27 +1,65 @@
-class Users::RegistrationsController < Devise::RegistrationsController
+class RegistrationsController < Devise::RegistrationsController
+  def new
+    build_resource
+    # Initialize nested attributes for different user types
+    resource.build_profile
+    respond_with resource
+  end
+
   def create
-    super do |resource|
-      case params[:user][:user_type]
+    build_resource(sign_up_params)
+
+    # Assign profile based on user_type
+    if params[:user][:profile]
+      case resource.user_type
       when "student"
-        student = Student.create!(
-          roll_number: params[:user][:roll_number],
-          graduation_year: params[:user][:graduation_year]
-        )
-        resource.profile = student
+        resource.profile = Student.new(student_params)
       when "recruiter"
-        recruiter = Recruiter.create!(
-          company_name: params[:user][:company_name],
-          designation: params[:user][:designation]
-        )
-        resource.profile = recruiter
-      when "careerOffice"
-        career_office = CareerOffice.create!(
-          institution_name: params[:user][:institution_name],
-          department: params[:user][:department]
-        )
-        resource.profile = career_office
+        resource.profile = Recruiter.new(recruiter_params)
+      when "career_office"
+        resource.profile = CareerOffice.new(career_office_params)
       end
-      resource.save
     end
+
+    if resource.save
+      # Custom logic after successful signup
+      sign_up(resource_name, resource)
+      respond_with resource, location: after_sign_up_path_for(resource)
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      respond_with resource
+    end
+  end
+
+  private
+
+  def sign_up_params
+    params.require(:user).permit(
+      :email,
+      :password,
+      :password_confirmation,
+      :full_name,
+      :phone_number,
+      :user_type
+    )
+  end
+
+  def student_params
+    params.require(:user).require(:profile).permit(:roll_number)
+  rescue ActionController::ParameterMissing
+    {}
+  end
+
+  def recruiter_params
+    params.require(:user).require(:profile).permit(:company_name)
+  rescue ActionController::ParameterMissing
+    {}
+  end
+
+  def career_office_params
+    params.require(:user).require(:profile).permit(:institution_name)
+  rescue ActionController::ParameterMissing
+    {}
   end
 end

@@ -1,218 +1,64 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dynamic Signup Page</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    // Hide all dynamic fieldsets by default when the page loads
-    window.onload = function() {
-      // Hide all dynamic fieldsets initially
-      document.getElementById("studentFields").style.display = "none";
-      document.getElementById("recruiterFields").style.display = "none";
-      document.getElementById("careerOfficeFields").style.display = "none";
-
-      // Check the initial user type selection and display relevant fields if any
-      const userType = document.getElementById("user_user_type").value;
-      if (userType === "student") {
-        document.getElementById("studentFields").style.display = "block";
-      } else if (userType === "recruiter") {
-        document.getElementById("recruiterFields").style.display = "block";
-      } else if (userType === "careerOffice") {
-        document.getElementById("careerOfficeFields").style.display = "block";
-      }
-    }
-
-    // Function to toggle fieldsets based on selected user type
-    function toggleFields() {
-      const userType = document.getElementById("user_user_type").value;
-
-      // Hide all dynamic fieldsets by default
-      document.getElementById("studentFields").style.display = "none";
-      document.getElementById("recruiterFields").style.display = "none";
-      document.getElementById("careerOfficeFields").style.display = "none";
-
-      // Show the relevant fieldset based on the selected user type
-      if (userType === "student") {
-        document.getElementById("studentFields").style.display = "block";
-      } else if (userType === "recruiter") {
-        document.getElementById("recruiterFields").style.display = "block";
-      } else if (userType === "careerOffice") {
-        document.getElementById("careerOfficeFields").style.display = "block";
-      }
-    }
-
-    // Validate Password Confirmation
-    function validatePasswords() {
-      const password = document.getElementById("user_password").value;
-      const passwordConfirmation = document.getElementById("user_password_confirmation").value;
-      if (password !== passwordConfirmation) {
-        document.getElementById("passwordError").textContent = "Passwords do not match!";
-        return false;
-      } else {
-        document.getElementById("passwordError").textContent = "";
-        return true;
-      }
-    }
-
-    // Validate Pakistani Phone Number Format
-    function validatePhoneNumber() {
-      const phoneNumber = document.getElementById("user_phone_number").value;
-      const regex = /^03[0-9]{2}-[0-9]{7}$/;
-      if (!regex.test(phoneNumber)) {
-        document.getElementById("phoneNumberError").textContent = "Phone number must be in the format 03XX-XXXXXXX";
-        return false;
-      } else {
-        document.getElementById("phoneNumberError").textContent = "";
-        return true;
-      }
-    }
-
-    // Validate Email (any domain)
-    function validateEmail() {
-      const email = document.getElementById("user_email").value;
-      const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!regex.test(email)) {
-        document.getElementById("emailError").textContent = "Please enter a valid email address.";
-        return false;
-      } else {
-        document.getElementById("emailError").textContent = "";
-        return true;
-      }
-    }
-
-    // Validate Roll Number Format (21F-9498)
-    function validateRollNumber() {
-      const rollNumber = document.getElementById("profile_roll_number").value;
-      const regex = /^\d{2}[A-Za-z]-\d{4}$/;
-      if (!regex.test(rollNumber)) {
-        document.getElementById("rollNumberError").textContent = "Roll number must be in the format 21F-9498";
-        return false;
-      } else {
-        document.getElementById("rollNumberError").textContent = "";
-        return true;
-      }
-    }
-
-    // Validate all fields before submission
-    function validateForm() {
-      // Check for empty fields
-      const fullName = document.getElementById("user_full_name").value;
-      const email = document.getElementById("user_email").value;
-      const phoneNumber = document.getElementById("user_phone_number").value;
-      const password = document.getElementById("user_password").value;
-      const passwordConfirmation = document.getElementById("user_password_confirmation").value;
-
-      if (!fullName || !email || !phoneNumber || !password || !passwordConfirmation) {
-        alert("Please fill in all the required fields.");
-        return false;
-      }
-
-      // Proceed with further validations
-      const passwordValid = validatePasswords();
-      const phoneValid = validatePhoneNumber();
-      const emailValid = validateEmail();
-      const rollValid = validateRollNumber();
-
-      return passwordValid && phoneValid && emailValid && rollValid;
-    }
-  </script>
 </head>
 <body class="bg-gray-100">
   <div class="flex flex-col lg:flex-row h-screen">
-    <!-- Left Section (Image) -->
     <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-10">
-      <div class="text-center">
-        <img src="https://via.placeholder.com/400" alt="Image" class="rounded-full w-64 h-64 object-cover mx-auto">
-        <h1 class="text-2xl font-bold mt-6">Welcome to Our Platform</h1>
-        <p class="mt-4 text-sm lg:text-base">Discover opportunities, connect with employers, and shape your future.</p>
-      </div>
+      <h1 class="text-2xl font-bold">Welcome to Our Platform</h1>
     </div>
 
-    <!-- Right Section (Form) -->
     <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-6">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'w-full max-w-lg bg-white p-8 rounded-lg shadow-md', onsubmit: 'return validateForm()' }) do |f| %>
-
-        <!-- Title -->
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', onsubmit: 'return validateForm()' }) do |f| %>
         <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Create Your Account</h2>
 
-        <!-- User Type -->
         <div class="mb-6">
-          <%= f.label :user_type, "User Type", class: 'block text-gray-700 text-sm font-bold mb-2' %>
-          <%= f.select :user_type, [["Select User Type", ""], ["Student", "student"], ["Recruiter", "recruiter"], ["Career Office", "careerOffice"]], {}, 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 
-              onchange: "toggleFields()" %>
+          <%= f.label :user_type, "User Type" %>
+          <%= f.select :user_type, [["Student", "student"], ["Recruiter", "recruiter"], ["Career Office", "career_office"]], {}, onchange: "toggleFields()" %>
         </div>
 
-        <!-- Full Name -->
         <div class="mb-6">
-          <%= f.label :full_name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-          <%= f.text_field :full_name, placeholder: 'Enter your full name', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+          <%= f.label :full_name %>
+          <%= f.text_field :full_name, placeholder: 'Enter your full name' %>
         </div>
 
-        <!-- Email -->
         <div class="mb-6">
-          <%= f.label :email, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-          <%= f.email_field :email, placeholder: 'example@domain.com', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_email" %>
-          <p id="emailError" class="text-red-500 text-sm mt-2"></p>
+          <%= f.label :email %>
+          <%= f.email_field :email, placeholder: 'example@domain.com' %>
         </div>
 
-        <!-- Phone Number -->
         <div class="mb-6">
-          <%= f.label :phone_number, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-          <%= f.text_field :phone_number, placeholder: '03XX-XXXXXXX', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_phone_number" %>
-          <p id="phoneNumberError" class="text-red-500 text-sm mt-2"></p>
+          <%= f.label :password %>
+          <%= f.password_field :password, placeholder: 'Enter your password' %>
         </div>
 
-        <!-- Password -->
-        <div class="mb-6">
-          <%= f.label :password, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-          <%= f.password_field :password, placeholder: 'Enter your password', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_password" %>
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mb-6">
-          <%= f.label :password_confirmation, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-          <%= f.password_field :password_confirmation, placeholder: 'Confirm your password', 
-              class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "user_password_confirmation" %>
-          <p id="passwordError" class="text-red-500 text-sm mt-2"></p>
-        </div>
-
-        <!-- Dynamic Fields for Student -->
-        <div id="studentFields" class="mt-6">
+        <div id="studentFields" class="mt-6" style="display: none;">
           <%= f.fields_for :profile, Student.new do |student_form| %>
             <div class="mb-6">
-              <%= student_form.label :roll_number, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-              <%= student_form.text_field :roll_number, placeholder: 'Roll Number i.e (17l-1234)', 
-                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', id: "profile_roll_number" %>
-              <p id="rollNumberError" class="text-red-500 text-sm mt-2"></p>
+              <%= student_form.label :roll_number %>
+              <%= student_form.text_field :roll_number, placeholder: 'Roll Number i.e (17L-1234)' %>
             </div>
           <% end %>
         </div>
 
-        <!-- Dynamic Fields for Recruiter -->
-        <div id="recruiterFields" class="mt-6">
+        <div id="recruiterFields" class="mt-6" style="display: none;">
           <%= f.fields_for :profile, Recruiter.new do |recruiter_form| %>
             <div class="mb-6">
-              <%= recruiter_form.label :company_name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-              <%= recruiter_form.text_field :company_name, placeholder: 'Enter company name', 
-                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+              <%= recruiter_form.label :company_name %>
+              <%= recruiter_form.text_field :company_name, placeholder: 'Enter company name' %>
             </div>
           <% end %>
         </div>
 
-        <!-- Dynamic Fields for Career Office -->
-        <div id="careerOfficeFields" class="mt-6">
+        <div id="careerOfficeFields" class="mt-6" style="display: none;">
           <%= f.fields_for :profile, CareerOffice.new do |career_form| %>
             <div class="mb-6">
-              <%= career_form.label :institution_name, class: 'block text-gray-700 text-sm font-bold mb-2' %>
-              <%= career_form.text_field :institution_name, placeholder: 'Enter institution name', 
-                  class: 'w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500' %>
+              <%= career_form.label :institution_name %>
+              <%= career_form.text_field :institution_name, placeholder: 'Enter institution name' %>
             </div>
           <% end %>
         </div>
@@ -221,5 +67,26 @@
       <% end %>
     </div>
   </div>
+
+  <script>
+    function toggleFields() {
+      const userType = document.getElementById("user_user_type").value;
+      document.getElementById("studentFields").style.display = "none";
+      document.getElementById("recruiterFields").style.display = "none";
+      document.getElementById("careerOfficeFields").style.display = "none";
+      
+      if (userType === "student") {
+        document.getElementById("studentFields").style.display = "block";
+      } else if (userType === "recruiter") {
+        document.getElementById("recruiterFields").style.display = "block";
+      } else if (userType === "career_office") {
+        document.getElementById("careerOfficeFields").style.display = "block";
+      }
+    }
+    
+    window.onload = function() {
+      toggleFields();
+    }
+  </script>
 </body>
 </html>

@@ -10,6 +10,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.2]
       t.string :phone_number
       t.string :full_name
       t.string :user_type            # student, recruiter, careerOffice
+      t.string :profile_picture_url
+
       t.references :profile, polymorphic: true, index: true
       ## Recoverable
       t.string   :reset_password_token

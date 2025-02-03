@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [
       :phone_number, :full_name, :user_type,
-      :roll_number, :graduation_year,    # Student fields
+      :roll_number, :graduation_year,         # Student fields
       :company_name, :designation,       # Recruiter fields
       :institution_name, :department     # CareerOffice fields
     ])
