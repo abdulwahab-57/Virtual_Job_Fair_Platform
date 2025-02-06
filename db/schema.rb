@@ -17,7 +17,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203054) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "employee_range", ["1-50", "51-200", "201-500", "501-1000", "1001+"]
-  create_enum "user_role", ["student", "recruiter", "career_officer"]
 
   create_table "activities_honors", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
@@ -116,12 +115,18 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_28_203054) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "full_name", limit: 50
-    t.string "email", limit: 100
-    t.enum "role", enum_type: "user_role"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "full_name"
+    t.string "user_type"
     t.string "profile_picture_url"
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "activities_honors", "student_profiles"

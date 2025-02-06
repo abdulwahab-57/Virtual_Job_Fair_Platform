@@ -1,7 +1,6 @@
 class User < ApplicationRecord
-  # Enums
-  enum role: { student: "student", recruiter: "recruiter", career_officer: "career_officer" }
-
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
   # Associations
   has_one :student_profile, dependent: :destroy
   has_one :recruiter_profile, dependent: :destroy
@@ -12,4 +11,8 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true,
             format: { with: URI::MailTo::EMAIL_REGEXP },
             length: { maximum: 100 }
+
+  # Add user type validation
+  validates :user_type, presence: true,
+            inclusion: { in: %w[student recruiter career_office] }
 end

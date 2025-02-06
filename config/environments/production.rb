@@ -99,4 +99,17 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Add the following for email delivery in production
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "your-production-domain.com",
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: ENV["EMAIL_USERNAME"], # From .env
+    password: ENV["EMAIL_PASSWORD"] # From .env
+  }
+
+  config.ation_mailer.default_url_options = { host: "your-production-domain.com", protocol: "https" }
 end
