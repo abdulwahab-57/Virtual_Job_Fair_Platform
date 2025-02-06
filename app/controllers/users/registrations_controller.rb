@@ -40,13 +40,12 @@ class RegistrationsController < Devise::RegistrationsController
       :password,
       :password_confirmation,
       :full_name,
-      :phone_number,
       :user_type
     )
   end
 
   def student_params
-    params.require(:user).require(:profile).permit(:roll_number)
+    params.require(:user).require(:profile).permit(:email_personal)
   rescue ActionController::ParameterMissing
     {}
   end
@@ -58,7 +57,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def career_office_params
-    params.require(:user).require(:profile).permit(:institution_name)
+    params.require(:user).require(:profile).permit(:designation)
   rescue ActionController::ParameterMissing
     {}
   end
