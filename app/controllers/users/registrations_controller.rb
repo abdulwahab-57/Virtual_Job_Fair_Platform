@@ -1,25 +1,24 @@
-class RegistrationsController < Devise::RegistrationsController
+class Users::RegistrationsController < Devise::RegistrationsController
   def new
     build_resource
-    # Initialize nested attributes for different user types
-    resource.build_profile
+    resource.build_student_profile
+    resource.build_recruiter_profile
+    resource.build_career_officer_profile
     respond_with resource
   end
 
   def create
     build_resource(sign_up_params)
 
-    # Assign profile based on user_type
-    if params[:user][:profile]
-      case resource.user_type
-      when "student"
-        resource.profile = Student.new(student_params)
-      when "recruiter"
-        resource.profile = Recruiter.new(recruiter_params)
-      when "career_office"
-        resource.profile = CareerOffice.new(career_office_params)
-      end
+    case resource.user_type
+    when "student"
+      resource.student_profile_attributes = StudentProfile.new(student_params)
+    when "recruiter"
+      resource.recruiter_profile_attributes = RecruiterProfile.new(recruiter_params)
+    when "career_office"
+      resource.career_officer_profile_attributes = CareerOfficerProfile.new(career_office_params)
     end
+
 
     if resource.save
       # Custom logic after successful signup
@@ -32,32 +31,46 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  protected
+
+  def after_sign_up_path_for(resource)
+    case resource.user_type
+    when "student"
+      student_path
+    when "recruiter"
+      recruiter_path
+    when "career_office"
+      career_officer_path
+    else
+      root_path # Fallback for unexpected user types
+    end
+  end
+
   private
 
   def sign_up_params
     params.require(:user).permit(
+      :user_type,
+      :full_name,
       :email,
       :password,
-      :password_confirmation,
-      :full_name,
-      :user_type
     )
   end
 
   def student_params
-    params.require(:user).require(:profile).permit(:email_personal)
+    params.require(:user).require(:student_profile_attributes).permit(:email_personal)
   rescue ActionController::ParameterMissing
     {}
   end
 
   def recruiter_params
-    params.require(:user).require(:profile).permit(:company_name)
+    params.require(:user).require(:recruiter_profile_attributes).permit(:company_name)
   rescue ActionController::ParameterMissing
     {}
   end
 
   def career_office_params
-    params.require(:user).require(:profile).permit(:designation)
+    params.require(:user).require(:career_officer_profile_attributes).permit(:designation)
   rescue ActionController::ParameterMissing
     {}
   end

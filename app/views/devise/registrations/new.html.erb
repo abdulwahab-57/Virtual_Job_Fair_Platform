@@ -31,7 +31,7 @@
         </div>
 
         <div id="studentFields" class="mt-6" style="display: none;">
-          <%= f.fields_for :profile, StudentProfile.new do |student_form| %>
+          <%= f.fields_for :student_profile, StudentProfile.new do |student_form| %>
             <div class="mb-6">
               <%= student_form.label :email_personal, "Personal Email" %>
               <%= student_form.text_field :email_personal, placeholder: 'example@gmail.com' %>
@@ -40,7 +40,7 @@
         </div>
 
         <div id="recruiterFields" class="mt-6" style="display: none;">
-          <%= f.fields_for :profile, RecruiterProfile.new do |recruiter_form| %>
+          <%= f.fields_for :recruiter_profile, RecruiterProfile.new do |recruiter_form| %>
             <div class="mb-6">
               <%= recruiter_form.label :company_name %>
               <%= recruiter_form.text_field :company_name, placeholder: 'Enter company name' %>
@@ -49,7 +49,7 @@
         </div>
 
         <div id="careerOfficeFields" class="mt-6" style="display: none;">
-          <%= f.fields_for :profile, CareerOfficerProfile.new do |career_form| %>
+          <%= f.fields_for :career_officer_profile, CareerOfficerProfile.new do |career_form| %>
             <div class="mb-6">
               <%= career_form.label :designation %>
               <%= career_form.text_field :designation, placeholder: 'Enter your designation' %>
@@ -62,7 +62,7 @@
           <%= f.password_field :password, placeholder: 'Enter your password' %>
         </div>
 
-        <%= f.submit "Sign Up", class: 'w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-blue-600 transition-all' %>
+        <%= f.submit "Sign Up", class: 'w-full bg-blue-500 text-white font-bold py-3 rounded-md hover:bg-blue-600 transition-all', data: { turbo: false } %>
       <% end %>
     </div>
   </div>

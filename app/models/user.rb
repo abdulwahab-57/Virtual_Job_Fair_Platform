@@ -6,6 +6,11 @@ class User < ApplicationRecord
   has_one :recruiter_profile, dependent: :destroy
   has_one :career_officer_profile, dependent: :destroy
 
+  # Nested attributes
+  accepts_nested_attributes_for :student_profile
+  accepts_nested_attributes_for :recruiter_profile
+  accepts_nested_attributes_for :career_officer_profile
+
   # Validations
   validates :full_name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true,

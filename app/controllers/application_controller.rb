@@ -5,17 +5,19 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [
-      :phone_number, :full_name, :user_type,
-      :roll_number, :graduation_year,         # Student fields
-      :company_name, :designation,       # Recruiter fields
-      :institution_name, :department     # CareerOffice fields
+      :full_name,
+      :user_type,
+      student_profile_attributes: [ :email_personal ],
+      recruiter_profile_attributes: [ :company_name ],
+      career_officer_profile_attributes: [ :designation ]
     ])
 
     devise_parameter_sanitizer.permit(:account_update, keys: [
-      :phone_number, :full_name, :user_type,
-      :roll_number, :graduation_year,
-      :company_name, :designation,
-      :institution_name, :department
+      :full_name,
+      :email,
+      student_profile_attributes: [ :email_personal ],
+      recruiter_profile_attributes: [ :company_name ],
+      career_officer_profile_attributes: [ :designation ]
     ])
   end
 end
