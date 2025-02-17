@@ -1,0 +1,15 @@
+--2025-02-17 09:25:52--  https://update.code.visualstudio.com/commit:e54c774e0add60467559eb0d1e229c6452cf8447/server-linux-x64/stable
+Resolving update.code.visualstudio.com (update.code.visualstudio.com)... 13.107.246.61, 2620:1ec:bdf::61
+Connecting to update.code.visualstudio.com (update.code.visualstudio.com)|13.107.246.61|:443... connected.
+HTTP request sent, awaiting response... No data received.
+Retrying.
+
+--2025-02-17 09:26:09--  (try: 2)  https://update.code.visualstudio.com/commit:e54c774e0add60467559eb0d1e229c6452cf8447/server-linux-x64/stable
+Connecting to update.code.visualstudio.com (update.code.visualstudio.com)|13.107.246.61|:443... connected.
+HTTP request sent, awaiting response... No data received.
+Retrying.
+
+--2025-02-17 09:26:16--  (try: 3)  https://update.code.visualstudio.com/commit:e54c774e0add60467559eb0d1e229c6452cf8447/server-linux-x64/stable
+Connecting to update.code.visualstudio.com (update.code.visualstudio.com)|13.107.246.61|:443... connected.
+OpenSSL: error:0A000126:SSL routines::unexpected eof while reading
+Unable to establish SSL connection.

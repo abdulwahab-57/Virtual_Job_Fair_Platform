@@ -1,6 +1,6 @@
 class StudentProfile < ApplicationRecord
    # Associations
-   belongs_to :user
+   belongs_to :user, inverse_of: :student_profile  # ✅ Add inverse_of
    has_many :educations, dependent: :destroy
    has_many :projects, dependent: :destroy
    has_many :skills, dependent: :destroy
@@ -10,7 +10,7 @@ class StudentProfile < ApplicationRecord
 
 
    # Validations
-   validates :user_id, presence: true, uniqueness: true
+   # validates :user_id, presence: true, uniqueness: true
    validates :email_personal, allow_blank: true,
              format: { with: URI::MailTo::EMAIL_REGEXP },
              length: { maximum: 100 }
