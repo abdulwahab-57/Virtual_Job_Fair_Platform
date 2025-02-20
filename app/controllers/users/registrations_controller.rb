@@ -55,7 +55,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       student_dashboard_path
     when "recruiter"
       recruiter_dashboard_path
-    when "career_office"
+    when "career_officer"
       career_officer_dashboard_path
     else
       root_path
@@ -70,7 +70,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       resource.build_student_profile(sign_up_params.dig(:student_profile_attributes) || {})
     when "recruiter"
       resource.build_recruiter_profile(sign_up_params.dig(:recruiter_profile_attributes) || {})
-    when "career_office"
+    when "career_officer"
       resource.build_career_officer_profile(sign_up_params.dig(:career_officer_profile_attributes) || {})
     end
   end
@@ -83,7 +83,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       resource.build_student_profile unless resource.student_profile
     when "recruiter"
       resource.build_recruiter_profile unless resource.recruiter_profile
-    when "career_office"
+    when "career_officer"
       resource.build_career_officer_profile unless resource.career_officer_profile
     end
   end

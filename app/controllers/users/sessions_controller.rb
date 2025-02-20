@@ -24,4 +24,16 @@ class Users::SessionsController < Devise::SessionsController
   # def configure_sign_in_params
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
+  def after_sign_in_path_for(resource)
+    case resource.user_type
+    when "student"
+      student_dashboard_path
+    when "recruiter"
+      recruiter_dashboard_path
+    when "career_officer"
+      career_officer_dashboard_path
+    else
+      root_path # Default if no user_type matches
+    end
+  end
 end

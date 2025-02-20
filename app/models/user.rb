@@ -17,12 +17,10 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true,
             format: { with: URI::MailTo::EMAIL_REGEXP },
             length: { maximum: 100 }
-  validates :user_type, presence: true, inclusion: { in: %w[student recruiter career_office] }
+  validates :user_type, presence: true, inclusion: { in: %w[student recruiter career_officer] }, on: :create
 
   # Validate associated profile based on user_type
-  validate :validate_profile
-
-  private
+  validate :validate_profile, on: :create
 
   private
 
@@ -32,7 +30,7 @@ class User < ApplicationRecord
       errors.add(:base, "Student profile is required") if student_profile.nil?
     when "recruiter"
       errors.add(:base, "Recruiter profile is required") if recruiter_profile.nil?
-    when "career_office"
+    when "career_officer"
       errors.add(:base, "Career officer profile is required") if career_officer_profile.nil?
     end
   end

@@ -23,7 +23,7 @@ class CareerOfficer::ProfilesController < CareerOfficer::BaseController
   end
 
   def career_officer_profile_params
-    params.require(:user).permit(career_officer_profile: [ :designation, :introduction, :education, :office_location, :phone_number ])[:career_officer_profile]
+    params.require(:user).permit(career_officer_profile_attributes: [ :designation, :introduction, :education, :office_location, :phone_number ])[:career_officer_profile_attributes]
   end
 
   def user_params

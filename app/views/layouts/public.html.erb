@@ -7,5 +7,18 @@
   <body class="font-roboto">
     <%= render "shared/public_navbar" %>
     <%= yield %>
+    <div data-controller="flash" class="fixed bottom-5 right-5 space-y-2 z-50">
+      <% flash.each do |key, message| %>
+          <% bg_color = key == "notice" ? "bg-green-500" : "bg-red-500" %>
+          <div data-flash-target="message"
+              class="<%= bg_color %> text-white px-4 py-3 rounded-lg shadow-lg flex items-center justify-between transition-transform transform translate-x-20 opacity-0"
+              data-action="animationend->flash#remove">
+          <span><%= message %></span>
+          <button data-action="click->flash#close" class="ml-4 text-white">
+              ✖
+          </button>
+          </div>
+      <% end %>
+    </div>
   </body>
 </html>

@@ -11,13 +11,18 @@
     <!-- Right Section (Signup Form) -->
     <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-8">
       <div class="w-full max-w-md">
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', onsubmit: 'return validateForm()', class: 'bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4' }) do |f| %>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', onsubmit: 'return validateForm()', class: 'bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4', data: { controller: "toggle-fields" } }) do |f| %>
           <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Create Your Account</h2>
 
           <!-- User Type Dropdown -->
           <div class="mb-6">
             <%= f.label :user_type, "User Type", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.select :user_type, [["Student", "student"], ["Recruiter", "recruiter"], ["Career Office", "career_office"]], {}, { class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", onchange: "toggleFields()" } %>
+            <%= f.select :user_type, [["Student", "student"], ["Recruiter", "recruiter"], ["Career Officer", "career_officer"]],{}, 
+                          { 
+                            class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", 
+                            data: { toggle_fields_target: "userType" },
+                            "data-action": "change->toggle-fields#toggle" 
+                          } %>
           </div>
 
           <!-- Full Name Field -->
@@ -33,7 +38,7 @@
           </div>
 
           <!-- Student Fields -->
-          <div id="studentFields" class="mt-6" style="display: none;">
+          <div id="studentFields" class="mt-6" style="display: none;" data-toggle-fields-target="studentFields">
             <%= f.fields_for :student_profile, StudentProfile.new do |student_form| %>
               <div class="mb-6">
                 <%= student_form.label :email_personal, "Personal Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
@@ -43,7 +48,7 @@
           </div>
 
           <!-- Recruiter Fields -->
-          <div id="recruiterFields" class="mt-6" style="display: none;">
+          <div id="recruiterFields" class="mt-6" style="display: none;" data-toggle-fields-target="recruiterFields">
             <%= f.fields_for :recruiter_profile, RecruiterProfile.new do |recruiter_form| %>
               <div class="mb-6">
                 <%= recruiter_form.label :company_name, class: "block text-gray-700 text-sm font-bold mb-2" %>
@@ -53,7 +58,7 @@
           </div>
 
           <!-- Career Office Fields -->
-          <div id="careerOfficeFields" class="mt-6" style="display: none;">
+          <div id="careerOfficerFields" class="mt-6" style="display: none;" data-toggle-fields-target="careerOfficerFields">
             <%= f.fields_for :career_officer_profile, CareerOfficerProfile.new do |career_form| %>
               <div class="mb-6">
                 <%= career_form.label :designation, class: "block text-gray-700 text-sm font-bold mb-2" %>
@@ -76,25 +81,4 @@
       </div>
     </div>
   </div>
-
-  <script>
-    function toggleFields() {
-      const userType = document.getElementById("user_user_type").value;
-      document.getElementById("studentFields").style.display = "none";
-      document.getElementById("recruiterFields").style.display = "none";
-      document.getElementById("careerOfficeFields").style.display = "none";
-      
-      if (userType === "student") {
-        document.getElementById("studentFields").style.display = "block";
-      } else if (userType === "recruiter") {
-        document.getElementById("recruiterFields").style.display = "block";
-      } else if (userType === "career_office") {
-        document.getElementById("careerOfficeFields").style.display = "block";
-      }
-    }
-    
-    window.onload = function() {
-      toggleFields();
-    }
-  </script>
 </body>
