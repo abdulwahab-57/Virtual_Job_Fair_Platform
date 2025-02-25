@@ -80,15 +80,17 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   # Add the following to set up email sending in the development environment
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,
-    domain: "example.com",
+    domain: "gmail.com",
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: ENV["EMAIL_USERNAME"], # From .env
-    password: ENV["EMAIL_PASSWORD"] # From .env
+     user_name: "muhammadahmadsarfraz2020@gmail.com",
+   password: "zjdzpvfrfzxtdqoc"
   }
 
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }

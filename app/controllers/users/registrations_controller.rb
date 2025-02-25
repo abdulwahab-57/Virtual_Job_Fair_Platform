@@ -26,6 +26,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
         respond_with resource, location: after_inactive_sign_up_path_for(resource)
       end
     else
+      # Log validation errors
+      Rails.logger.error "Validation errors: #{resource.errors.full_messages.join(', ')}"
       clean_up_passwords resource
       set_minimum_password_length
       respond_with resource
@@ -61,6 +63,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
       root_path
     end
   end
+ # Add this method to handle redirection after inactive sign-up (email confirmation)
+ def after_inactive_sign_up_path_for(resource)
+  new_user_session_path # Redirect to login page after signup
+ end
+
 
   private
 

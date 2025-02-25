@@ -311,4 +311,6 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+  config.mailer_sender = "f219498@cfd.nu.edu.pk"
+  config.allow_unconfirmed_access_for = 0.days
 end
