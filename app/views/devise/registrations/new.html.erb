@@ -1,12 +1,21 @@
 <body class="bg-gradient-to-r from-blue-50 to-purple-50">
   <div class="flex flex-col lg:flex-row h-screen">
-    <!-- Left Section (Welcome Message) -->
-    <div class="lg:w-1/2 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex justify-center items-center p-10">
-      <div class="text-center">
-        <h1 class="text-4xl font-bold mb-4">Welcome to Our Platform</h1>
-        <p class="text-lg">Join us to explore opportunities and grow your career.</p>
-      </div>
-    </div>
+    <div class="absolute top-4 right-6">
+    <p class="text-sm text-gray-600">
+        Already have an account? 
+        <a href="<%= new_user_session_path %>" class="text-blue-500 font-semibold hover:underline">
+            Sign in here
+        </a>
+    </p>
+</div>
+   <!-- Left Section (Welcome Message) -->
+<div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-12">
+  <div class="text-center">
+    <h1 class="text-4xl font-extrabold mb-6">Welcome to Our Platform</h1>
+    <p class="text-lg mb-6">Join us to explore opportunities and grow your career.</p>
+    <a href="#" class="mt-8 text-base underline hover:text-gray-200 block">Learn More</a>
+  </div>
+</div>
 
     <!-- Right Section (Signup Form) -->
     <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-8">
