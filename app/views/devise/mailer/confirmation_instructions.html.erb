@@ -1,7 +1,96 @@
-<p>Welcome <%= @resource.full_name %>,</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
 
-<p>Thank you for signing up! Please confirm your email by clicking the link below:</p>
+      .email-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+      }
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @resource.confirmation_token) %></p>
+      .header {
+        text-align: center;
+        padding: 20px;
+        background-color: #1a73e8;
+        border-radius: 10px 10px 0 0;
+        color: #fff;
+        font-size: 24px;
+      }
 
-<p>If you did not sign up, please ignore this email.</p>
+      .content {
+        padding: 20px;
+        text-align: left;
+        font-size: 16px;
+      }
+
+      .button-container {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .button {
+        background-color: #1a73e8;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        padding: 12px 20px;
+        border-radius: 5px;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+      }
+
+      .button:hover {
+        background-color: #1558b2;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <!-- Header -->
+      <div class="header">
+        Welcome to Virtual Job Fair
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <p>Welcome, <strong><%= @resource.full_name %></strong>!</p>
+
+        <p>Thank you for signing up. Please confirm your email by clicking the button below:</p>
+
+        <!-- Button -->
+        <div class="button-container">
+          <a href="<%= confirmation_url(@resource, confirmation_token: @resource.confirmation_token) %>" class="button">
+            Confirm My Account
+          </a>
+        </div>
+
+        <p>If you did not sign up, you can safely ignore this email.</p>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        &copy; 2025 Virtual Job Fair Platform. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>
