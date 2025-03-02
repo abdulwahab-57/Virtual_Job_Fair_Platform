@@ -1,11 +1,15 @@
 class CareerOfficer::BaseController < ApplicationController
   layout "private"
-  before_action :authenticate_user!, :authorize_career_officer, :set_path
+  before_action :authenticate_user!, :authorize_career_officer, :set_sidebar_path, :set_path
 
   private
 
   def authorize_career_officer
     redirect_to new_user_session_path, alert: "Access denied!" unless current_user.user_type == "career_officer"
+  end
+
+  def set_sidebar_path
+    @sidebar = "shared/career_officer_sidebar"
   end
 
   def set_path
