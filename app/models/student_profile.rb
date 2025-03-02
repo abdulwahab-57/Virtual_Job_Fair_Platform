@@ -8,6 +8,12 @@ class StudentProfile < ApplicationRecord
    has_many :interests, dependent: :destroy
    has_many :location_preferences, dependent: :destroy
 
+   accepts_nested_attributes_for :educations, allow_destroy: true, reject_if: :all_blank
+   accepts_nested_attributes_for :projects, allow_destroy: true, reject_if: :all_blank
+   accepts_nested_attributes_for :skills, allow_destroy: true, reject_if: :all_blank
+   accepts_nested_attributes_for :activities_honors, allow_destroy: true, reject_if: :all_blank
+   accepts_nested_attributes_for :interests, allow_destroy: true, reject_if: :all_blank
+   accepts_nested_attributes_for :location_preferences, allow_destroy: true, reject_if: :all_blank
 
    # Validations
    # validates :user_id, presence: true, uniqueness: true

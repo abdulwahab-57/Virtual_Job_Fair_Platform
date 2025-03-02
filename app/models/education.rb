@@ -3,11 +3,11 @@ class Education < ApplicationRecord
    belongs_to :student_profile
 
    # Validations
-   validates :student_profile_id, presence: true
-   validates :institution_name, presence: true, length: { maximum: 100 }
-   validates :degree_title, presence: true, length: { maximum: 100 }
-   validates :field_of_study, presence: true, length: { maximum: 100 }
-   validates :graduation_year, presence: true,
+   # validates :student_profile_id, presence: true
+   validates :institution_name, allow_blank: true, length: { maximum: 100 }
+   validates :degree_title, allow_blank: true, length: { maximum: 100 }
+   validates :field_of_study, allow_blank: true, length: { maximum: 100 }
+   validates :graduation_year, allow_blank: true,
              numericality: {
                only_integer: true,
                greater_than: 1900,

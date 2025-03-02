@@ -5,8 +5,8 @@
   </div>
   <div class="col-start-2 row-start-1">
     <div class="font-serif">
-      <h1 class="text-4xl font-medium">Muhammad Subhan Attique</h1>
-      <p class="text-2xl  font-medium">BS (Computer Science)</p>
+      <h1 class="text-4xl font-medium"><%= @user.full_name %></h1>
+      <p class="text-2xl  font-medium"><%= "#{@user.student_profile.educations.first&.degree_title.to_s} (#{@user.student_profile.educations.first&.field_of_study.to_s})" %></p>
     </div>
   </div>
   <div class="col-start-1 row-start-2 bg-[#1499DC]">
@@ -14,33 +14,33 @@
       <ul class="break-all space-y-4">
         <li>
           <p><strong>Date of Birth</strong></p>
-          <p>10/11/2002</p>
+          <p><%= @user.student_profile.date_of_birth.strftime("%d/%m/%Y") if @user.student_profile.date_of_birth.present? %></p>
         </li>
         <li>
           <p><strong>Telephone</strong></p>
-          <p>0308 4436860</p>
+          <p><%= @user.student_profile.phone_number %></p>
         </li>
         <li>
           <p><strong>Email</strong></p>
           <ul>
-            <li>f201121@cfd.nu.edu.pk</li>
-            <li>subhanarfat93@gmail.com</li>
+            <li><%= @user.email %></li>
+            <li><%= @user.student_profile.email_personal %></li>
           </ul>
         </li>
         <li>
           <p><strong>Address</strong></p>
-          <p>House#75, Shershah Block, Bahria Town, Lahore</p>
+          <p><%= @user.student_profile.address %></p>
         </li>
         <li>
           <p><strong>LinkedIn</strong></p>
-          <p>linkedin.com/in/subhan-attique-48a7a8274</p>
+          <p><%= @user.student_profile.linkedin_url %></p>
         </li>
         <li>
           <p><strong>Preference for Job</strong></p>
           <ul>
-            <li>Lahore</li>
-            <li>Islamabad</li>
-            <li>Rawalpindi</li>
+            <% @user.student_profile.location_preferences.each do |loc| %>
+              <li><%= loc.location %></li>
+            <% end %>
           </ul>
         </li>
       </ul>
@@ -51,14 +51,17 @@
       <section class="mb-6">
         <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Education</h2>
         <ul class="mt-2">
-          <li>
-            <p class="font-medium">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
-            <p class="text-sm ">BS (Computer Science) - 2024</p>
-          </li>
-          <li>
-            <p class="font-medium">Punjab Group of Colleges</p>
-            <p class="text-sm ">F.Sc - Pre Engineering - 2020</p>
-          </li>
+          <% @user.student_profile.educations.each_with_index do |education, index| %>
+            <li>
+              <% if index == 0 %>
+                <p class="font-medium">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
+                <p class="text-sm"><%= "#{education.degree_title} (#{education.field_of_study}) - #{Date.today.year}" %></p>
+              <% else %>
+                <p class="font-medium"><%= education.institution_name %></p>
+                <p class="text-sm"><%= "#{education.degree_title} - #{education.field_of_study} - #{education.graduation_year}" %></p>
+              <% end %>
+            </li>
+          <% end %>
         </ul>
       </section>
 
@@ -66,32 +69,12 @@
       <section class="mb-6">
         <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Projects/Portfolio</h2>
         <ul class="mt-2">
-          <li>
-            <p class="font-medium">Zen-Filter</p>
-            <p class="text-sm ">A robust mobile app and browser extension to block explicit and violent
-              content. Features ad blockers, app statistics, and safe browsing capabilities, ensuring a secure digital
-              space.</p>
-          </li>
-          <li>
-            <p class="font-medium">Library Management System</p>
-            <p class="text-sm ">Streamlines library book issuance using HTML, CSS, JavaScript, Bootstrap, and
-              MySQL. Includes fines for late returns and a detailed book information display.</p>
-          </li>
-          <li>
-            <p class="font-medium">Land of Dead (Unity 3D)</p>
-            <p class="text-sm ">A 3D open-world survival game where players fight zombies using AI detection,
-              health systems, and a time cycle mechanism.</p>
-          </li>
-          <li>
-            <p class="font-medium">Analysis of Imtiaz Mall Dataset using Data Science Concepts</p>
-            <p class="text-sm ">Analyzed data using Python by cleaning, plotting graphs, adding new columns,
-              and making assumptions.</p>
-          </li>
-          <li>
-            <p class="font-medium">Store Inventory Management System in SQL</p>
-            <p class="text-sm ">Developed with C# Windows Forms and MySQL to implement a uniform store
-              management system.</p>
-          </li>
+          <% @user.student_profile.projects.each do |project| %>
+            <li>
+              <p class="font-medium"><%= project.project_name %></p>
+              <p class="text-sm"><%= project.description %></p>
+            </li>
+          <% end %>
         </ul>
       </section>
 
@@ -99,9 +82,11 @@
       <section class="mb-6">
         <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Activities, Honors & Awards</h2>
         <ul class="mt-2">
-          <li><span class="font-medium">Certified Social Media Manager</span>, Alms 360, Islamabad</li>
-          <li><span class="font-medium">Game Development Internship</span>, Mindstorm Studios</li>
-          <li><span class="font-medium">Teaching Assistant - Software Engineering</span>, FAST NU, Faisalabad</li>
+          <% @user.student_profile.activities_honors.each do |activity| %>
+            <li>
+              <span class="font-medium"><%= activity.title %></span>, <%= activity.organization %>
+            </li>
+          <% end %>
         </ul>
       </section>
 
@@ -109,23 +94,19 @@
       <section class="mb-6">
         <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Skills & Tools</h2>
         <ul class="mt-2">
-          <li>
-            <p class="font-medium">Programming Languages</p>
-            <p class="text-sm ">C, C++, Python, Javascript, C#, SQL, Bash</p>
-          </li>
-          <li>
-            <p class="font-medium">Tools and Frameworks</p>
-            <p class="text-sm ">MERN Stack, Unity 3D, Figma, Github, Jupyter Notebook, VS Code, MS Word, MS
-              Excel, MS Powerpoint</p>
-          </li>
+          <% @user.student_profile.skills.each do |skill| %>
+            <li>
+              <p class="font-medium"><%= skill.title %></p>
+              <p class="text-sm"><%= skill.skill_list %></p>
+            </li>
+          <% end %>
         </ul>
       </section>
 
       <!-- Interests Section -->
       <section>
         <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Interests & Hobbies</h2>
-        <p class="mt-2 text-sm ">Photography, Videography, Workouts, Gaming, Researching Conspiracies,
-          Watching Documentaries</p>
+        <p class="mt-2 text-sm "><%= @user.student_profile.interests[0].interest_list %></p>
       </section>
   </div>
 </div>
