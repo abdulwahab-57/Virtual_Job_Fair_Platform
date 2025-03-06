@@ -8,7 +8,7 @@
 <body class="bg-gray-100 font-roboto">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <%= render @sidebar if @sidebar.present? %>
+        <%= render SideBarComponent.new(tabs: @sidebar_tabs, home_path: @home_path) %>
 
             <!-- Main Content Area -->
             <div class="flex-1 flex flex-col">

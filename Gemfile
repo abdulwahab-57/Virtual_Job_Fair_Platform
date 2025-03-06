@@ -66,3 +66,5 @@ end
 gem "tailwindcss-rails", "~> 3.0"
 # Gemfile
 gem "bcrypt", "~> 3.1.7"
+
+gem "view_component", "~> 3.21"
