@@ -6,7 +6,8 @@
   <title>Sign Up</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-blue-50 to-purple-50">
+<body class="bg-gray-100">
+  
   <div class="flex flex-col lg:flex-row h-screen">
     <div class="absolute top-4 right-6">
       <p class="text-sm text-gray-600">
@@ -30,7 +31,7 @@
     <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-12">
 
       <div class="w-full max-w-md">
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', class: 'bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4', data: { controller: "toggle-fields" } }) do |f| %>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', class: 'bg-gray-50 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4', data: { controller: "toggle-fields" } }) do |f| %>
           <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Create Your Account</h2>
 
           <!-- User Type Dropdown -->
