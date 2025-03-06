@@ -15,15 +15,20 @@ class User < ApplicationRecord
 
   # Validations
   validates :full_name, presence: true, length: { maximum: 50 }
-  validates :email, presence: true, uniqueness: true,
-            format: { with: URI::MailTo::EMAIL_REGEXP },
-            length: { maximum: 100 }
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }
   validates :user_type, presence: true, inclusion: { in: %w[student recruiter career_officer] }, on: :create
+  validates :password, presence: true, length: { minimum: 8 }
+  validates :password_confirmation, presence: true
 
-  # Validate associated profile based on user_type
+  # Custom validation to ensure password and password_confirmation match
+  validate :password_match
   validate :validate_profile, on: :create
 
   private
+
+  def password_match
+    errors.add(:password_confirmation, "doesn't match Password") if password != password_confirmation
+  end
 
   def validate_profile
     case user_type

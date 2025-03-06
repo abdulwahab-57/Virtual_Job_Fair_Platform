@@ -1,6 +1,7 @@
 class StudentProfile < ApplicationRecord
    # Associations
    belongs_to :user, inverse_of: :student_profile  # ✅ Add inverse_of
+   validates :email_personal, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }
    has_many :educations, dependent: :destroy
    has_many :projects, dependent: :destroy
    has_many :skills, dependent: :destroy
@@ -17,12 +18,9 @@ class StudentProfile < ApplicationRecord
 
    # Validations
    # validates :user_id, presence: true, uniqueness: true
-   validates :email_personal, allow_blank: true,
-             format: { with: URI::MailTo::EMAIL_REGEXP },
-             length: { maximum: 100 }
+   validates :email_personal, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }
    validates :phone_number, allow_blank: true,
              format: { with: /\A\+?[\d\s-]{10,20}\z/ }
    validates :linkedin_url, allow_blank: true,
              format: { with: /\Ahttps?:\/\/(www\.)?linkedin\.com\/.*\z/ }
-   validates :status, inclusion: { in: [ "Reviewed", "Not Reviewed" ] }
 end

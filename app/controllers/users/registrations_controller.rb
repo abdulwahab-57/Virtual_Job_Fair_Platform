@@ -26,7 +26,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         respond_with resource, location: after_inactive_sign_up_path_for(resource)
       end
     else
-      # Log validation errors
+      # Log validation errors for debugging
       Rails.logger.error "Validation errors: #{resource.errors.full_messages.join(', ')}"
       clean_up_passwords resource
       set_minimum_password_length
@@ -44,7 +44,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         :password_confirmation,
         :full_name,
         :user_type,
-        student_profile_attributes: [ :email_personal ],
+        student_profile_attributes: [ :email_personal ], # Ensure this is correct
         recruiter_profile_attributes: [ :company_name ],
         career_officer_profile_attributes: [ :designation ]
       )
