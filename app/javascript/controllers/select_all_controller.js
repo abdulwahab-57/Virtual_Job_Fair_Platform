@@ -10,29 +10,92 @@ export default class extends Controller {
     "selectedCount", 
     "clearSelection",
     "actionsSelect",
-    "statusModal"
+    "statusModal",
+    "tableBody",
+    "activeTab",
+    "tableTitle"
   ]
 
   connect() {
     this.updateSelectionSummary()
     this.currentStatusElement = null
+    // Set the initial active tab
+    this.currentTab = "all"
   }
 
+  // Tab switching functionality
+  switchTab(event) {
+    const tab = event.currentTarget
+    const tabName = tab.dataset.tab
+    
+    // Update active tab styling - first remove active styling from all tabs
+    document.querySelectorAll('[data-tab]').forEach(tabEl => {
+      tabEl.classList.remove('text-indigo-600', 'border-indigo-600')
+      tabEl.classList.add('text-gray-500', 'border-transparent')
+    })
+    
+    // Add active styling to the clicked tab
+    tab.classList.remove('text-gray-500', 'border-transparent')
+    tab.classList.add('text-indigo-600', 'border-indigo-600')
+    
+    // Store current tab
+    this.currentTab = tabName
+    
+    // Update table title based on tab
+    if (tabName === "all") {
+      this.tableTitleTarget.textContent = "Profiles List"
+    } else if (tabName === "reviewed") {
+      this.tableTitleTarget.textContent = "Reviewed Profiles"
+    } else if (tabName === "not-reviewed") {
+      this.tableTitleTarget.textContent = "Not Reviewed Profiles"
+    }
+    
+    // Filter table rows
+    this.filterRows()
+    
+    // Reset checkbox selection when switching tabs
+    this.clearSelectedRows()
+  }
+
+  // Filter table rows based on active tab
+  filterRows() {
+    const rows = this.tableBodyTarget.querySelectorAll('tr')
+    
+    rows.forEach(row => {
+      const status = row.dataset.status
+      
+      if (this.currentTab === "all") {
+        row.classList.remove('hidden')
+      } else if (this.currentTab === "reviewed" && status === "reviewed") {
+        row.classList.remove('hidden')
+      } else if (this.currentTab === "not-reviewed" && status === "not-reviewed") {
+        row.classList.remove('hidden')
+      } else {
+        row.classList.add('hidden')
+      }
+    })
+  }
 
   toggleAll(event) {
     const isChecked = event.target.checked
 
-    // Select or deselect all row checkboxes based on the header checkbox
+    // Select or deselect only visible row checkboxes based on the header checkbox
     this.checkboxRowTargets.forEach(checkbox => {
-      checkbox.checked = isChecked
+      if (!checkbox.closest('tr').classList.contains('hidden')) {
+        checkbox.checked = isChecked
+      }
     })
 
     this.updateSelectionSummary()
   }
 
   checkRowSelection() {
-    // Check if all row checkboxes are checked
-    const allRowsChecked = this.checkboxRowTargets.every(checkbox => checkbox.checked)
+    // Check if all visible row checkboxes are checked
+    const visibleCheckboxes = this.checkboxRowTargets.filter(
+      cb => !cb.closest('tr').classList.contains('hidden')
+    )
+    
+    const allRowsChecked = visibleCheckboxes.every(checkbox => checkbox.checked)
     
     // Update the header checkbox accordingly
     this.checkboxAllTarget.checked = allRowsChecked
@@ -53,8 +116,12 @@ export default class extends Controller {
       this.selectionSummaryTarget.classList.add('hidden')
     }
 
-    // Manage header checkbox state
-    this.checkboxAllTarget.checked = selectedCount === this.checkboxRowTargets.length
+    // Manage header checkbox state - only consider visible rows
+    const visibleCheckboxes = this.checkboxRowTargets.filter(
+      cb => !cb.closest('tr').classList.contains('hidden')
+    )
+    this.checkboxAllTarget.checked = selectedCount > 0 && 
+      selectedCount === visibleCheckboxes.length
   }
 
   clearSelectedRows() {
@@ -107,7 +174,10 @@ export default class extends Controller {
 
   exportSelected() {
     // Implement export logic for selected rows
+    const selectedRows = this.checkboxRowTargets.filter(checkbox => checkbox.checked)
     
+    // In a real app, you would extract data from the selected rows
+    const exportData = `Exporting ${selectedRows.length} rows`
     console.log('Exporting selected rows:', exportData)
     // In a real application, you'd implement actual export logic here
     // For example, converting to CSV or sending to a backend service
@@ -173,10 +243,11 @@ export default class extends Controller {
       
       // Add new color classes
       this.currentStatusElement.classList.add(...colorMap[this.selectedStatus].split(' '))
+      
     }
     
     // Close the modal
     this.closeStatusModal(event)
   }
-
 }
+
