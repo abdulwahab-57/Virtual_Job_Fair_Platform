@@ -7,6 +7,7 @@ class CreateStudentProfiles < ActiveRecord::Migration[7.2]
       t.string :phone_number, limit: 20
       t.text :address
       t.string :linkedin_url, limit: 255
+      t.string :status, default: "Not Reviewed"
       t.timestamps
     end
   end

@@ -4,6 +4,7 @@ class Student::ProfilesController < Student::BaseController
   end
 
   def edit
+    @form_action=student_profile_path(@user.id)
   end
 
   def update

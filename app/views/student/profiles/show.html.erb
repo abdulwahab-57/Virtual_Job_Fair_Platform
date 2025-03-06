@@ -106,7 +106,7 @@
       <!-- Interests Section -->
       <section>
         <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Interests & Hobbies</h2>
-        <p class="mt-2 text-sm "><%= @user.student_profile.interests[0].interest_list %></p>
+        <p class="mt-2 text-sm "><%= @user.student_profile&.interests&.first&.interest_list %></p>
       </section>
   </div>
 </div>

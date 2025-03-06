@@ -24,4 +24,5 @@ class StudentProfile < ApplicationRecord
              format: { with: /\A\+?[\d\s-]{10,20}\z/ }
    validates :linkedin_url, allow_blank: true,
              format: { with: /\Ahttps?:\/\/(www\.)?linkedin\.com\/.*\z/ }
+   validates :status, inclusion: { in: [ "Reviewed", "Not Reviewed" ] }
 end

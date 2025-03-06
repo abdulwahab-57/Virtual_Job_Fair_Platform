@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   end
 
   namespace :career_officer do
-    get "student_profiles/", to: "student_profiles#index"
+    resources :student_profiles, only: [ :index, :show, :edit, :update ]
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end
