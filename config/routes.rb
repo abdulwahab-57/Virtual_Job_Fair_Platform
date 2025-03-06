@@ -11,10 +11,15 @@ Rails.application.routes.draw do
   end
 
   namespace :career_officer do
-    resources :student_profiles, only: [ :index, :show, :edit, :update ]
+    resources :student_profiles, only: [ :index, :show, :edit, :update ] do
+      member do
+        patch :update_status
+      end
+    end
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end
+
 
   namespace :recruiter do
     concerns :dashboardable

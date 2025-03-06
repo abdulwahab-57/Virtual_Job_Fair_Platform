@@ -124,10 +124,10 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200" data-select-all-target="tableBody">
               <!-- Row 1 -->
               <% @users.each do |user| %>
-                <tr class="hover:bg-gray-50">
+                <tr class="hover:bg-gray-50" data-status="<%= user.student_profile.status.downcase.gsub(' ', '-') %>" data-user-id="<%= user.id %>">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <input type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded"
                     data-select-all-target="checkboxRow"
@@ -187,7 +187,7 @@
           class="px-4 py-2 bg-indigo-600 text-white rounded"
         >
           Apply
-        </button>
+        </button> 
       </div>
     </div>
   </div>

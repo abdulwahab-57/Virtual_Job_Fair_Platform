@@ -1,6 +1,6 @@
 class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   before_action :set_users, only: [ :index ]
-  before_action :set_user, only: [ :show, :edit, :update ]
+  before_action :set_user, only: [ :show, :edit, :update, :update_status ]
 
   def index
   end
@@ -25,6 +25,24 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
     end
   rescue ActiveRecord::RecordInvalid => e
     render :edit, alert: "Failed to update the profile: #{e.message}"
+  end
+
+  def update_status
+    if @user.student_profile.update(status: params[:status])
+      render json: {
+        success: true,
+        message: "Status updated successfully",
+        status: @user.student_profile.status,
+        updated_at: @user.student_profile.updated_at,
+        redirect_url: "/career_officer/student_profiles"
+      }
+    else
+      render json: {
+        success: false,
+        message: "Failed to update status",
+        errors: @user.student_profile.errors.full_messages
+      }, status: :unprocessable_entity
+    end
   end
 
   private

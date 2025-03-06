@@ -26,7 +26,7 @@ export default class extends Controller {
   // Tab switching functionality
   switchTab(event) {
     const tab = event.currentTarget
-    const tabName = tab.dataset.tab
+    this.currentTab = tab.dataset.tab;
     
     // Update active tab styling - first remove active styling from all tabs
     document.querySelectorAll('[data-tab]').forEach(tabEl => {
@@ -37,18 +37,6 @@ export default class extends Controller {
     // Add active styling to the clicked tab
     tab.classList.remove('text-gray-500', 'border-transparent')
     tab.classList.add('text-indigo-600', 'border-indigo-600')
-    
-    // Store current tab
-    this.currentTab = tabName
-    
-    // Update table title based on tab
-    if (tabName === "all") {
-      this.tableTitleTarget.textContent = "Profiles List"
-    } else if (tabName === "reviewed") {
-      this.tableTitleTarget.textContent = "Reviewed Profiles"
-    } else if (tabName === "not-reviewed") {
-      this.tableTitleTarget.textContent = "Not Reviewed Profiles"
-    }
     
     // Filter table rows
     this.filterRows()
@@ -191,6 +179,9 @@ export default class extends Controller {
 
     // Store the clicked status element
     this.currentStatusElement = event.currentTarget
+    
+    // Store the user ID from the row
+    this.currentUserId = this.currentStatusElement.closest('tr').dataset.userId
 
     // Show the status modal
     this.statusModalTarget.classList.remove('hidden')
@@ -205,6 +196,7 @@ export default class extends Controller {
     
     // Reset the current status element
     this.currentStatusElement = null
+    this.currentUserId = null
   }
 
   changeStatus(event) {
@@ -227,27 +219,76 @@ export default class extends Controller {
     // Prevent event propagation
     event.stopPropagation()
 
-    if (this.currentStatusElement && this.selectedStatus) {
-      // Update the status text
-      this.currentStatusElement.textContent = this.selectedStatus
+    if (this.currentStatusElement && this.selectedStatus && this.currentUserId) {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
       
-      // Update background color based on status
-      const colorMap = {
-        'Reviewed': 'bg-gray-100 text-gray-800',
-        'Not Reviewed': 'bg-red-100 text-red-800'
-      }
-      
-      // Remove previous color classes
-      this.currentStatusElement.className = this.currentStatusElement.className
-        .replace(/bg-\w+-\d+\s+text-\w+-\d+/, '')
-      
-      // Add new color classes
-      this.currentStatusElement.classList.add(...colorMap[this.selectedStatus].split(' '))
-      
+      // Send AJAX request to update status in database
+      fetch(`/career_officer/student_profiles/${this.currentUserId}/update_status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({ 
+          status: this.selectedStatus 
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          // Update the UI with new status
+          this.updateStatusUI()
+          return response.json()
+        } else {
+          throw new Error('Status update failed')
+        }
+      })
+      .then(data => {
+        console.log('Status updated successfully:', data)
+        // If redirect URL is provided, redirect to that URL
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url
+        } else {
+          // Otherwise just update the UI
+          this.updateStatusUI()
+        }
+      })
+      .catch(error => {
+        console.error('Error updating status:', error)
+        // Optionally show an error message to the user
+      }).finally(() => {
+        // Hide loading state if needed
+        // this.hideLoadingState()
+        
+        // Close the modal
+        this.closeStatusModal(event)
+      })
     }
     
     // Close the modal
     this.closeStatusModal(event)
   }
+  
+  updateStatusUI() {
+    if (!this.currentStatusElement || !this.selectedStatus) return
+    
+    // Update the status text
+    this.currentStatusElement.textContent = this.selectedStatus
+    
+    // Update background color based on status
+    const colorMap = {
+      'Reviewed': 'bg-gray-100 text-gray-800',
+      'Not Reviewed': 'bg-red-100 text-red-800'
+    }
+    
+    // Remove previous color classes
+    this.currentStatusElement.className = this.currentStatusElement.className
+      .replace(/bg-\w+-\d+\s+text-\w+-\d+/, '')
+    
+    // Add new color classes
+    this.currentStatusElement.classList.add(...colorMap[this.selectedStatus].split(' '))
+    
+    // Update the row's data-status attribute for filtering
+    const row = this.currentStatusElement.closest('tr')
+    row.dataset.status = this.selectedStatus.toLowerCase().replace(' ', '-')
+  }
 }
-
