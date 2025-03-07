@@ -36,16 +36,22 @@
           <!-- User Type Dropdown -->
                                         <!-- Add this for the career_officer field inisde Drop down  <%# ["Career Officer", "career_officer"] %>-->
           <div class="mb-6">
-            <%= f.label :user_type, "User Type", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.select :user_type, [["Student", "student"], ["Recruiter", "recruiter"]], {},  
-                          { 
-                            id: 'user_type',
-                            class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", 
-                            data: { toggle_fields_target: "userType" },
-                            "data-action": "change->toggle-fields#toggle" 
-                          } %>
-          </div>
-
+  <%= f.label :user_type, "User Type", class: "block text-gray-700 text-sm font-bold mb-2" %>
+  <%= f.select :user_type, 
+      options_for_select([
+        ["Select User Type", ""], 
+        ["Student", "student"],
+        ["Recruiter", "recruiter"]
+      ], ""), 
+      {}, 
+      { 
+        id: 'user_type',
+        class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", 
+        data: { toggle_fields_target: "userType" },
+        "data-action": "change->toggle-fields#toggle",
+        required: true
+      } %>
+</div>
           <!-- Full Name Field -->
           <div class="mb-6">
             <%= f.label :full_name, class: "block text-gray-700 text-sm font-bold mb-2" %>
