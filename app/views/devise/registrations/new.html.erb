@@ -64,16 +64,20 @@
   <% end %>
 </div>
 
-          <!-- Student Fields -->
-          <div id="studentFields" class="mt-6" style="display: none;" data-toggle-fields-target="studentFields">
-            <%= f.fields_for :student_profile, StudentProfile.new do |student_form| %>
-              <div class="mb-6">
-                <%= student_form.label :email_personal, "Personal Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
-                <%= student_form.text_field :email_personal, id: 'user_email_personal', placeholder: 'john.doe@gmail.com', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
-              </div>
-            <% end %>
-          </div>
-
+         <!-- Student Fields -->
+<div id="studentFields" class="mt-6" style="display: none;" data-toggle-fields-target="studentFields">
+  <%= f.fields_for :student_profile, resource.student_profile || StudentProfile.new do |student_form| %>
+    <div class="mb-6">
+      <%= student_form.label :email_personal, "Personal Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= student_form.text_field :email_personal, id: 'user_email_personal', placeholder: 'john.doe@gmail.com', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      <p id="personalEmailError" class="text-red-500 text-sm mt-2 hidden"></p>
+      <!-- Display server-side validation errors -->
+      <% if resource.student_profile&.errors&.[](:email_personal)&.any? %>
+        <p class="text-red-500 text-sm mt-2"><%= resource.student_profile.errors[:email_personal].join(", ") %></p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
           <!-- Recruiter Fields -->
           <div id="recruiterFields" class="mt-6" style="display: none;" data-toggle-fields-target="recruiterFields">
             <%= f.fields_for :recruiter_profile, RecruiterProfile.new do |recruiter_form| %>
@@ -109,8 +113,7 @@
 
           <!-- Submit Button -->
           <div class="mb-6">
-            <%= f.submit "Sign Up", class: 'w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition-all cursor-pointer' %>
-          </div>
+            <%= f.submit "Sign Up", class: "w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" %>
         <% end %>
       </div>
     </div>
@@ -149,13 +152,15 @@
       toggleFields();
     });
 
-    function validateForm() {
+   function validateForm() {
   const userType = document.getElementById("user_type").value;
   const email = document.getElementById("user_email").value;
+  const personalEmail = document.getElementById("user_email_personal")?.value; // Optional chaining for personal email
   const password = document.getElementById("user_password").value;
   const confirmPassword = document.getElementById("user_password_confirmation").value;
   const passwordError = document.getElementById("passwordError");
   const emailError = document.getElementById("emailError");
+  const personalEmailError = document.getElementById("personalEmailError");
 
   // Password matching validation
   if (password !== confirmPassword) {
@@ -173,6 +178,18 @@
       return false; // Prevent form submission
     } else {
       emailError.classList.add("hidden");
+    }
+  }
+
+  // Personal email validation for students
+  if (userType === "student" && personalEmail) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+    if (!emailRegex.test(personalEmail)) {
+      personalEmailError.textContent = "Personal email must be a valid email address.";
+      personalEmailError.classList.remove("hidden");
+      return false; // Prevent form submission
+    } else {
+      personalEmailError.classList.add("hidden");
     }
   }
 
