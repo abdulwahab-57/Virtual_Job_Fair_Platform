@@ -53,10 +53,16 @@
           </div>
 
           <!-- Email Field -->
-          <div class="mb-6">
-            <%= f.label :email, "Institutional/Organizational Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.email_field :email, id: 'user_email', placeholder: 'john.doe@university.edu', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true %>
-          </div>
+          <!-- Email Field -->
+<div class="mb-6">
+  <%= f.label :email, "Institutional/Organizational Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
+  <%= f.email_field :email, id: 'user_email', placeholder: 'john.doe@university.edu', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true %>
+  <p id="emailError" class="text-red-500 text-sm mt-2 hidden"></p>
+  <!-- Display server-side validation errors -->
+  <% if resource.errors[:email].any? %>
+    <p class="text-red-500 text-sm mt-2"><%= resource.errors[:email].join(", ") %></p>
+  <% end %>
+</div>
 
           <!-- Student Fields -->
           <div id="studentFields" class="mt-6" style="display: none;" data-toggle-fields-target="studentFields">
@@ -144,18 +150,34 @@
     });
 
     function validateForm() {
-      const password = document.getElementById("user_password").value;
-      const confirmPassword = document.getElementById("user_password_confirmation").value;
-      const passwordError = document.getElementById("passwordError");
+  const userType = document.getElementById("user_type").value;
+  const email = document.getElementById("user_email").value;
+  const password = document.getElementById("user_password").value;
+  const confirmPassword = document.getElementById("user_password_confirmation").value;
+  const passwordError = document.getElementById("passwordError");
+  const emailError = document.getElementById("emailError");
 
-      if (password !== confirmPassword) {
-        passwordError.classList.remove("hidden");
-        return false; // Prevent form submission
-      } else {
-        passwordError.classList.add("hidden");
-        return true; // Allow form submission
-      }
+  // Password matching validation
+  if (password !== confirmPassword) {
+    passwordError.classList.remove("hidden");
+    return false; // Prevent form submission
+  } else {
+    passwordError.classList.add("hidden");
+  }
+
+  // Email domain validation for students and career officers
+  if (userType === "student" || userType === "career_officer") {
+    if (!email.endsWith("@cfd.nu.edu.pk")) {
+      emailError.textContent = "Email must be a valid @cfd.nu.edu.pk email address.";
+      emailError.classList.remove("hidden");
+      return false; // Prevent form submission
+    } else {
+      emailError.classList.add("hidden");
     }
+  }
+
+  return true; // Allow form submission
+}
   </script>
 </body>
 </html>

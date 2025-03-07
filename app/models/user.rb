@@ -23,6 +23,7 @@ class User < ApplicationRecord
   # Custom validation to ensure password and password_confirmation match
   validate :password_match
   validate :validate_profile, on: :create
+  validate :validate_email_domain, on: :create # Add this line to invoke the email domain validation
 
   private
 
@@ -38,6 +39,12 @@ class User < ApplicationRecord
       errors.add(:base, "Recruiter profile is required") if recruiter_profile.nil?
     when "career_officer"
       errors.add(:base, "Career officer profile is required") if career_officer_profile.nil?
+    end
+  end
+  # Custom validation for email domain
+  def validate_email_domain
+    if user_type.in?(%w[student career_officer]) && !email.end_with?("@cfd.nu.edu.pk")
+      errors.add(:email, "must be a valid @cfd.nu.edu.pk email address")
     end
   end
 end
