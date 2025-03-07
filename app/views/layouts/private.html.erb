@@ -13,10 +13,10 @@
             <!-- Main Content Area -->
             <div class="flex-1 flex flex-col">
                 <!-- Navbar -->
-                <%= render "shared/private_navbar" %>
+                <%= render "shared/private_navbar", header_text: @header_text %>
 
                     <!-- Main Content -->
-                    <div class="bg-grey-50 p-8">
+                    <div class="p-8">
                         <%= yield %>
                     </div>
             </div>

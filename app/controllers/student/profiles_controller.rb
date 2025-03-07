@@ -1,9 +1,12 @@
 class Student::ProfilesController < Student::BaseController
   before_action :set_user, only: [ :show, :edit, :update ]
   def show
+    @header_text= "My Profile"
   end
 
   def edit
+    @header_text= "Edit My Profile"
+
     @form_action=student_profile_path(@user.id)
   end
 

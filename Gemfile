@@ -68,3 +68,5 @@ gem "tailwindcss-rails", "~> 3.0"
 gem "bcrypt", "~> 3.1.7"
 
 gem "view_component", "~> 3.21"
+
+gem "inline_svg", "~> 1.10"

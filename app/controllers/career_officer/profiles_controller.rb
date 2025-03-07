@@ -1,9 +1,11 @@
 class CareerOfficer::ProfilesController < CareerOfficer::BaseController
   before_action :set_user, only: [ :show, :edit, :update ]
   def show
+    @header_text= "My Profile"
   end
 
   def edit
+    @header_text= "Edit My Profile"
   end
 
   def update

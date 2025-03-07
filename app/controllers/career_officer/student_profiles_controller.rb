@@ -3,14 +3,19 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   before_action :set_user, only: [ :show, :edit, :update, :update_status ]
 
   def index
+    @header_text= "Student Profiles"
   end
 
   def show
+    @header_text= "Student Profile"
+
     @edit_profile_path = edit_career_officer_student_profile_path(params[:id])
     render "student/profiles/show"
   end
 
   def edit
+    @header_text= "Edit Student Profile"
+
     @form_action=career_officer_student_profile_path(@user.id)
     render "student/profiles/edit"
   end

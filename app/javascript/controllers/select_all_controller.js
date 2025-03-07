@@ -30,13 +30,13 @@ export default class extends Controller {
     
     // Update active tab styling - first remove active styling from all tabs
     document.querySelectorAll('[data-tab]').forEach(tabEl => {
-      tabEl.classList.remove('text-indigo-600', 'border-indigo-600')
+      tabEl.classList.remove('text-[#1499DC]', 'border-[#1499DC]')
       tabEl.classList.add('text-gray-500', 'border-transparent')
     })
     
     // Add active styling to the clicked tab
     tab.classList.remove('text-gray-500', 'border-transparent')
-    tab.classList.add('text-indigo-600', 'border-indigo-600')
+    tab.classList.add('text-[#1499DC]', 'border-[#1499DC]')
     
     // Filter table rows
     this.filterRows()
