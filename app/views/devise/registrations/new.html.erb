@@ -8,16 +8,15 @@
 </head>
 <body class="bg-gray-100">
   
-  <div class="flex flex-col lg:flex-row h-screen">
-    <div class="absolute top-4 right-6">
-      <p class="text-sm text-gray-600">
-        Already have an account? 
-        <a href="<%= new_user_session_path %>" class="text-blue-500 font-semibold hover:underline">
-          Sign in here
-        </a>
-      </p>
-    </div>
+  <!-- Header -->
+  <div style="position: absolute; top: 1rem; right: 2rem; z-index: 10;">
+    <p style="white-space: nowrap; font-size: 0.875rem; color: #4b5563;">
+      Already have an account? <a href="<%= new_user_session_path %>" style="color: #2563eb; font-weight: 600; text-decoration: underline;">Sign in here</a>
+    </p>
+  </div>
 
+<!-- Main Container -->
+  <div class="flex flex-col lg:flex-row h-screen">
     <!-- Left Section (Welcome Message) -->
     <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-12">
       <div class="text-center">
