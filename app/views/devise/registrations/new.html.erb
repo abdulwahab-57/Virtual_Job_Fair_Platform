@@ -35,21 +35,20 @@
 
           <!-- User Type Dropdown -->
                                         <!-- Add this for the career_officer field inisde Drop down  <%# ["Career Officer", "career_officer"] %>-->
-          <div class="mb-6">
+         <div class="mb-6">
   <%= f.label :user_type, "User Type", class: "block text-gray-700 text-sm font-bold mb-2" %>
   <%= f.select :user_type, 
       options_for_select([
-        ["Select User Type", ""], 
         ["Student", "student"],
         ["Recruiter", "recruiter"]
       ], ""), 
-      {}, 
+      { include_blank: "Select User Type" }, 
       { 
         id: 'user_type',
         class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", 
         data: { toggle_fields_target: "userType" },
         "data-action": "change->toggle-fields#toggle",
-        required: true
+        required: true 
       } %>
 </div>
           <!-- Full Name Field -->
@@ -168,6 +167,9 @@
   const emailError = document.getElementById("emailError");
   const personalEmailError = document.getElementById("personalEmailError");
 
+  // Store selected user type in session storage
+  sessionStorage.setItem("selectedUserType", userType);
+
   // Password matching validation
   if (password !== confirmPassword) {
     passwordError.classList.remove("hidden");
@@ -201,6 +203,17 @@
 
   return true; // Allow form submission
 }
+
+// This event listener should be outside the validateForm function
+document.addEventListener("DOMContentLoaded", function() {
+  // Restore user type selection if it exists in session storage
+  const savedUserType = sessionStorage.getItem("selectedUserType");
+  if (savedUserType) {
+    document.getElementById("user_type").value = savedUserType;
+    // Trigger the change event to update visible fields
+    document.getElementById("user_type").dispatchEvent(new Event('change'));
+  }
+});
   </script>
 </body>
 </html>
