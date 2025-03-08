@@ -477,8 +477,8 @@ User.destroy_all
 
 # Creating a Career Officer User with an associated profile
 User.create!(
-  full_name: "John Doe",
-  email: "johndoe@cfd.nu.edu.pk",
+  full_name: "Muhammad Ahmad",
+  email: "f219498@cfd.nu.edu.pk",
   password: "SecurePass123",
   password_confirmation: "SecurePass123",
   user_type: "career_officer",
