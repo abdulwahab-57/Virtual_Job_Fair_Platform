@@ -19,10 +19,17 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   def confirm_recruiter
     recruiter = User.find_by_approval_token(params[:approval_token])
 
-    if recruiter && !recruiter.career_officer_confirmed?
-      # Use update_column to bypass validations
-      recruiter.update_column(:career_officer_confirmed, true)
-      set_flash_message!(:notice, :recruiter_fully_confirmed)
+    if recruiter
+      Rails.logger.info "Recruiter found: #{recruiter.email}"
+      Rails.logger.info "Career officer confirmed before update: #{recruiter.career_officer_confirmed?}"
+
+      unless recruiter.career_officer_confirmed?
+        recruiter.update(career_officer_confirmed: true)
+        Rails.logger.info "Career officer confirmed after update: #{recruiter.career_officer_confirmed?}"
+        set_flash_message!(:notice, :recruiter_fully_confirmed)
+      else
+        set_flash_message!(:alert, :already_confirmed)
+      end
     else
       set_flash_message!(:alert, :invalid_token)
     end

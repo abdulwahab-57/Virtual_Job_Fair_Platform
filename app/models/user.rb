@@ -54,29 +54,24 @@ class User < ApplicationRecord
 
   # Custom confirmation logic for recruiters
   def confirm!
-    if recruiter? && !confirmed?
-      # If the recruiter confirms, mark them as confirmed
-      self.confirmed_at = Time.now
-      save
+    return if confirmed? # Prevent duplicate confirmations
 
-      # Send confirmation request to the career officer
-      send_career_officer_confirmation_request
-    else
-      # Default confirmation logic for other user types
-      super
-    end
+    self.confirmed_at = Time.current
+    save
+
+    send_career_officer_confirmation_request if recruiter?
   end
+
 
   # Method to handle career officer's confirmation
   def career_officer_confirm!
-    if recruiter? && confirmed?
-      self.career_officer_confirmed = true
-      save
+    return unless recruiter? && confirmed?
 
-      # Notify the recruiter that their account is fully confirmed
-      send_confirmation_notification if fully_confirmed?
-    end
+    update(career_officer_confirmed: true)
+
+    send_confirmation_notification if fully_confirmed?
   end
+
 
   # Check if both recruiter and career officer have confirmed
   def fully_confirmed?
@@ -106,9 +101,9 @@ class User < ApplicationRecord
     end
 
     def career_officer_confirmed?
-      # Check if the career officer has confirmed
-      career_officer_confirmed == true
+      self[:career_officer_confirmed] == true
     end
+
   private
 
   def password_match
