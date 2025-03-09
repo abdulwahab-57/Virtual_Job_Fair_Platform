@@ -22,6 +22,11 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
 
   def update
     ActiveRecord::Base.transaction do
+      # Purge the old profile picture if a new one is being uploaded
+      if user_params[:profile_picture].present? && @user.profile_picture.attached?
+        @user.profile_picture.purge
+      end
+
       if @user.update!(user_params)
         redirect_to career_officer_student_profile_path(@user.id), notice: "Profile updated successfully."
       else
@@ -84,7 +89,7 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   private
 
   def set_users
-     @users = User.where(user_type: "student").select(:id, :full_name, :email, :profile_picture_url).includes(:student_profile)
+     @users = User.where(user_type: "student").select(:id, :full_name, :email).includes(:student_profile)
   end
 
   def set_user

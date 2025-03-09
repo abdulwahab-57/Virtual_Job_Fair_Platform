@@ -9,7 +9,6 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.2]
       ## Custom fields
       t.string :full_name
       t.string :user_type            # student, recruiter, careerOffice
-      t.string :profile_picture_url
 
       ## Recoverable
       t.string   :reset_password_token

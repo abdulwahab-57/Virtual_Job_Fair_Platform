@@ -21,7 +21,7 @@ class CareerOfficer::ProfilesController < CareerOfficer::BaseController
   private
 
   def set_user
-     @user = User.select(:id, :full_name, :email, :profile_picture_url).includes(:career_officer_profile).find(params[:id])
+     @user = User.select(:id, :full_name, :email).includes(:career_officer_profile).find(params[:id])
   end
 
   def career_officer_profile_params

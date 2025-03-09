@@ -8,6 +8,9 @@ class User < ApplicationRecord
   has_one :recruiter_profile, dependent: :destroy, inverse_of: :user
   has_one :career_officer_profile, dependent: :destroy, inverse_of: :user
 
+  # Active storage association
+  has_one_attached :profile_picture
+
   # Nested attributes
   accepts_nested_attributes_for :student_profile, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :recruiter_profile, allow_destroy: true, reject_if: :all_blank

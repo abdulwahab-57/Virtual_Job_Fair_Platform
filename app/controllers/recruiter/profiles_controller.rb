@@ -19,7 +19,7 @@ class Recruiter::ProfilesController < Recruiter::BaseController
   private
 
   def set_user
-    @user = User.select(:id, :full_name, :email, :profile_picture_url).includes(:recruiter_profile).find(params[:id])
+    @user = User.select(:id, :full_name, :email).includes(:recruiter_profile).find(params[:id])
   end
 
   def recruiter_profile_params
