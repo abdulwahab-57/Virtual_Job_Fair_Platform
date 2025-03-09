@@ -15,6 +15,10 @@ Rails.application.routes.draw do
       member do
         patch :update_status
       end
+      collection do
+        get :download_profiles
+        post :download_profiles
+      end
     end
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]

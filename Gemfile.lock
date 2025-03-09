@@ -113,6 +113,8 @@ GEM
     erubi (1.13.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    grover (1.2.3)
+      nokogiri (~> 1)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.3)
@@ -333,6 +335,7 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  grover (~> 1.2, >= 1.2.3)
   importmap-rails
   inline_svg (~> 1.10)
   jbuilder

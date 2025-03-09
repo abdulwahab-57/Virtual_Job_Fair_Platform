@@ -70,3 +70,5 @@ gem "bcrypt", "~> 3.1.7"
 gem "view_component", "~> 3.21"
 
 gem "inline_svg", "~> 1.10"
+
+gem "grover", "~> 1.2", ">= 1.2.3"

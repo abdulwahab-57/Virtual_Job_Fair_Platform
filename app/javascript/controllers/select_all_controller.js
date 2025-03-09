@@ -136,6 +136,9 @@ export default class extends Controller {
       case 'export':
         this.exportSelected(selectedRows)
         break
+      case 'download_profiles':
+        this.downloadProfiles(selectedRows)
+        break
       case 'delete':
         this.deleteSelected(selectedRows)
         break
@@ -158,6 +161,38 @@ export default class extends Controller {
     })
 
     this.updateSelectionSummary()
+  }
+
+  downloadProfiles(selectedCheckboxes) {
+    // Get user IDs from selected rows
+    const userIds = selectedCheckboxes.map(checkbox => 
+      checkbox.closest('tr').dataset.userId
+    )
+    
+    if (userIds.length === 0) {
+      console.error('No profiles selected')
+      return
+    }
+    
+    // Create a URL with query parameters
+    const baseUrl = '/career_officer/student_profiles/download_profiles.pdf'
+    const queryParams = userIds.map(id => `user_ids[]=${id}`).join('&')
+    const url = `${baseUrl}?${queryParams}`
+    
+    // Create a temporary link and click it to trigger download
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('data-method', 'post') // For Rails UJS
+    link.setAttribute('data-remote', 'false')
+    
+    // Add CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    const csrfParam = document.querySelector('meta[name="csrf-param"]').getAttribute('content')
+    link.setAttribute(`data-${csrfParam}`, csrfToken)
+    
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   exportSelected() {

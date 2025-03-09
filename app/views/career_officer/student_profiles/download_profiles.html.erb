@@ -1,0 +1,118 @@
+<% @users.each_with_index do |user, index| %>
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg">
+    <div class="grid grid-cols-[20%_1fr] grid-rows-[auto] gap-x-4 gap-y-6">
+      <div class="col-start-1 row-start-1 justify-self-center">
+        <img src="https://placehold.co/160x160"/>
+      </div>
+      <div class="col-start-2 row-start-1">
+        <div class="font-serif">
+          <h1 class="text-4xl font-medium"><%= user.full_name %></h1>
+          <p class="text-2xl  font-medium"><%= "#{user.student_profile.educations.first&.degree_title.to_s} (#{user.student_profile.educations.first&.field_of_study.to_s})" %></p>
+        </div>
+      </div>
+      <div class="col-start-1 row-start-2 bg-[#1499DC]">
+        <div class="text-right text-sm text-white px-4 pt-8">
+          <ul class="break-all space-y-4">
+            <li>
+              <p><strong>Date of Birth</strong></p>
+              <p><%= user.student_profile.date_of_birth.strftime("%d/%m/%Y") if user.student_profile.date_of_birth.present? %></p>
+            </li>
+            <li>
+              <p><strong>Telephone</strong></p>
+              <p><%= user.student_profile.phone_number %></p>
+            </li>
+            <li>
+              <p><strong>Email</strong></p>
+              <ul>
+                <li><%= user.email %></li>
+                <li><%= user.student_profile.email_personal %></li>
+              </ul>
+            </li>
+            <li>
+              <p><strong>Address</strong></p>
+              <p><%= user.student_profile.address %></p>
+            </li>
+            <li>
+              <p><strong>LinkedIn</strong></p>
+              <p><%= user.student_profile.linkedin_url %></p>
+            </li>
+            <li>
+              <p><strong>Preference for Job</strong></p>
+              <ul>
+                <% user.student_profile.location_preferences.each do |loc| %>
+                  <li><%= loc.location %></li>
+                <% end %>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-start-2 row-start-2">
+          <!-- Education Section -->
+          <section class="mb-6">
+            <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Education</h2>
+            <ul class="mt-2">
+              <% user.student_profile.educations.each_with_index do |education, index| %>
+                <li>
+                  <% if index == 0 %>
+                    <p class="font-medium">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
+                    <p class="text-sm"><%= "#{education.degree_title} (#{education.field_of_study}) - #{Date.today.year}" %></p>
+                  <% else %>
+                    <p class="font-medium"><%= education.institution_name %></p>
+                    <p class="text-sm"><%= "#{education.degree_title} - #{education.field_of_study} - #{education.graduation_year}" %></p>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </section>
+
+          <!-- Projects Section -->
+          <section class="mb-6">
+            <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Projects/Portfolio</h2>
+            <ul class="mt-2">
+              <% user.student_profile.projects.each do |project| %>
+                <li>
+                  <p class="font-medium"><%= project.project_name %></p>
+                  <p class="text-sm"><%= project.description %></p>
+                </li>
+              <% end %>
+            </ul>
+          </section>
+
+          <!-- Activities Section -->
+          <section class="mb-6">
+            <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Activities, Honors & Awards</h2>
+            <ul class="mt-2">
+              <% user.student_profile.activities_honors.each do |activity| %>
+                <li>
+                  <span class="font-medium"><%= activity.title %></span>, <%= activity.organization %>
+                </li>
+              <% end %>
+            </ul>
+          </section>
+
+          <!-- Skills Section -->
+          <section class="mb-6">
+            <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Skills & Tools</h2>
+            <ul class="mt-2">
+              <% user.student_profile.skills.each do |skill| %>
+                <li>
+                  <p class="font-medium"><%= skill.title %></p>
+                  <p class="text-sm"><%= skill.skill_list %></p>
+                </li>
+              <% end %>
+            </ul>
+          </section>
+
+          <!-- Interests Section -->
+          <section>
+            <h2 class="text-xl font-semibold border-b-2 text-[#1499DC] border-[#1499DC]">Interests & Hobbies</h2>
+            <p class="mt-2 text-sm "><%= user.student_profile&.interests&.first&.interest_list %></p>
+          </section>
+      </div>
+    </div>
+  </div>
+  <% if index < @users.size - 1 %>
+    <div class="break-before-page h-0"></div>
+  <% end %>
+<% end %>

@@ -50,6 +50,37 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
     end
   end
 
+  def download_profiles
+    @user_ids = params[:user_ids].is_a?(Array) ? params[:user_ids] : [ params[:user_ids] ].compact
+
+    if @user_ids.blank?
+      flash[:alert] = "No profiles selected for download"
+      redirect_back(fallback_location: career_officer_student_profiles_path)
+      return
+    end
+
+    # Get users from selected IDs
+    @users = User.includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).where(id: @user_ids)
+
+    respond_to do |format|
+      format.html { redirect_to career_officer_student_profiles_path, alert: "PDF format required" }
+      format.pdf do
+        html = render_to_string(
+          template: "career_officer/student_profiles/download_profiles",
+          layout: "pdf",
+          formats: [ :html ]
+        )
+
+        pdf = Grover.new(html, style_tag_options: [ { path: "app/assets/builds/tailwind.css" } ]).to_pdf
+
+        send_data pdf,
+          filename: "student_profiles_#{Date.today.strftime('%Y%m%d')}.pdf",
+          type: "application/pdf",
+          disposition: "inline"
+      end
+    end
+  end
+
   private
 
   def set_users
