@@ -1,15 +1,25 @@
 Rails.application.routes.draw do
-  # Devise routes for user authentication
-  devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions" },
-                     path_names: { sign_in: "login" },
-                     sign_out_via: [ :delete, :get ]
+  devise_for :users, controllers: {
+    registrations: "users/registrations",
+    sessions: "users/sessions",
+    confirmations: "users/confirmations"
+  }
 
+  devise_scope :user do
+    get "users/confirm_recruiter", to: "users/confirmations#confirm_recruiter", as: :confirm_recruiter
+  end
+  # Root route
   root "static_pages#home"
+
+  # Static pages
   get "/about", to: "static_pages#about"
+
+  # Dashboard concern
   concern :dashboardable do
     get "/", to: "dashboards#index", as: :dashboard
   end
 
+  # Career Officer namespace
   namespace :career_officer do
     resources :student_profiles, only: [ :index, :show, :edit, :update ] do
       member do
@@ -20,28 +30,25 @@ Rails.application.routes.draw do
     resources :profiles, only: [ :show, :edit, :update ]
   end
 
-
+  # Recruiter namespace
   namespace :recruiter do
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end
 
+  # Student namespace
   namespace :student do
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check route
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/*
+  # PWA routes
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Dotenv gem (for development and test environments)
   gem "dotenv-rails", groups: [ :development, :test ]
 end

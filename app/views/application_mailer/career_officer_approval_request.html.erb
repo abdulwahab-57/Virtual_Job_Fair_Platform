@@ -74,25 +74,13 @@
         Welcome to Virtual Job Fair
       </div>
       <div class="content">
-        <% if @resource.recruiter? && @resource.confirmed_at.present? %>
-          <!-- Career Officer Approval Email -->
-          <p>Hello Career Officer,</p>
-          <p>A new recruiter <strong><%= @resource.full_name %></strong> from <%= @resource.recruiter_profile.company_name %> requires your approval.</p>
-          <div class="button-container">
-            <a href="<%= confirm_recruiter_url(approval_token: @resource.generate_approval_token) %>" class="button">
-              Approve Recruiter
-            </a>
-          </div>
-        <% else %>
-          <!-- Standard Confirmation Email -->
-          <p>Welcome, <strong><%= @resource.full_name %></strong>!</p>
-          <p>Thank you for signing up. Please confirm your email:</p>
-          <div class="button-container">
-            <a href="<%= confirmation_url(@resource, confirmation_token: @token) %>" class="button">
-              Confirm Account
-            </a>
-          </div>
-        <% end %>
+        <p>Hello Career Officer,</p>
+        <p>A new recruiter <strong><%= @recruiter.full_name %></strong> from <%= @recruiter.recruiter_profile.company_name %> requires your approval.</p>
+        <div class="button-container">
+          <a href="<%= confirm_recruiter_url(approval_token: @recruiter.generate_approval_token) %>" class="button">
+            Approve Recruiter
+          </a>
+        </div>
         <p>If you didn't request this, please ignore this email.</p>
       </div>
       <div class="footer">
