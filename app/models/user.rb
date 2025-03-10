@@ -1,6 +1,4 @@
 class User < ApplicationRecord
-  attr_accessor :career_officer_confirmed # Virtual attribute to track career officer confirmation
-
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable
@@ -62,7 +60,6 @@ class User < ApplicationRecord
     send_career_officer_confirmation_request if recruiter?
   end
 
-
   # Method to handle career officer's confirmation
   def career_officer_confirm!
     return unless recruiter? && confirmed?
@@ -71,7 +68,6 @@ class User < ApplicationRecord
 
     send_confirmation_notification if fully_confirmed?
   end
-
 
   # Check if both recruiter and career officer have confirmed
   def fully_confirmed?
@@ -90,19 +86,27 @@ class User < ApplicationRecord
     nil
   end
 
-    # Move this method outside the private block
-    def send_career_officer_confirmation_request
-      career_officers = User.where(user_type: "career_officer")
-                           .where.not(confirmed_at: nil)
+  # Send confirmation request to career officers
+  def send_career_officer_confirmation_request
+    Rails.logger.info "Career officer confirmation request triggered for recruiter: #{email}"
 
-      career_officers.each do |officer|
-        ApplicationMailer.career_officer_approval_request(self, officer).deliver_later
-      end
+    career_officers = User.where(user_type: "career_officer")
+                          .where.not(confirmed_at: nil)
+
+    if career_officers.empty?
+      Rails.logger.warn "No confirmed career officers found!"
     end
 
-    def career_officer_confirmed?
-      self[:career_officer_confirmed] == true
+    career_officers.each do |officer|
+      Rails.logger.info "Sending email to: #{officer.email}"
+      ApplicationMailer.career_officer_approval_request(self, officer).deliver_later
     end
+  end
+
+  # Check if the career officer has confirmed
+  def career_officer_confirmed?
+    self[:career_officer_confirmed] == true
+  end
 
   private
 

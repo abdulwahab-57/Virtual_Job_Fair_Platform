@@ -5,7 +5,10 @@ class ApplicationMailer < ActionMailer::Base
   def career_officer_approval_request(recruiter, officer)
     @recruiter = recruiter
     @officer = officer
-    @approval_link = Rails.application.routes.url_helpers.confirm_recruiter_url(approval_token: recruiter.generate_approval_token)
+    @approval_link = confirm_recruiter_url(approval_token: recruiter.generate_approval_token)
+
+    Rails.logger.info "Sending approval request email to: #{@officer.email} for recruiter: #{@recruiter.email}"
+
     mail(to: @officer.email, subject: "Recruiter Approval Request")
   end
 end
