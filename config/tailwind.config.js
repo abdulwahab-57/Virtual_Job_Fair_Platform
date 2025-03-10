@@ -13,8 +13,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-        roboto: ['Roboto', 'serif'],
+        roboto: ['Roboto', 'sans'],
         condensed: ['Roboto Condensed', 'serif'],
+        times: ['Times New Roman Cyr', 'serif'],
       },
     },
   },
