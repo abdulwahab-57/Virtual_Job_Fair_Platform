@@ -36,7 +36,16 @@
                 <h2 class="text-2xl font-semibold mb-6 text-center">Resend Confirmation</h2>
 
                 <!-- Error Messages -->
-                <%= render "devise/shared/error_messages", resource: resource %>
+                <% if resource.errors.any? %>
+                  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                    <p class="font-bold">Oops! There was a problem:</p>
+                    <ul class="list-disc pl-5 mt-2">
+                      <% resource.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
 
                 <!-- Email Field -->
                 <div class="mb-4">
@@ -49,8 +58,6 @@
                     <%= f.submit "Resend confirmation instructions", class: "w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" %>
                 </div>
             <% end %>
-
-          
         </div>
     </div>
 </body>
