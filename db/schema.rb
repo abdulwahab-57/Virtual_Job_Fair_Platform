@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_11_144038) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_10_185745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -188,13 +188,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_11_144038) do
 
   create_table "zoom_credentials", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.datetime "expires_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.text "encrypted_access_token"
     t.text "encrypted_access_token_iv"
     t.text "encrypted_refresh_token"
     t.text "encrypted_refresh_token_iv"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_zoom_credentials_on_user_id"
   end
 
