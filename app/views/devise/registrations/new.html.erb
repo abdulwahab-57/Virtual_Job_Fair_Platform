@@ -8,16 +8,15 @@
 </head>
 <body class="bg-gray-100">
   
-  <div class="flex flex-col lg:flex-row h-screen">
-    <div class="absolute top-4 right-6">
-      <p class="text-sm text-gray-600">
-        Already have an account? 
-        <a href="<%= new_user_session_path %>" class="text-blue-500 font-semibold hover:underline">
-          Sign in here
-        </a>
-      </p>
-    </div>
+  <!-- Header -->
+  <div style="position: absolute; top: 1rem; right: 2rem; z-index: 10;">
+    <p style="white-space: nowrap; font-size: 0.875rem; color: #4b5563;">
+      Already have an account? <a href="<%= new_user_session_path %>" style="color: #2563eb; font-weight: 600; text-decoration: underline;">Sign in here</a>
+    </p>
+  </div>
 
+<!-- Main Container -->
+  <div class="flex flex-col lg:flex-row h-screen">
     <!-- Left Section (Welcome Message) -->
     <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-12">
       <div class="text-center">
@@ -31,43 +30,59 @@
     <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-12">
 
       <div class="w-full max-w-md">
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', class: 'bg-gray-50 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4', data: { controller: "toggle-fields" } }) do |f| %>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', class: 'bg-gray-50 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4', data: { controller: "toggle-fields" }, onsubmit: "return validateForm()" }) do |f| %>
           <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Create Your Account</h2>
 
           <!-- User Type Dropdown -->
-          <div class="mb-6">
-            <%= f.label :user_type, "User Type", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.select :user_type, [["Student", "student"], ["Recruiter", "recruiter"], ["Career Officer", "career_officer"]], {}, 
-                          { 
-                            id: 'user_type',
-                            class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", 
-                            data: { toggle_fields_target: "userType" },
-                            "data-action": "change->toggle-fields#toggle" 
-                          } %>
-          </div>
-
+                                        <!-- Add this for the career_officer field inisde Drop down  <%# ["Career Officer", "career_officer"] %>-->
+   <div class="mb-6">
+  <%= f.label :user_type, "User Type", class: "block text-gray-700 text-sm font-bold mb-2" %>
+  <%= f.select :user_type, 
+      options_for_select([
+        ["Student", "student"],
+        ["Recruiter", "recruiter"]
+      ], ""), 
+      { include_blank: "Select User Type" }, 
+      { 
+        id: 'user_type',
+        class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", 
+        data: { toggle_fields_target: "userType" },
+        "data-action": "change->toggle-fields#toggle",
+        required: true 
+      } %>
+</div>
           <!-- Full Name Field -->
           <div class="mb-6">
             <%= f.label :full_name, class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.text_field :full_name, id: 'user_full_name', placeholder: 'John Doe', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+            <%= f.text_field :full_name, id: 'user_full_name', placeholder: 'John Doe', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true %>
           </div>
 
           <!-- Email Field -->
-          <div class="mb-6">
-            <%= f.label :email, "Institutional/Organizational Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.email_field :email, id: 'user_email', placeholder: 'john.doe@university.edu', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
-          </div>
+          <!-- Email Field -->
+<div class="mb-6">
+  <%= f.label :email, "Institutional/Organizational Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
+  <%= f.email_field :email, id: 'user_email', placeholder: 'john.doe@university.edu', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true %>
+  <p id="emailError" class="text-red-500 text-sm mt-2 hidden"></p>
+  <!-- Display server-side validation errors -->
+  <% if resource.errors[:email].any? %>
+    <p class="text-red-500 text-sm mt-2"><%= resource.errors[:email].join(", ") %></p>
+  <% end %>
+</div>
 
-          <!-- Student Fields -->
-          <div id="studentFields" class="mt-6" style="display: none;" data-toggle-fields-target="studentFields">
-            <%= f.fields_for :student_profile, StudentProfile.new do |student_form| %>
-              <div class="mb-6">
-                <%= student_form.label :email_personal, "Personal Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
-                <%= student_form.text_field :email_personal, id: 'user_email_personal', placeholder: 'john.doe@gmail.com', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
-              </div>
-            <% end %>
-          </div>
-
+         <!-- Student Fields -->
+<div id="studentFields" class="mt-6" style="display: none;" data-toggle-fields-target="studentFields">
+  <%= f.fields_for :student_profile, resource.student_profile || StudentProfile.new do |student_form| %>
+    <div class="mb-6">
+      <%= student_form.label :email_personal, "Personal Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
+      <%= student_form.text_field :email_personal, id: 'user_email_personal', placeholder: 'john.doe@gmail.com', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      <p id="personalEmailError" class="text-red-500 text-sm mt-2 hidden"></p>
+      <!-- Display server-side validation errors -->
+      <% if resource.student_profile&.errors&.[](:email_personal)&.any? %>
+        <p class="text-red-500 text-sm mt-2"><%= resource.student_profile.errors[:email_personal].join(", ") %></p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
           <!-- Recruiter Fields -->
           <div id="recruiterFields" class="mt-6" style="display: none;" data-toggle-fields-target="recruiterFields">
             <%= f.fields_for :recruiter_profile, RecruiterProfile.new do |recruiter_form| %>
@@ -91,20 +106,19 @@
           <!-- Password Field -->
           <div class="mb-6">
             <%= f.label :password, class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.password_field :password, id: 'user_password', placeholder: 'Create a strong password (min. 8 characters)', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+            <%= f.password_field :password, id: 'user_password', placeholder: 'Create a strong password (min. 8 characters)', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true, minlength: 8 %>
           </div>
 
           <!-- Confirm Password Field -->
           <div class="mb-6">
             <%= f.label :password_confirmation, "Confirm Password", class: "block text-gray-700 text-sm font-bold mb-2" %>
-            <%= f.password_field :password_confirmation, id: 'user_password_confirmation', placeholder: 'Re-enter your password', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+            <%= f.password_field :password_confirmation, id: 'user_password_confirmation', placeholder: 'Re-enter your password', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true, minlength: 8 %>
             <p id="passwordError" class="text-red-500 text-sm mt-2 hidden">Passwords do not match.</p>
           </div>
 
           <!-- Submit Button -->
           <div class="mb-6">
-            <%= f.submit "Sign Up", class: 'w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition-all cursor-pointer' %>
-          </div>
+            <%= f.submit "Sign Up", class: "w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" %>
         <% end %>
       </div>
     </div>
@@ -143,19 +157,63 @@
       toggleFields();
     });
 
-    function validateForm() {
-      const password = document.getElementById("user_password").value;
-      const confirmPassword = document.getElementById("user_password_confirmation").value;
-      const passwordError = document.getElementById("passwordError");
+   function validateForm() {
+  const userType = document.getElementById("user_type").value;
+  const email = document.getElementById("user_email").value;
+  const personalEmail = document.getElementById("user_email_personal")?.value; // Optional chaining for personal email
+  const password = document.getElementById("user_password").value;
+  const confirmPassword = document.getElementById("user_password_confirmation").value;
+  const passwordError = document.getElementById("passwordError");
+  const emailError = document.getElementById("emailError");
+  const personalEmailError = document.getElementById("personalEmailError");
 
-      if (password !== confirmPassword) {
-        passwordError.classList.remove("hidden");
-        return false; // Prevent form submission
-      } else {
-        passwordError.classList.add("hidden");
-        return true; // Allow form submission
-      }
+  // Store selected user type in session storage
+  sessionStorage.setItem("selectedUserType", userType);
+
+  // Password matching validation
+  if (password !== confirmPassword) {
+    passwordError.classList.remove("hidden");
+    return false; // Prevent form submission
+  } else {
+    passwordError.classList.add("hidden");
+  }
+
+  // Email domain validation for students and career officers
+  if (userType === "student" || userType === "career_officer") {
+    if (!email.endsWith("@cfd.nu.edu.pk")) {
+      emailError.textContent = "Email must be a valid @cfd.nu.edu.pk email address.";
+      emailError.classList.remove("hidden");
+      return false; // Prevent form submission
+    } else {
+      emailError.classList.add("hidden");
     }
+  }
+
+  // Personal email validation for students
+  if (userType === "student" && personalEmail) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+    if (!emailRegex.test(personalEmail)) {
+      personalEmailError.textContent = "Personal email must be a valid email address.";
+      personalEmailError.classList.remove("hidden");
+      return false; // Prevent form submission
+    } else {
+      personalEmailError.classList.add("hidden");
+    }
+  }
+
+  return true; // Allow form submission
+}
+
+// This event listener should be outside the validateForm function
+document.addEventListener("DOMContentLoaded", function() {
+  // Restore user type selection if it exists in session storage
+  const savedUserType = sessionStorage.getItem("selectedUserType");
+  if (savedUserType) {
+    document.getElementById("user_type").value = savedUserType;
+    // Trigger the change event to update visible fields
+    document.getElementById("user_type").dispatchEvent(new Event('change'));
+  }
+});
   </script>
 </body>
 </html>

@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Your Password?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
+    
     <!-- Header -->
-    <div class="absolute top-4 right-6">
-        <p class="text-sm text-gray-600">Remembered your password? <a href="<%= new_user_session_path %>" class="text-blue-500 font-semibold hover:underline">Login here</a></p>
+    <div style="position: absolute; top: 1rem; right: 1.5rem; z-index: 10;">
+        <p style="white-space: nowrap; font-size: 0.875rem; color: #4b5563;">
+            Remembered your password? <a href="<%= new_user_session_path %>" style="color: #2563eb; font-weight: 600; text-decoration: underline;">Login here</a>
+        </p>
     </div>
 
     <!-- Main Container -->
@@ -25,9 +29,18 @@
         <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-12">
             <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: 'w-full max-w-sm bg-gray-50 p-6 rounded-lg shadow-lg' }) do |f| %>
                 <h2 class="text-2xl font-semibold mb-6 text-center">Forgot your password?</h2>
-
+                
                 <!-- Error Messages -->
-                <%= render "devise/shared/error_messages", resource: resource %>
+                <% if resource.errors.any? %>
+                  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                    <p class="font-bold">Oops! There was a problem:</p>
+                    <ul class="list-disc pl-5 mt-2">
+                      <% resource.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
 
                 <!-- Email Field -->
                 <div class="mb-4">
@@ -40,11 +53,6 @@
                     <%= f.submit "Send me reset password instructions", class: "w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" %>
                 </div>
             <% end %>
-
-            <!-- Links for other actions -->
-            <div class="mt-6 text-center">
-             <!--  <%=  "devise/shared/links" %> -->
-            </div>
         </div>
     </div>
 </body>

@@ -474,3 +474,17 @@ User.destroy_all
 # end
 
 # puts "Created 3 career_officer users with complete profiles!"
+
+# Creating a Career Officer User with an associated profile
+User.create!(
+  full_name: "Muhammad Ahmad",
+  email: "f219498@cfd.nu.edu.pk",
+  password: "SecurePass123",
+  password_confirmation: "SecurePass123",
+  user_type: "career_officer",
+  career_officer_profile_attributes: {
+    designation: "Career Advisor"
+  }
+)
+
+puts "Career Officer user with profile seeded successfully!"

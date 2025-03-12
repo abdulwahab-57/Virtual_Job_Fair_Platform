@@ -2,7 +2,6 @@
 <html>
   <head>
     <style>
-      /* Overall styling for the email */
       body {
         font-family: Arial, sans-serif;
         color: #333;
@@ -10,7 +9,6 @@
         margin: 0;
         padding: 0;
       }
-
       .email-container {
         width: 100%;
         max-width: 600px;
@@ -20,30 +18,26 @@
         border-radius: 10px;
         border: 1px solid #ddd;
       }
-
       .header {
         text-align: center;
         padding: 20px;
-        background-color: #1a73e8; /* Blue header background */
+        background-color: #1a73e8;
         border-radius: 10px 10px 0 0;
         color: #fff;
         font-size: 24px;
       }
-
       .content {
         padding: 20px;
         text-align: left;
         font-size: 16px;
       }
-
       .button-container {
         text-align: center;
         margin: 20px 0;
       }
-
       .button {
-        background-color: #1a73e8 !important; /* Ensures background color */
-        color: white !important; /* Ensures text color stays white */
+        background-color: #1a73e8 !important;
+        color: white !important;
         text-decoration: none;
         font-size: 18px;
         padding: 12px 20px;
@@ -51,61 +45,55 @@
         display: inline-block;
         transition: background-color 0.3s ease;
         font-weight: bold;
-        border: none; /* Ensure no border issues */
-        text-align: center; /* Ensures proper alignment */
-        width: auto; /* Prevents unwanted resizing */
-        max-width: 100%; /* Avoids breaking on mobile */
+        border: none;
+        text-align: center;
+        width: auto;
+        max-width: 100%;
       }
-
       .button:hover {
         background-color: #1558b2 !important;
       }
-
       .footer {
         text-align: center;
         margin-top: 20px;
         font-size: 14px;
         color: #888;
       }
-
-      a {
-        color: #1a73e8; /* Blue link color */
+      .bold {
+        font-weight: bold;
       }
     </style>
   </head>
   <body>
     <div class="email-container">
-      <!-- Header -->
       <div class="header">
-        Get the Job Done
+        Welcome to Virtual Job Fair
       </div>
-
-      <!-- Content -->
       <div class="content">
-        <p>Hi <strong><%= @resource.email %></strong>,</p>
-        <p>
-          We received a request to reset your password for your account on
-          <strong>Virtual Job Fair Platform</strong>. If you made this request, please click the button below to reset your password:
-        </p>
+        <p class="bold">Hello Career Officer,</p>
+        <p>A new recruiter has registered on the <strong>Virtual Job Fair Platform</strong> and requires your approval to proceed. Below are the details provided by the recruiter:</p>
+        
+        <!-- Recruiter Full Name -->
+        <p><strong>Full Name:</strong> <%= @recruiter.full_name %></p>
+        
+        <!-- Recruiter Email -->
+        <p><strong>Email:</strong> <%= @recruiter.email %></p>
+        
+        <!-- Recruiter Company Name -->
+        <p><strong>Company Name:</strong> <%= @recruiter.recruiter_profile.company_name %></p>
 
-        <!-- Button -->
+        <p>To approve this recruiter and allow them access to the platform, please click the button below:</p>
+
         <div class="button-container">
-          <a href="<%= edit_password_url(@resource, reset_password_token: @token) %>" class="button">
-            Change my password
+          <a href="<%= confirm_recruiter_url(approval_token: @recruiter.generate_approval_token) %>" class="button">
+            Approve Recruiter
           </a>
         </div>
 
-        <p>
-          If you did not request a password reset, you can safely ignore this email. Your account is safe, and no changes will be made.
-        </p>
+        <p>If the information provided seems <strong>unprofessional</strong>, <strong>ambiguous</strong>, or if you have any doubts about the legitimacy of this request, please <strong>ignore this email</strong> or contact the company directly for confirmation.</p>
 
-        <p>
-          If you have any questions, feel free to contact our support team at
-          <a href="mailto:support@virtualjobfair.com">support@virtualjobfair.com</a>.
-        </p>
+        <p>Thank you for helping us maintain the integrity of the <strong>Virtual Job Fair Platform</strong>.</p>
       </div>
-
-      <!-- Footer -->
       <div class="footer">
         &copy; 2025 Virtual Job Fair Platform. All rights reserved.
       </div>

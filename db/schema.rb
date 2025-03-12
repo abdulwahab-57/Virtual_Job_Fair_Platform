@@ -161,7 +161,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_10_185745) do
     t.string "phone_number", limit: 20
     t.text "address"
     t.string "linkedin_url", limit: 255
-    t.string "status", default: "Not Reviewed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_student_profiles_on_user_id"
@@ -181,6 +180,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_10_185745) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "career_officer_confirmed"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

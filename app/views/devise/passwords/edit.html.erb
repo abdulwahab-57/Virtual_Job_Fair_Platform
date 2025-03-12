@@ -23,8 +23,10 @@
 </head>
 <body class="bg-gray-100">
     <!-- Header -->
-    <div class="absolute top-4 right-6">
-        <p class="text-sm text-gray-600">Remembered your password? <a href="<%= new_user_session_path %>" class="text-blue-500 font-semibold hover:underline">Login here</a></p>
+    <div style="position: absolute; top: 1rem; right: 1.5rem; z-index: 10;">
+        <p style="white-space: nowrap; font-size: 0.875rem; color: #4b5563;">
+            Remembered your password? <a href="<%= new_user_session_path %>" style="color: #2563eb; font-weight: 600; text-decoration: underline;">Login here</a>
+        </p>
     </div>
 
     <!-- Main Container -->
@@ -43,7 +45,17 @@
                 <h2 class="text-2xl font-semibold mb-6 text-center">Change your password</h2>
 
                 <!-- Error Messages -->
-                <%= render "devise/shared/error_messages", resource: resource %>
+                <% if resource.errors.any? %>
+                  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                    <p class="font-bold">We encountered the following issues:</p>
+                    <ul class="list-disc pl-5 mt-2">
+                      <% resource.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+                
                 <%= f.hidden_field :reset_password_token %>
 
                 <!-- New Password Field -->

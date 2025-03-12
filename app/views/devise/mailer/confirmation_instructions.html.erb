@@ -41,8 +41,8 @@
       }
 
       .button {
-        background-color: #1a73e8;
-        color: white;
+        background-color: #1a73e8 !important;
+        color: white !important;
         text-decoration: none;
         font-size: 18px;
         padding: 12px 20px;
@@ -50,10 +50,14 @@
         display: inline-block;
         transition: background-color 0.3s ease;
         font-weight: bold;
+        border: none;
+        text-align: center;
+        width: auto;
+        max-width: 100%;
       }
 
       .button:hover {
-        background-color: #1558b2;
+        background-color: #1558b2 !important;
       }
 
       .footer {
@@ -62,32 +66,79 @@
         font-size: 14px;
         color: #888;
       }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .highlight {
+        color: #1a73e8;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
     <div class="email-container">
-      <!-- Header -->
       <div class="header">
         Welcome to Virtual Job Fair
       </div>
-
-      <!-- Content -->
       <div class="content">
-        <p>Welcome, <strong><%= @resource.full_name %></strong>!</p>
-
-        <p>Thank you for signing up. Please confirm your email by clicking the button below:</p>
-
-        <!-- Button -->
-        <div class="button-container">
-          <a href="<%= confirmation_url(@resource, confirmation_token: @resource.confirmation_token) %>" class="button">
-            Confirm My Account
-          </a>
-        </div>
-
-        <p>If you did not sign up, you can safely ignore this email.</p>
+        <% if @resource.recruiter? && @resource.confirmed_at.present? %>
+          <!-- Career Officer Approval Email -->
+          <p class="bold">Hello Career Officer,</p>
+          <p>As a <span class="highlight">Career Officer</span>, your role is to ensure that recruiters joining the Virtual Job Fair Platform are legitimate and aligned with our standards. A new recruiter requires your approval:</p>
+          <ul>
+            <li><strong>Recruiter Name:</strong> <%= @resource.full_name %></li>
+            <li><strong>Company Name:</strong> <%= @resource.recruiter_profile.company_name %></li>
+            <li><strong>Email:</strong> <%= @resource.email %></li>
+          </ul>
+          <p>Please review the details above and click the button below to approve this recruiter:</p>
+          <div class="button-container">
+            <a href="<%= confirm_recruiter_url(approval_token: @resource.generate_approval_token) %>" class="button">
+              Approve Recruiter
+            </a>
+          </div>
+          <p>If you have any concerns about this request or find the information unclear, please <strong>ignore this email</strong> or contact the company directly for verification.</p>
+        <% elsif @resource.recruiter? %>
+          <!-- Recruiter Confirmation Email -->
+          <p class="bold">Welcome, <span class="highlight"><%= @resource.full_name %></span>!</p>
+          <p>Thank you for signing up for the <strong>Virtual Job Fair Platform</strong> as a <span class="highlight">Recruiter</span>. Your role is vital in connecting talented students with exciting career opportunities. Once your account is approved by a Career Officer, you will gain access to:</p>
+          <ul>
+            <li>Post job openings and internships.</li>
+            <li>Connect with highly qualified students.</li>
+            <li>Participate in virtual career fairs and networking events.</li>
+          </ul>
+          <p>To complete your registration, please confirm your email address by clicking the button below:</p>
+          <div class="button-container">
+            <a href="<%= confirmation_url(@resource, confirmation_token: @token) %>" class="button">
+              Confirm Account
+            </a>
+          </div>
+          <p>If you did not request this, please disregard this email.</p>
+        <% elsif @resource.career_officer? %>
+          <!-- Career Officer Confirmation Email -->
+          <p class="bold">Welcome, <span class="highlight"><%= @resource.full_name %></span>!</p>
+          <p>Thank you for signing up for the <strong>Virtual Job Fair Platform</strong> as a <span class="highlight">Career Officer</span>. Your role is crucial in ensuring the quality and legitimacy of recruiters on our platform. You will have access to tools and resources to review and approve recruiter profiles.</p>
+          <p>To complete your registration, please confirm your email address by clicking the button below:</p>
+          <div class="button-container">
+            <a href="<%= confirmation_url(@resource, confirmation_token: @token) %>" class="button">
+              Confirm Account
+            </a>
+          </div>
+          <p>If you did not request this, please disregard this email.</p>
+        <% else %>
+          <!-- Student Confirmation Email -->
+          <p class="bold">Welcome, <span class="highlight"><%= @resource.full_name %></span>!</p>
+          <p>Thank you for signing up for the <strong>Virtual Job Fair Platform</strong>. As a <span class="highlight">Student</span>, you will have access to job opportunities, career resources, and networking events tailored to help you succeed.</p>
+          <p>To complete your registration, please confirm your email address by clicking the button below:</p>
+          <div class="button-container">
+            <a href="<%= confirmation_url(@resource, confirmation_token: @token) %>" class="button">
+              Confirm Account
+            </a>
+          </div>
+          <p>If you did not request this, please disregard this email.</p>
+        <% end %>
       </div>
-
-      <!-- Footer -->
       <div class="footer">
         &copy; 2025 Virtual Job Fair Platform. All rights reserved.
       </div>
