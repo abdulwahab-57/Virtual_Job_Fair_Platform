@@ -1,0 +1,169 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold"><%= @meeting.title %></h1>
+    <div>
+      <%= link_to "Back to Meetings", career_officer_meetings_path, class: "text-gray-600 hover:text-gray-800 mr-4" %>
+      <%= link_to "Edit", edit_career_officer_meeting_path(@meeting), class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="md:col-span-2">
+      <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Meeting Details</h2>
+        
+        <div class="mb-4">
+          <p class="text-gray-700"><strong>Description:</strong></p>
+          <p class="mt-1"><%= @meeting.description.present? ? @meeting.description : "No description provided." %></p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <p class="text-gray-700"><strong>Start Time:</strong></p>
+            <p class="mt-1"><%= (@meeting.start_time.utc + 5.hours).strftime("%B %d, %I:%M %p") %></p>
+          </div>
+          <div>
+            <p class="text-gray-700"><strong>End Time:</strong></p>
+            <p class="mt-1"><%= (@meeting.end_time.utc + 5.hours).strftime("%B %d, %I:%M %p") %></p>
+          </div>
+        </div>
+              
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <p class="text-gray-700"><strong>Status:</strong></p>
+            <p class="mt-1">
+              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                <%= @meeting.status == 'scheduled' ? 'bg-yellow-100 text-yellow-800' : 
+                   @meeting.status == 'started' ? 'bg-green-100 text-green-800' : 
+                   @meeting.status == 'ended' ? 'bg-gray-100 text-gray-800' : 
+                   'bg-red-100 text-red-800' %>">
+                <%= @meeting.status.capitalize %>
+              </span>
+            </p>
+          </div>
+          <div>
+            <p class="text-gray-700"><strong>Host:</strong></p>
+            <p class="mt-1"><%= @meeting.host&.full_name || "Unknown" %></p>
+          </div>
+        </div>
+        
+        <% if @meeting.zoom_meeting_url.present? %>
+          <div class="mb-4">
+            <p class="text-gray-700"><strong>Zoom Meeting URL:</strong></p>
+            <p class="mt-1">
+              <a href="<%= @meeting.zoom_meeting_url %>" target="_blank" class="text-blue-600 hover:text-blue-800">
+                <%= @meeting.zoom_meeting_url %>
+              </a>
+            </p>
+          </div>
+        <% end %>
+        
+        <div class="mt-6 flex space-x-4">
+          <% if @meeting.scheduled? %>
+            <%= button_to "Start Meeting", start_career_officer_meeting_path(@meeting), method: :post, class: "bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded" %>
+          <% elsif @meeting.started? %>
+            <%= button_to "End Meeting", end_career_officer_meeting_path(@meeting), method: :post, class: "bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded" %>
+            <a href="<%= @meeting.zoom_meeting_url %>" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Join Meeting</a>
+          <% end %>
+          
+          <% unless @meeting.ended? || @meeting.cancelled? %>
+            <%= button_to "Cancel Meeting", cancel_career_officer_meeting_path(@meeting), method: :post, data: { confirm: "Are you sure you want to cancel this meeting?" }, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+          <% end %>
+        </div>
+      </div>
+      
+      <% if @meeting.started? %>
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 class="text-xl font-semibold mb-4">Virtual Booth</h2>
+          <div class="aspect-w-16 aspect-h-9">
+            <iframe src="<%= @meeting.zoom_meeting_url %>" frameborder="0" allow="camera; microphone; fullscreen; display-capture" class="w-full h-full rounded"></iframe>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div>
+      <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Participants</h2>
+        
+        <% if @meeting.users.empty? %>
+          <p class="text-gray-600">No participants added yet.</p>
+        <% else %>
+          <div class="mb-4">
+            <h3 class="font-medium text-gray-700 mb-2">Students</h3>
+            <ul class="divide-y divide-gray-200">
+              <% @meeting.student_participants.each do |student| %>
+                <li class="py-2 flex justify-between items-center">
+                  <span><%= student.full_name %></span>
+                  <%= button_to "Remove", remove_participant_career_officer_meeting_path(@meeting, user_id: student.id), method: :delete, class: "text-red-600 hover:text-red-800 bg-transparent border-none cursor-pointer" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+          
+          <div class="mb-4">
+            <h3 class="font-medium text-gray-700 mb-2">Recruiters</h3>
+            <ul class="divide-y divide-gray-200">
+              <% @meeting.recruiter_participants.each do |recruiter| %>
+                <li class="py-2 flex justify-between items-center">
+                  <span><%= recruiter.full_name %> (<%= recruiter.recruiter_profile.company_name %>)</span>
+                  <%= button_to "Remove", remove_participant_career_officer_meeting_path(@meeting, user_id: recruiter.id), method: :delete, class: "text-red-600 hover:text-red-800 bg-transparent border-none cursor-pointer" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="font-medium text-gray-700 mb-2">Career Officers</h3>
+            <ul class="divide-y divide-gray-200">
+              <% @meeting.career_officer_participants.each do |officer| %>
+                <li class="py-2 flex justify-between items-center">
+                  <span><%= officer.full_name %></span>
+                  <% if officer.id != current_user.id %>
+                    <%= button_to "Remove", remove_participant_career_officer_meeting_path(@meeting, user_id: officer.id), method: :delete, class: "text-red-600 hover:text-red-800 bg-transparent border-none cursor-pointer" %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Add Participants</h2>
+        
+        <div class="mb-4">
+          <h3 class="font-medium text-gray-700 mb-2">Students</h3>
+          <% if @students.nil? || @students.empty? %>
+            <p class="text-gray-600">No more students available to add.</p>
+          <% else %>
+            <div class="max-h-40 overflow-y-auto">
+              <% @students.each do |student| %>
+                <div class="py-2 flex justify-between items-center">
+                  <span><%= student.full_name %></span>
+                  <%= button_to "Add", add_participant_career_officer_meeting_path(@meeting, user_id: student.id), method: :post, class: "text-blue-600 hover:text-blue-800 bg-transparent border-none cursor-pointer" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        
+        <div>
+          <h3 class="font-medium text-gray-700 mb-2">Recruiters</h3>
+          <% if @recruiters.nil? || @recruiters.empty? %>
+            <p class="text-gray-600">No more recruiters available to add.</p>
+          <% else %>
+            <div class="max-h-40 overflow-y-auto">
+              <% @recruiters.each do |recruiter| %>
+                <div class="py-2 flex justify-between items-center">
+                  <span><%= recruiter.full_name %> (<%= recruiter.recruiter_profile.company_name %>)</span>
+                  <%= button_to "Add", add_participant_career_officer_meeting_path(@meeting, user_id: recruiter.id), method: :post, class: "text-blue-600 hover:text-blue-800 bg-transparent border-none cursor-pointer" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

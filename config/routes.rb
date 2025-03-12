@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  # Zoom OAuth routes
+  get "zoom/auth", to: "zoom#auth"
+  get "zoom/callback", to: "zoom#callback"
+
   # Devise routes for user authentication
   devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions" },
                      path_names: { sign_in: "login" },
@@ -11,6 +15,20 @@ Rails.application.routes.draw do
   end
 
   namespace :career_officer do
+    # Job Fair Arena
+    resources :job_fair_arena, only: [ :index, :show ]
+
+    # Meetings management
+    resources :meetings do
+      member do
+        post :add_participant
+        delete :remove_participant
+        post :start
+        post :end
+        post :cancel
+      end
+    end
+
     resources :student_profiles, only: [ :index, :show, :edit, :update ] do
       member do
         patch :update_status
@@ -26,11 +44,17 @@ Rails.application.routes.draw do
 
 
   namespace :recruiter do
+    # Virtual Booth
+    resources :virtual_booth, only: [ :index, :show ]
+
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end
 
   namespace :student do
+    # Virtual Booth
+    resources :virtual_booth, only: [ :index, :show ]
+
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end

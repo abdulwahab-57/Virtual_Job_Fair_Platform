@@ -37,6 +37,12 @@ gem "bootsnap", require: false
 # Devise 4.0 works with Rails 6.0 onwards. Run:
 gem "devise"
 
+# Encryption for sensitive data
+gem "attr_encrypted", "~> 4.2"
+
+# CSV support (required by httparty)
+gem "csv"
+
 # Install dotenv-rails
 gem "dotenv-rails", groups: [ :development, :test ]
 
@@ -72,3 +78,11 @@ gem "view_component", "~> 3.21"
 gem "inline_svg", "~> 1.10"
 
 gem "grover", "~> 1.2", ">= 1.2.3"
+
+# Zoom API integration
+gem "omniauth-oauth2", "~> 1.8"
+gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "httparty", "~> 0.21.0"
+
+# JWT for Zoom Meeting SDK
+gem "jwt", "~> 2.10", ">= 2.10.1"

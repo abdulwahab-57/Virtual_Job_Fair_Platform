@@ -1,5 +1,28 @@
 {
   "dependencies": {
+    "@zoom/meetingsdk": "^3.12.0",
     "puppeteer": "^24.4.0"
-  }
+  },
+  "name": "virtual_job_fair_platform",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdulwahab-57/Virtual_Job_Fair_Platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdulwahab-57/Virtual_Job_Fair_Platform/issues"
+  },
+  "homepage": "https://github.com/abdulwahab-57/Virtual_Job_Fair_Platform#readme"
 }

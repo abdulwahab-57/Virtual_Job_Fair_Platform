@@ -9,7 +9,9 @@ class Recruiter::BaseController < ApplicationController
   end
 
   def set_sidebar
-    @sidebar_tabs = []
+    @sidebar_tabs = [
+      { label: "Virtual Booth", icon: "video", path: recruiter_virtual_booth_index_path }
+    ]
   end
 
   def set_path

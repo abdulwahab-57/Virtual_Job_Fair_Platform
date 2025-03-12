@@ -1,0 +1,140 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold"><%= @meeting.title %> - Virtual Booth</h1>
+    <div>
+      <%= link_to "Back to Virtual Booth", student_virtual_booth_index_path, class: "text-gray-600 hover:text-gray-800" %>
+    </div>
+  </div>
+
+  <% if @meeting.active? %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-2">
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 class="text-xl font-semibold mb-4">Meeting Details</h2>
+          
+          <div class="mb-4">
+            <p class="text-gray-700"><strong>Description:</strong></p>
+            <p class="mt-1"><%= @meeting.description.present? ? @meeting.description : "No description provided." %></p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <p class="text-gray-700"><strong>Start Time:</strong></p>
+              <p class="mt-1"><%= @meeting.start_time.utc.strftime("%B %d, %I:%M %p UTC") %></p>
+              <p class="text-sm text-gray-500">(<%= (@meeting.start_time.utc + 5.hours).strftime("%I:%M %p PKT") %>)</p>
+            </div>
+            <div>
+              <p class="text-gray-700"><strong>End Time:</strong></p>
+              <p class="mt-1"><%= @meeting.end_time.utc.strftime("%B %d, %I:%M %p UTC") %></p>
+              <p class="text-sm text-gray-500">(<%= (@meeting.end_time.utc + 5.hours).strftime("%I:%M %p PKT") %>)</p>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <p class="text-sm text-gray-500">All times are displayed in UTC with PKT equivalent (PKT is UTC+5)</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <p class="text-gray-700"><strong>Status:</strong></p>
+              <p class="mt-1">
+                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-700"><strong>Host:</strong></p>
+              <p class="mt-1"><%= @meeting.host&.full_name || "Unknown" %></p>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <p class="text-gray-700"><strong>Time Remaining:</strong></p>
+            <p class="mt-1" id="time-remaining">
+              <%= distance_of_time_in_words(Time.current, @meeting.end_time) %>
+            </p>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-semibold mb-4">Virtual Booth</h2>
+          <div class="aspect-w-16 aspect-h-9">
+            <iframe src="<%= @meeting.zoom_meeting_url %>" frameborder="0" allow="camera; microphone; fullscreen; display-capture" class="w-full h-full rounded"></iframe>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-semibold mb-4">Participants</h2>
+          
+          <% if @meeting.users.empty? %>
+            <p class="text-gray-600">No participants in this meeting.</p>
+          <% else %>
+            <div class="mb-4">
+              <h3 class="font-medium text-gray-700 mb-2">Students</h3>
+              <ul class="divide-y divide-gray-200">
+                <% @meeting.student_participants.each do |student| %>
+                  <li class="py-2"><%= student.full_name %></li>
+                <% end %>
+              </ul>
+            </div>
+            
+            <div class="mb-4">
+              <h3 class="font-medium text-gray-700 mb-2">Recruiters</h3>
+              <ul class="divide-y divide-gray-200">
+                <% @meeting.recruiter_participants.each do |recruiter| %>
+                  <li class="py-2"><%= recruiter.full_name %> (<%= recruiter.recruiter_profile.company_name %>)</li>
+                <% end %>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 class="font-medium text-gray-700 mb-2">Career Officers</h3>
+              <ul class="divide-y divide-gray-200">
+                <% @meeting.career_officer_participants.each do |officer| %>
+                  <li class="py-2"><%= officer.full_name %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow p-6 text-center">
+      <% if @meeting.start_time > Time.current %>
+        <h2 class="text-xl font-semibold mb-4">This meeting hasn't started yet</h2>
+        <p class="text-gray-600 mb-4">The meeting will start in <%= @time_until_start %>.</p>
+        <p class="text-gray-600">Please come back at the scheduled time.</p>
+      <% elsif @meeting.end_time < Time.current %>
+        <h2 class="text-xl font-semibold mb-4">This meeting has ended</h2>
+        <p class="text-gray-600">The meeting ended on <%= @meeting.end_time.utc.strftime("%B %d, %I:%M %p UTC") %> (<%= (@meeting.end_time.utc + 5.hours).strftime("%I:%M %p PKT") %>).</p>
+      <% elsif @meeting.cancelled? %>
+        <h2 class="text-xl font-semibold mb-4">This meeting has been cancelled</h2>
+        <p class="text-gray-600">Please contact the host for more information.</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<% if @meeting.active? %>
+  <script>
+    // Update time remaining every minute
+    setInterval(function() {
+      const endTime = new Date('<%= @meeting.end_time.iso8601 %>');
+      const now = new Date();
+      const diff = endTime - now;
+      
+      if (diff <= 0) {
+        document.getElementById('time-remaining').textContent = 'Meeting has ended';
+        window.location.reload();
+      } else {
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+        document.getElementById('time-remaining').textContent = `${minutes} minutes, ${seconds} seconds`;
+      }
+    }, 1000);
+  </script>
+<% end %>
