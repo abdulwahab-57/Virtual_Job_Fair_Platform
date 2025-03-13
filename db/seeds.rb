@@ -10,7 +10,7 @@
 # # db/seeds.rb
 # #
 # # Ensure existing records are cleared to avoid duplicates
-User.destroy_all
+# User.destroy_all
 # # StudentProfile.destroy_all
 
 # # Create three student users with associated student profiles
@@ -479,8 +479,8 @@ User.destroy_all
 User.create!(
   full_name: "Muhammad Ahmad",
   email: "f219498@cfd.nu.edu.pk",
-  password: "SecurePass123",
-  password_confirmation: "SecurePass123",
+  password: "123456789",
+  password_confirmation: "123456789",
   user_type: "career_officer",
   career_officer_profile_attributes: {
     designation: "Career Advisor"
@@ -488,3 +488,6 @@ User.create!(
 )
 
 puts "Career Officer user with profile seeded successfully!"
+
+
+# Creating a Student User with an associated profile
