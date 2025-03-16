@@ -7,18 +7,27 @@
     <script>
         // Function to validate password confirmation
         function validatePassword() {
-            const password = document.getElementById("user_password").value;
-            const confirmPassword = document.getElementById("user_password_confirmation").value;
-            const errorElement = document.getElementById("passwordError");
+    const password = document.getElementById("user_password").value;
+    const confirmPassword = document.getElementById("user_password_confirmation").value;
+    const errorElement = document.getElementById("passwordError");
+    const minLength = <%= @minimum_password_length || 8 %>; // Use server-side value or default to 8
 
-            if (password !== confirmPassword) {
-                errorElement.textContent = "Passwords do not match!";
-                return false;
-            } else {
-                errorElement.textContent = "";
-                return true;
-            }
-        }
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        errorElement.textContent = "Passwords do not match!";
+        return false;
+    }
+
+    // Check if password meets minimum length requirement
+    if (password.length < minLength) {
+        errorElement.textContent = `Password must be at least ${minLength} characters long.`;
+        return false;
+    }
+
+    // Clear error message if validation passes
+    errorElement.textContent = "";
+    return true;
+}
     </script>
 </head>
 <body class="bg-gray-100">

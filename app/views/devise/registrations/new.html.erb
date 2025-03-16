@@ -157,63 +157,65 @@
       toggleFields();
     });
 
-   function validateForm() {
+   // Extracted function for password validation
+function validatePassword(password, confirmPassword, passwordError) {
+  if (password !== confirmPassword) {
+    passwordError.classList.remove("hidden");
+    return false;
+  }
+  passwordError.classList.add("hidden");
+  return true;
+}
+
+// Extracted function for email validation
+function validateEmail(email, emailError, domain) {
+  if (!email.endsWith(domain)) {
+    emailError.textContent = `Email must be a valid ${domain} email address.`;
+    emailError.classList.remove("hidden");
+    return false;
+  }
+  emailError.classList.add("hidden");
+  return true;
+}
+
+// Extracted function for personal email validation
+function validatePersonalEmail(personalEmail, personalEmailError) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(personalEmail)) {
+    personalEmailError.textContent = "Personal email must be a valid email address.";
+    personalEmailError.classList.remove("hidden");
+    return false;
+  }
+  personalEmailError.classList.add("hidden");
+  return true;
+}
+
+// Main validation function
+function validateForm() {
   const userType = document.getElementById("user_type").value;
   const email = document.getElementById("user_email").value;
-  const personalEmail = document.getElementById("user_email_personal")?.value; // Optional chaining for personal email
+  const personalEmail = document.getElementById("user_email_personal")?.value;
   const password = document.getElementById("user_password").value;
   const confirmPassword = document.getElementById("user_password_confirmation").value;
   const passwordError = document.getElementById("passwordError");
   const emailError = document.getElementById("emailError");
   const personalEmailError = document.getElementById("personalEmailError");
 
-  // Store selected user type in session storage
-  sessionStorage.setItem("selectedUserType", userType);
+  // Validate password
+  if (!validatePassword(password, confirmPassword, passwordError)) return false;
 
-  // Password matching validation
-  if (password !== confirmPassword) {
-    passwordError.classList.remove("hidden");
-    return false; // Prevent form submission
-  } else {
-    passwordError.classList.add("hidden");
-  }
-
-  // Email domain validation for students and career officers
+  // Validate email based on user type
   if (userType === "student" || userType === "career_officer") {
-    if (!email.endsWith("@cfd.nu.edu.pk")) {
-      emailError.textContent = "Email must be a valid @cfd.nu.edu.pk email address.";
-      emailError.classList.remove("hidden");
-      return false; // Prevent form submission
-    } else {
-      emailError.classList.add("hidden");
-    }
+    if (!validateEmail(email, emailError, "@cfd.nu.edu.pk")) return false;
   }
 
-  // Personal email validation for students
+  // Validate personal email for students
   if (userType === "student" && personalEmail) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
-    if (!emailRegex.test(personalEmail)) {
-      personalEmailError.textContent = "Personal email must be a valid email address.";
-      personalEmailError.classList.remove("hidden");
-      return false; // Prevent form submission
-    } else {
-      personalEmailError.classList.add("hidden");
-    }
+    if (!validatePersonalEmail(personalEmail, personalEmailError)) return false;
   }
 
-  return true; // Allow form submission
+  return true;
 }
-
-// This event listener should be outside the validateForm function
-document.addEventListener("DOMContentLoaded", function() {
-  // Restore user type selection if it exists in session storage
-  const savedUserType = sessionStorage.getItem("selectedUserType");
-  if (savedUserType) {
-    document.getElementById("user_type").value = savedUserType;
-    // Trigger the change event to update visible fields
-    document.getElementById("user_type").dispatchEvent(new Event('change'));
-  }
-});
   </script>
 </body>
 </html>
