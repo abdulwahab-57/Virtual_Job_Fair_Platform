@@ -9,9 +9,7 @@ class Student::BaseController < ApplicationController
   end
 
   def set_sidebar
-    @sidebar_tabs = [
-      { label: "Virtual Booth", icon: "video", path: student_virtual_booth_index_path }
-    ]
+    @sidebar_tabs = []
   end
 
   def set_path

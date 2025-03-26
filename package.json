@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@zoom/meetingsdk": "^3.12.0",
     "puppeteer": "^24.4.0"
   },
   "name": "virtual_job_fair_platform",

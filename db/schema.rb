@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_10_185745) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,30 +96,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_10_185745) do
     t.index ["student_profile_id"], name: "index_location_preferences_on_student_profile_id"
   end
 
-  create_table "meeting_participants", force: :cascade do |t|
-    t.bigint "meeting_id", null: false
-    t.bigint "user_id", null: false
-    t.string "role"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["meeting_id"], name: "index_meeting_participants_on_meeting_id"
-    t.index ["user_id"], name: "index_meeting_participants_on_user_id"
-  end
-
-  create_table "meetings", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.string "zoom_meeting_id"
-    t.string "zoom_meeting_url"
-    t.string "zoom_meeting_password"
-    t.integer "host_id"
-    t.string "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "projects", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
     t.string "project_name", limit: 100
@@ -187,18 +163,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_10_185745) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "zoom_credentials", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.text "encrypted_access_token"
-    t.text "encrypted_access_token_iv"
-    t.text "encrypted_refresh_token"
-    t.text "encrypted_refresh_token_iv"
-    t.datetime "expires_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_zoom_credentials_on_user_id"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activities_honors", "student_profiles"
@@ -206,11 +170,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_10_185745) do
   add_foreign_key "educations", "student_profiles"
   add_foreign_key "interests", "student_profiles"
   add_foreign_key "location_preferences", "student_profiles"
-  add_foreign_key "meeting_participants", "meetings"
-  add_foreign_key "meeting_participants", "users"
   add_foreign_key "projects", "student_profiles"
   add_foreign_key "recruiter_profiles", "users"
   add_foreign_key "skills", "student_profiles"
   add_foreign_key "student_profiles", "users"
-  add_foreign_key "zoom_credentials", "users"
 end

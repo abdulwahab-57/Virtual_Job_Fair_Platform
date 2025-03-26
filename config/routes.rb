@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
-  # Zoom OAuth routes
-  get "zoom/auth", to: "zoom#auth"
-  get "zoom/callback", to: "zoom#callback"
+  # Root route
+  root "static_pages#home"
+
+  # Static pages
+  get "/about", to: "static_pages#about"
+
+  # Dashboard concern
+  concern :dashboardable do
+    get "/", to: "dashboards#index", as: :dashboard
+  end
 
   # Devise routes for user authentication
   devise_for :users, controllers: {
@@ -14,32 +21,11 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "users/confirm_recruiter", to: "users/confirmations#confirm_recruiter", as: :confirm_recruiter
   end
-  # Root route
-  root "static_pages#home"
-
-  # Static pages
-  get "/about", to: "static_pages#about"
-
-  # Dashboard concern
-  concern :dashboardable do
-    get "/", to: "dashboards#index", as: :dashboard
-  end
 
   # Career Officer namespace
   namespace :career_officer do
-    # Job Fair Arena
-    resources :job_fair_arena, only: [ :index, :show ]
-
-    # Meetings management
-    resources :meetings do
-      member do
-        post :add_participant
-        delete :remove_participant
-        post :start
-        post :end
-        post :cancel
-      end
-    end
+    concerns :dashboardable
+    resources :profiles, only: [ :show, :edit, :update ]
 
     resources :student_profiles, only: [ :index, :show, :edit, :update ] do
       member do
@@ -50,24 +36,16 @@ Rails.application.routes.draw do
         post :download_profiles
       end
     end
-    concerns :dashboardable
-    resources :profiles, only: [ :show, :edit, :update ]
   end
 
   # Recruiter namespace
   namespace :recruiter do
-    # Virtual Booth
-    resources :virtual_booth, only: [ :index, :show ]
-
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end
 
   # Student namespace
   namespace :student do
-    # Virtual Booth
-    resources :virtual_booth, only: [ :index, :show ]
-
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
   end
@@ -78,7 +56,4 @@ Rails.application.routes.draw do
   # PWA routes
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-  # Dotenv gem (for development and test environments)
-  gem "dotenv-rails", groups: [ :development, :test ]
 end

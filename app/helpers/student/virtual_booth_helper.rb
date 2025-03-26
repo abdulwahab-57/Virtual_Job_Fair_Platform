@@ -1,2 +1,0 @@
-module Student::VirtualBoothHelper
-end

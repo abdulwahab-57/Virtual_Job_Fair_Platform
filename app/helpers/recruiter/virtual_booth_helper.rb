@@ -1,2 +1,0 @@
-module Recruiter::VirtualBoothHelper
-end

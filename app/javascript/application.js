@@ -2,11 +2,4 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-import "lodash" 
-import "react" 
-import "react-dom"
-import "redux" 
-import "redux-thunk" 
-import "zoom-meeting-embedded"
-
 
