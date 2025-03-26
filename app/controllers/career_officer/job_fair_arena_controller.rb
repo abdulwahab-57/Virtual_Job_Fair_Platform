@@ -36,7 +36,7 @@ class CareerOfficer::JobFairArenaController < CareerOfficer::BaseController
 
       # Generate JWT signature for Zoom Meeting SDK
       # According to Zoom documentation, we must use role=0 for joining meetings
-      @zoom_signature = ZoomSdkService.generate_jwt(@meeting_number, 0)
+      @zoom_signature = ZoomSdkService.generate_jwt(@meeting_number)
 
       # Log information for debugging
       Rails.logger.info("Meeting details for Zoom SDK:")

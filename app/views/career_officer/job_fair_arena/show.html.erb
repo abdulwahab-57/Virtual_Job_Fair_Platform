@@ -19,7 +19,6 @@
         <div>
           <p><strong>Meeting Number:</strong> <%= @meeting_number %></p>
           <p><strong>Meeting Password:</strong> <%= @meeting_password %></p>
-          <p><strong>JWT Signature:</strong> <%= @zoom_signature.present? ? 'Yes' : 'No' %></p>
           <p><strong>SDK Version:</strong> NPM Package</p>
           <p><strong>Role:</strong> 0 (attendee)</p>
         </div>
@@ -79,19 +78,17 @@
       
       <div class="bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-xl font-semibold mb-4">Virtual Booth</h2>
-        <% if @meeting_number.present? && @zoom_signature.present? %>
+        <% if @meeting_number.present? %>
           <div 
-            id="zoom-meeting-container" 
-            class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-gray-100"
-            style="min-height: 600px; position: relative;"
+            id="meetingSDKElement" 
+            class="aspect-w-16 aspect-h-9 rounded-lg bg-gray-100"
             data-controller="zoom-meeting"
-            data-zoom-meeting-target="meetingContainer"
+            data-zoom-meeting-target="meetingSDKElement"
             data-zoom-meeting-sdk-key-value="<%= ENV['ZOOM_CLIENT_ID'] %>"
+            data-zoom-meeting-signature-value="<%= @zoom_signature %>"
             data-zoom-meeting-meeting-number-value="<%= @meeting_number %>"
             data-zoom-meeting-password-value="<%= @meeting_password %>"
-            data-zoom-meeting-signature-value="<%= @zoom_signature %>"
             data-zoom-meeting-user-name-value="<%= current_user.full_name %>"
-            data-zoom-meeting-user-email-value="<%= current_user.email %>"
             data-zoom-meeting-role-value="0"
           >
             <div class="absolute inset-0 flex items-center justify-center">

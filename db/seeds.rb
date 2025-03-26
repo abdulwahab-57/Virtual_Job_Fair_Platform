@@ -477,8 +477,8 @@
 
 # Creating a Career Officer User with an associated profile
 User.create!(
-  full_name: "Muhammad Ahmad",
-  email: "f219498@cfd.nu.edu.pk",
+  full_name: "Abdul Wahab",
+  email: "f219457@cfd.nu.edu.pk",
   password: "123456789",
   password_confirmation: "123456789",
   user_type: "career_officer",

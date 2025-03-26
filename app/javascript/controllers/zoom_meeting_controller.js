@@ -1,21 +1,30 @@
 import { Controller } from "@hotwired/stimulus"
 
+
+import "lodash";
+import "react";
+import "react-dom";
+import "redux";
+import "redux-thunk";
+import "zoom-meeting-embedded";
+
+
+
 export default class extends Controller {
-  static targets = ["meetingContainer"]
+  static targets = ["meetingSDKElement"]
   static values = {
     sdkKey: String,
+    signature: String,
     meetingNumber: String,
     password: String,
-    signature: String,
     userName: String,
-    userEmail: String,
     role: Number
   }
 
   connect() {
     console.log("Zoom Meeting Controller connected")
     this.client = null
-    this.loadZoomSdk()
+    this.initializeClient()
   }
 
   disconnect() {
@@ -26,37 +35,9 @@ export default class extends Controller {
     }
   }
 
-  loadZoomSdk() {
-    // Load the Zoom Meeting SDK by creating a script element
-    // This is more reliable than using import() since we need to access the global ZoomMtgEmbed object
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = '/node_modules/@zoom/meetingsdk/dist/zoomus-websdk-embedded.umd.min.js'
-      script.async = true
-      script.onload = () => {
-        console.log('Zoom Meeting SDK loaded')
-        if (window.ZoomMtgEmbed) {
-          this.ZoomMtgEmbedded = window.ZoomMtgEmbed
-          this.initializeClient()
-          resolve()
-        } else {
-          const error = new Error('ZoomMtgEmbed not found in window object')
-          console.error(error)
-          this.showError('Failed to load Zoom Meeting SDK: ZoomMtgEmbed not found')
-          reject(error)
-        }
-      }
-      script.onerror = (error) => {
-        console.error('Failed to load Zoom Meeting SDK', error)
-        this.showError('Failed to load Zoom Meeting SDK')
-        reject(error)
-      }
-      document.head.appendChild(script)
-    })
-  }
 
   initializeClient() {
-    const meetingContainer = this.meetingContainerTarget
+    const meetingSDKElement = document.getElementById("meetingSDKElement")
 
     // Check if we have all required values
     if (!this.hasAllRequiredValues()) {
@@ -71,11 +52,11 @@ export default class extends Controller {
 
     try {
       // Create the Zoom Meeting Embedded client
-      this.client = this.ZoomMtgEmbedded.createClient()
+      this.client = window.ZoomMtgEmbedded.createClient()
 
       // Initialize the client
       this.client.init({
-        zoomAppRoot: meetingContainer,
+        zoomAppRoot: meetingSDKElement,
         language: 'en-US',
         patchJsMedia: true
       }).then(() => {
@@ -96,8 +77,9 @@ export default class extends Controller {
     console.log(`Meeting Number: ${this.meetingNumberValue}`)
     console.log(`Password: ${this.passwordValue}`)
     console.log(`User Name: ${this.userNameValue}`)
-    console.log(`User Email: ${this.userEmailValue}`)
     console.log(`Role: ${this.roleValue}`)
+    console.log(`SDK Key: ${this.sdkKeyValue}`)
+    console.log(`Signature: ${this.signatureValue}`)
 
     this.client.join({
       sdkKey: this.sdkKeyValue,
@@ -105,7 +87,6 @@ export default class extends Controller {
       meetingNumber: this.meetingNumberValue,
       password: this.passwordValue,
       userName: this.userNameValue,
-      userEmail: this.userEmailValue
     }).then(() => {
       console.log('Joined Zoom meeting successfully')
     }).catch((error) => {
@@ -117,9 +98,9 @@ export default class extends Controller {
   hasAllRequiredValues() {
     return (
       this.sdkKeyValue &&
+      this.signatureValue &&
       this.meetingNumberValue &&
       this.passwordValue &&
-      this.signatureValue &&
       this.userNameValue
     )
   }
