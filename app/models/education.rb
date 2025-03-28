@@ -4,9 +4,8 @@ class Education < ApplicationRecord
 
    # Validations
    # validates :student_profile_id, presence: true
-   validates :institution_name, allow_blank: true, length: { maximum: 100 }
-   validates :degree_title, allow_blank: true, length: { maximum: 100 }
-   validates :field_of_study, allow_blank: true, length: { maximum: 100 }
+   validates :institution_name, allow_blank: true, length: { maximum: 80 }
+   validates :degree, allow_blank: true, length: { maximum: 50 }
    validates :graduation_year, allow_blank: true,
              numericality: {
                only_integer: true,

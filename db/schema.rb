@@ -48,8 +48,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
 
   create_table "activities_honors", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
-    t.string "title", limit: 100
-    t.string "organization", limit: 100
+    t.string "title", limit: 30
+    t.string "organization", limit: 30
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_profile_id"], name: "index_activities_honors_on_student_profile_id"
@@ -71,8 +71,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
   create_table "educations", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
     t.string "institution_name", limit: 100
-    t.string "degree_title", limit: 100
-    t.string "field_of_study", limit: 100
+    t.string "degree", limit: 50
     t.integer "graduation_year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -89,8 +88,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
 
   create_table "location_preferences", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
-    t.string "location", limit: 50
-    t.integer "preference_order"
+    t.string "location", limit: 20
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_profile_id"], name: "index_location_preferences_on_student_profile_id"
@@ -98,7 +96,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
 
   create_table "projects", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
-    t.string "project_name", limit: 100
+    t.string "project_name", limit: 80
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -123,7 +121,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
 
   create_table "skills", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
-    t.string "title", limit: 100, null: false
+    t.string "title", limit: 50, null: false
     t.text "skill_list"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -134,7 +132,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
     t.bigint "user_id", null: false
     t.date "date_of_birth"
     t.string "email_personal", limit: 100
-    t.string "phone_number", limit: 20
+    t.string "phone_number", limit: 13
     t.text "address"
     t.string "linkedin_url", limit: 255
     t.string "status", default: "Not Reviewed"

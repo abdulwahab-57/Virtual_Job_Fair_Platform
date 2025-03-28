@@ -4,6 +4,6 @@ class Skill < ApplicationRecord
 
   # Validations
   # validates :student_profile_id, presence: true
-  validates :title, allow_blank: true, length: { maximum: 100 }
-  validates :skill_list, allow_blank: true, length: { maximum: 200 }
+  validates :title, allow_blank: true, length: { maximum: 50 }
+  validates :skill_list, allow_blank: true, length: { maximum: 100 }
 end

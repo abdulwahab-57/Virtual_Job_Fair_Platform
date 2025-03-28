@@ -9,7 +9,7 @@
             <!-- Profile Button -->
             <button id="profile-button" class="flex items-center focus:outline-none" data-action="click->profile-menu#toggle">
                 <% if current_user.profile_picture.attached? %>
-                    <%= image_tag current_user.profile_picture, 
+                    <%= image_tag current_user.profile_picture.variant(resize_to_fill: [40, 40]).processed, 
                                 alt: "Profile",
                                 class: "rounded-full w-10 h-10 border border-gray-300" %>
                 <% else %>

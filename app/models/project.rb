@@ -4,6 +4,6 @@ class Project < ApplicationRecord
 
   # Validations
   # validates :student_profile_id, presence: true
-  validates :project_name, allow_blank: true, length: { maximum: 100 }
+  validates :project_name, allow_blank: true, length: { maximum: 80 }
   validates :description, allow_blank: true, length: { maximum: 500 }
 end

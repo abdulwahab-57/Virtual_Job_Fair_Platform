@@ -40,7 +40,7 @@ class Student::ProfilesController < Student::BaseController
       student_profile_attributes: [
         :id, :date_of_birth, :phone_number, :email_personal, :address, :linkedin_url,
         location_preferences_attributes: [ :id, :location, :_destroy ],
-        educations_attributes: [ :id, :institution_name, :degree_title, :field_of_study, :graduation_year ],
+        educations_attributes: [ :id, :institution_name, :degree, :graduation_year ],
         projects_attributes: [ :id, :project_name, :description ],
         activities_honors_attributes: [ :id, :title, :organization ],
         skills_attributes: [ :id, :title, :skill_list ],

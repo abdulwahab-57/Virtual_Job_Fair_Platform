@@ -17,10 +17,9 @@ class StudentProfile < ApplicationRecord
    accepts_nested_attributes_for :location_preferences, allow_destroy: true, reject_if: :all_blank
 
    # Validations
-   # validates :user_id, presence: true, uniqueness: true
-   validates :email_personal, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }
+   validates :email_personal, presence: true,  uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }
    validates :phone_number, allow_blank: true,
-             format: { with: /\A\+?[\d\s-]{10,20}\z/ }
+             format: { with: /\A\+92\d{10}\z/ }
    validates :linkedin_url, allow_blank: true,
              format: { with: /\Ahttps?:\/\/(www\.)?linkedin\.com\/.*\z/ }
 end

@@ -11,7 +11,7 @@
       </div>
       <div class="col-start-2 row-start-1">
           <h1 class="text-[28pt] font-bold"><%= user.full_name %></h1>
-          <p class="text-[17pt] font-bold"><%= "#{user.student_profile.educations.first&.degree_title.to_s} (#{user.student_profile.educations.first&.field_of_study.to_s})" %></p>
+          <p class="text-[17pt] font-bold"><%= user.student_profile.educations.first&.degree %></p>
       </div>
       <div class="col-start-1 row-start-2 bg-[#1499DC]">
         <div class="text-right text-[9.5pt] text-white px-4 pt-8">
@@ -59,10 +59,10 @@
                 <li>
                   <% if index == 0 %>
                     <p class="text-[10pt] font-bold">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
-                    <p class="text-[10.5pt]"><%= "#{education.degree_title} (#{education.field_of_study}) - #{Date.today.year}" %></p>
+                    <p class="text-[10.5pt]"><%= "#{education.degree} - #{Date.today.year}" %></p>
                   <% else %>
                     <p class="text-[10.5pt] font-bold"><%= education.institution_name %></p>
-                    <p class="text-[10.5pt]"><%= "#{education.degree_title} - #{education.field_of_study} - #{education.graduation_year}" %></p>
+                    <p class="text-[10.5pt]"><%= "#{education.degree} - #{education.graduation_year}" %></p>
                   <% end %>
                 </li>
               <% end %>

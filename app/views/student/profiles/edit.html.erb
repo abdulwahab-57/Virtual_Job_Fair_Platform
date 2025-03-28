@@ -2,8 +2,7 @@
   <%= form_with(model: @user, url: @form_action, method: :put, class: "grid grid-cols-[20%_1fr] grid-rows-[auto] gap-x-4 gap-y-6") do |f| %>
 
     <!-- Profile Picture -->
-    <div class="col-start-1 row-start-1 justify-self-center space-y-4">
-      <%# image_tag("https://via.placeholder.com/160", size: "160x160") %>
+    <div class="col-start-1 row-start-1 space-y-4">
       <%= f.label :profile_picture, "Upload Profile Picture", class: "block font-medium" %>
       <%= f.file_field :profile_picture, class: "w-full text-gray-700" %>
     </div>
@@ -12,7 +11,11 @@
     <div class="col-start-2 row-start-1">
       <div class="space-y-4">
         <%= f.label :full_name, "Name", class: "block font-medium" %>
-        <%= f.text_field :full_name, class: "w-full p-2 border border-gray-300", placeholder:"Enter your full name"%>
+        <%= f.text_field :full_name, class: "w-full p-2 border border-gray-300 rounded-md", 
+                          placeholder:"Enter your full name", 
+                          maxlength:50, 
+                          pattern: "[A-Za-z\s]+", 
+                          title:"Only letters and spaces are allowed. Please remove numbers or special characters." %>
       </div>
     </div>
 
@@ -23,20 +26,29 @@
           <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
             <li>
               <%= sf.label :date_of_birth, "Date of Birth", class: "block mb-2 font-medium" %>
-              <%= sf.text_field :date_of_birth, class: "w-full p-2 border border-gray-300", placeholder:"10/11/2002" %>
+              <%= sf.date_field  :date_of_birth, class: "w-full p-2 border border-gray-300 rounded-md" %>
             </li>   
             <li>
               <%= sf.label :phone_number, "Telephone", class: "block mb-2 font-medium" %>
-              <%= sf.text_field :phone_number, class: "w-full p-2 border border-gray-300", placeholder: "+92 300 1234567", maxlength:13%>
+              <%= sf.text_field :phone_number, class: "w-full p-2 border border-gray-300 rounded-md", 
+                                placeholder: "+923001234567", 
+                                maxlength:13,
+                                pattern: "\\+92\\d{10}", 
+                                title: "Phone number must start with +92 and be followed by exactly 10 digits. Example: +923001234567. Do not include spaces, letters, or special characters." %>
             </li>
           <% end %>
           <li>
             <fieldset class="mb-4">
               <legend class="block mb-2 font-medium">Email</legend>
               <div class="space-y-2">
-                <%= f.text_field :email, class: "w-full p-2 border border-gray-300", placeholder: "f123456@cfd.nu.edu.pk" %>
+                <%= f.email_field :email, class: "w-full p-2 border border-gray-300 rounded-md", 
+                                  placeholder: "f123456@cfd.nu.edu.pk",
+                                  pattern: "f\\d{6}@cfd\\.nu\\.edu\\.pk",
+                                  title: "Email must start with 'f', followed by exactly 6 digits, and end with '@cfd.nu.edu.pk'. Example: f123456@cfd.nu.edu.pk" %>
                 <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
-                  <%= sf.text_field :email_personal, class: "w-full p-2 border border-gray-300", placeholder: "personal@gmail.com" %>
+                  <%= sf.email_field :email_personal, class: "w-full p-2 border border-gray-300 rounded-md", 
+                                    placeholder: "personal@gmail.com",
+                                    maxlength: 100 %>
                 <% end %>
               </div>
             </fieldset>
@@ -44,11 +56,14 @@
           <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
             <li>
               <%= sf.label :address, "Address", class: "block mb-2 font-medium" %>
-              <%= sf.text_area :address, class: "w-full p-2 border border-gray-300 resize-none", row:2, placeholder: "House #, Street #, Area ,City", maxlength:150%>
+              <%= sf.text_area :address, class: "w-full p-2 border border-gray-300 resize-none rounded-md", row:2, placeholder: "House #, Street #, Area ,City", maxlength:100%>
             </li>
             <li>
               <%= sf.label :linkedin_url, "LinkedIn", class: "block mb-2 font-medium" %>
-              <%= sf.text_field :linkedin_url, class: "w-full p-2 border border-gray-300", placeholder: "linkedin.com/in/subhan-attique-48a7a8274" %>
+              <%= sf.text_field :linkedin_url, class: "w-full p-2 border border-gray-300 rounded-md", 
+                                placeholder: "https://linkedin.com/in/your-profile",
+                                pattern: 'https?:\/\/(www\.)?linkedin\.com\/.*', 
+                                title: "Enter a valid LinkedIn URL (e.g., https://linkedin.com/in/your-profile)" %>
             </li>
           <% end %>
           <li>
@@ -58,7 +73,11 @@
                 <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
                   <% 3.times do |i| %>
                     <%= sf.fields_for :location_preferences, @user.student_profile.location_preferences[i] || @user.student_profile.location_preferences.build do |lp_form| %>
-                      <%= lp_form.text_field :location, class: "w-full p-2 border border-gray-300", placeholder: "City #{i + 1}" %>
+                      <%= lp_form.text_field :location, class: "w-full p-2 border border-gray-300 rounded-md", 
+                                              placeholder: "City #{i + 1}", 
+                                              maxlength: 20,
+                                              pattern: "[A-Za-z\s]+", 
+                                              title:"Only letters and spaces are allowed. Please remove numbers or special characters." %>
                     <% end %>
                   <% end %>  
                 <% end %>
@@ -78,21 +97,37 @@
           <div class="space-y-2">
             <%= sf.fields_for :educations, @user.student_profile.educations[0] || @user.student_profile.educations.build do |ef| %>
               <div>
-                <%= ef.text_field :institution_name, value: "National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus" , class: "w-full p-2 border-none mb-2 text-gray-500 bg-gray-200", placeholder: "Institution Name", disabled: true%>
+                <%= ef.text_field :institution_name, value: "National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus" , class: "w-full p-2 border-none mb-2 text-gray-500 bg-gray-200 rounded-md", 
+                                  placeholder: "Institution Name", disabled: true,
+                                  pattern: "[A-Za-z\s]+", 
+                                  title:"Only letters and spaces are allowed. Please remove numbers or special characters.",
+                                  maxlength: 80 %>
                 <div class="flex flex-wrap gap-2 items-center">
-                  <%= ef.text_field :degree_title, class: "w-1/4 p-2 border border-gray-300", placeholder: "Degree Title" %><span>-</span>
-                  <%= ef.text_field :field_of_study, class: "w-1/4 p-2 border border-gray-300", placeholder: "Field of Study" %><span>-</span>
-                  <%= ef.select :graduation_year, options_for_select((Date.today.year - 10..Date.today.year).to_a.reverse, Date.today.year), {}, { disabled: true, class: "w-1/4 p-2 border-none text-gray-600 bg-gray-200" } %>
+                  <%= ef.select :degree, options_for_select([
+                    "BS (Computer Science)",
+                    "BS (Software Engineering)",
+                    "BS (Electrical Engineering)"
+                  ]), { prompt: "Select Degree" }, class: "w-2/5 p-2 border border-gray-300 rounded-md" %>
+                  <span>-</span>
+                  <%= ef.select :graduation_year, options_for_select((Date.today.year - 10..Date.today.year).to_a.reverse, Date.today.year), {}, { disabled: true, class: "w-1/4 p-2 border-none text-gray-600 bg-gray-200 rounded-md" } %>
                 </div>
               </div>
             <% end %>
             <%= sf.fields_for :educations, @user.student_profile.educations[1] || @user.student_profile.educations.build do |ef| %>
               <div>
-                <%= ef.text_field :institution_name, class: "w-full p-2 mb-2 border border-gray-300", placeholder: "Intermediate College"%>
+                <%= ef.text_field :institution_name, class: "w-full p-2 mb-2 border border-gray-300 rounded-md",
+                                  placeholder: "Intermediate College",
+                                  pattern: "[A-Za-z\s]+", 
+                                  title:"Only letters and spaces are allowed. Please remove numbers or special characters.",
+                                  maxlength: 80 %>
                 <div class="flex flex-wrap gap-2 items-center">
-                  <%= ef.text_field :degree_title, class: "w-1/4 p-2 border border-gray-300", placeholder: "Degree Title" %><span>-</span>
-                  <%= ef.text_field :field_of_study, class: "w-1/4 p-2 border border-gray-300", placeholder: "Field of Study" %><span>-</span>
-                  <%= ef.select :graduation_year, options_for_select((Date.today.year - 10..Date.today.year).to_a.reverse, @user.student_profile.educations[1]&.graduation_year), {}, { class: "w-1/4 p-2 border border-gray-300" } %>
+                  <%= ef.select :degree, options_for_select([
+                    "F.Sc - Pre Engineering",
+                    "ICS",
+                    "A - Levels"
+                  ]), { prompt: "Select Degree" }, class: "w-2/5 p-2 border border-gray-300 rounded-md" %>
+                  <span>-</span>
+                  <%= ef.select :graduation_year, options_for_select((Date.today.year - 10..Date.today.year).to_a.reverse, @user.student_profile.educations[1]&.graduation_year), {}, { class: "w-1/4 p-2 border border-gray-300 rounded-md" } %>
                 </div>
               </div>
             <% end %>
@@ -106,8 +141,12 @@
         <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
             <% 5.times do |i| %>
               <%= sf.fields_for :projects, @user.student_profile.projects[i] || @user.student_profile.projects.build do |pf| %>
-                  <%= pf.text_field :project_name, class: "w-full p-2 border border-gray-300", placeholder: "Project Name" %>
-                  <%= pf.text_area :description, class: "mt-2 w-full p-2 border border-gray-300 resize-none", rows: 4, placeholder: "Enter project details", maxlength: 500 %>
+                  <%= pf.text_field :project_name, class: "w-full p-2 border border-gray-300 rounded-md", 
+                                    placeholder: "Project Name", 
+                                    maxlength: 80 %>
+                  <%= pf.text_area :description, class: "mt-2 w-full p-2 border border-gray-300 resize-none rounded-md", rows: 4, 
+                                    placeholder: "Enter project details", 
+                                    maxlength: 500 %>
               <% end %>
             <% end %>
         <% end %>
@@ -120,8 +159,14 @@
             <% 3.times do |i| %>
               <%= sf.fields_for :activities_honors, @user.student_profile.activities_honors[i] || @user.student_profile.activities_honors.build do |ahf| %>
                   <div class="flex flex-wrap gap-2 mb-2">
-                    <%= ahf.text_field :title, class: "flex-1 p-2 border border-gray-300", placeholder: "Activity 1 Title" %>
-                    <%= ahf.text_field :organization, class: "flex-1 p-2 border border-gray-300", placeholder: "Institution/Organization" %>
+                    <%= ahf.text_field :title, class: "flex-1 p-2 border border-gray-300 rounded-md", 
+                                        placeholder: "Activity #{i + 1} Title", 
+                                        size: 20, 
+                                        maxlength: 30 %>
+                    <%= ahf.text_field :organization, class: "flex-1 p-2 border border-gray-300 rounded-md", 
+                                        placeholder: "Institution/Organization", 
+                                        size: 20, 
+                                        maxlength: 30 %>
                   </div>
               <% end %>
             <% end %>
@@ -136,8 +181,12 @@
             <% 2.times do |i| %>
               <%= sf.fields_for :skills, @user.student_profile.skills[i] || @user.student_profile.skills.build do |skf| %>
                   <div class="mb-2">
-                    <%= skf.text_field :title, class: "w-full p-2 border border-gray-300", placeholder: "Skill Title" %>
-                    <%= skf.text_field :skill_list, class: "mt-2 w-full p-2 border border-gray-300 resize-none", placeholder: "Enter skills separated by comma (,)", maxlength: 150 %> 
+                    <%= skf.text_field :title, class: "w-full p-2 border border-gray-300 rounded-md", 
+                                        placeholder: "Skill #{i + 1} Title",
+                                        maxlength: 50 %>
+                    <%= skf.text_field :skill_list, class: "mt-2 w-full p-2 border border-gray-300 resize-none rounded-md", 
+                                        placeholder: "Enter skills separated by comma (,)", 
+                                        maxlength: 100 %> 
                   </div>
               <% end %>
             <% end %>
@@ -149,7 +198,9 @@
         <h2 class="font-medium mb-2">Interests & Hobbies</h2>
         <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
             <%= sf.fields_for :interests, @user.student_profile.interests.presence || @user.student_profile.interests.build do |inf| %>
-              <%= inf.text_field :interest_list, class: "w-full p-2 border border-gray-300 resize-none", placeholder: "Enter interests and hobbies separated by comma (,)", maxlength: 150 %>
+              <%= inf.text_field :interest_list, class: "w-full p-2 border border-gray-300 resize-none rounded-md",
+                                 placeholder: "Enter interests and hobbies separated by comma (,)", 
+                                 maxlength: 100 %>
             <% end %>
         <% end %>
       </section>
@@ -157,7 +208,7 @@
 
     <!-- Submit Button -->
     <div class="col-span-2 text-right mt-6">
-      <%= f.submit "Save Changes", class: "px-6 py-2 bg-[#1499DC] text-white font-medium hover:bg-[#0d7bbd]" %>
+      <%= f.submit "Save Changes", class: "px-6 py-2 bg-[#1499DC] text-white font-medium hover:bg-[#0d7bbd] rounded-md" %>
     </div>
   <% end %>
 </div>

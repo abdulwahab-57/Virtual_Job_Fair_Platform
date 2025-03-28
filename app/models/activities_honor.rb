@@ -4,6 +4,6 @@ class ActivitiesHonor < ApplicationRecord
 
   # Validations
   # validates :student_profile_id, presence: true
-  validates :title, allow_blank: true, length: { maximum: 100 }
-  validates :organization, allow_blank: true, length: { maximum: 100 }
+  validates :title, allow_blank: true, length: { maximum: 30 }
+  validates :organization, allow_blank: true, length: { maximum: 30 }
 end
