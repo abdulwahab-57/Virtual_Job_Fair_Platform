@@ -70,7 +70,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_09_163256) do
 
   create_table "educations", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
-    t.string "institution_name", limit: 100
+    t.string "institution_name", limit: 80
     t.string "degree", limit: 50
     t.integer "graduation_year"
     t.datetime "created_at", null: false

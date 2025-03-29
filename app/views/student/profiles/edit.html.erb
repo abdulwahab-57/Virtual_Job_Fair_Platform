@@ -146,7 +146,7 @@
                                     maxlength: 80 %>
                   <%= pf.text_area :description, class: "mt-2 w-full p-2 border border-gray-300 resize-none rounded-md", rows: 4, 
                                     placeholder: "Enter project details", 
-                                    maxlength: 500 %>
+                                    maxlength: 200 %>
               <% end %>
             <% end %>
         <% end %>
@@ -186,7 +186,7 @@
                                         maxlength: 50 %>
                     <%= skf.text_field :skill_list, class: "mt-2 w-full p-2 border border-gray-300 resize-none rounded-md", 
                                         placeholder: "Enter skills separated by comma (,)", 
-                                        maxlength: 100 %> 
+                                        maxlength: 80 %> 
                   </div>
               <% end %>
             <% end %>
@@ -200,7 +200,7 @@
             <%= sf.fields_for :interests, @user.student_profile.interests.presence || @user.student_profile.interests.build do |inf| %>
               <%= inf.text_field :interest_list, class: "w-full p-2 border border-gray-300 resize-none rounded-md",
                                  placeholder: "Enter interests and hobbies separated by comma (,)", 
-                                 maxlength: 100 %>
+                                 maxlength: 80 %>
             <% end %>
         <% end %>
       </section>

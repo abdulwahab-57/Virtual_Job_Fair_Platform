@@ -133,14 +133,8 @@ export default class extends Controller {
     const selectedRows = this.checkboxRowTargets.filter(checkbox => checkbox.checked)
 
     switch(selectedAction) {
-      case 'export':
-        this.exportSelected(selectedRows)
-        break
       case 'download_profiles':
         this.downloadProfiles(selectedRows)
-        break
-      case 'delete':
-        this.deleteSelected(selectedRows)
         break
     }
 
@@ -149,20 +143,6 @@ export default class extends Controller {
   }
 
   // Actions on selected rows
-  deleteSelected() {
-    // Implement delete logic for selected rows
-    const selectedRows = this.checkboxRowTargets.filter(checkbox => checkbox.checked)
-    console.log(`Deleting ${selectedRows.length} selected rows`)
-    
-    // Remove selected rows from the table (example implementation)
-    selectedRows.forEach(checkbox => {
-      const row = checkbox.closest('tr')
-      row.remove()
-    })
-
-    this.updateSelectionSummary()
-  }
-
   downloadProfiles(selectedCheckboxes) {
     // Get user IDs from selected rows
     const userIds = selectedCheckboxes.map(checkbox => 
@@ -195,16 +175,6 @@ export default class extends Controller {
     document.body.removeChild(link)
   }
 
-  exportSelected() {
-    // Implement export logic for selected rows
-    const selectedRows = this.checkboxRowTargets.filter(checkbox => checkbox.checked)
-    
-    // In a real app, you would extract data from the selected rows
-    const exportData = `Exporting ${selectedRows.length} rows`
-    console.log('Exporting selected rows:', exportData)
-    // In a real application, you'd implement actual export logic here
-    // For example, converting to CSV or sending to a backend service
-  }
 
   openStatusModal(event) {
     // Prevent event propagation

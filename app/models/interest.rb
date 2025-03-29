@@ -4,5 +4,5 @@ class Interest < ApplicationRecord
 
   # Validations
   # validates :student_profile_id, presence: true
-  validates :interest_list, allow_blank: true, length: { maximum: 100 }
+  validates :interest_list, allow_blank: true, length: { maximum: 80 }
 end

@@ -9,68 +9,76 @@
             <div class="h-[128px]"></div>
             <div class="flex flex-col gap-8 py-8">
                 <div class="flex flex-col gap-3">
-                    <div class="flex gap-2">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_10_26)">
-                                <path
-                                    d="M12 2C8.13 2 5 5.13 5 9C5 10.74 5.5 12.37 6.41 13.84C7.36 15.38 8.61 16.7 9.57 18.24C10.04 18.99 10.38 19.69 10.74 20.5C11 21.05 11.21 22 12 22C12.79 22 13 21.05 13.25 20.5C13.62 19.69 13.95 18.99 14.42 18.24C15.38 16.71 16.63 15.39 17.58 13.84C18.5 12.37 19 10.74 19 9C19 5.13 15.87 2 12 2ZM12 11.75C10.62 11.75 9.5 10.63 9.5 9.25C9.5 7.87 10.62 6.75 12 6.75C13.38 6.75 14.5 7.87 14.5 9.25C14.5 10.63 13.38 11.75 12 11.75Z"
-                                    fill="#005691" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_10_26">
-                                    <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.office_location %></span>
-                    </div>
-                    <div class="flex gap-2">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_10_29)">
-                                <path
-                                    d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z"
-                                    fill="#005691" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_10_29">
-                                    <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.company_email %></span>
-                    </div>
-                    <div class="flex gap-2">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_52_84)">
-                                <path
-                                    d="M12 2C10.722 2 9.34494 3.961 8.58594 7H15.4141C14.6551 3.961 13.278 2 12 2ZM8.06055 2.81055C6.07655 3.66455 4.42952 5.146 3.35352 7H6.51172C6.86772 5.362 7.39655 3.93855 8.06055 2.81055ZM15.9395 2.81055C16.6025 3.93855 17.1323 5.362 17.4883 7H20.6465C19.5705 5.146 17.9235 3.66455 15.9395 2.81055ZM2.46094 9C2.16294 9.948 2 10.955 2 12C2 13.045 2.16294 14.052 2.46094 15H6.18164C6.06764 14.045 6 13.046 6 12C6 10.954 6.06764 9.955 6.18164 9H2.46094ZM8.20117 9C8.07217 9.939 8 10.945 8 12C8 13.055 8.07217 14.061 8.20117 15H15.7988C15.9268 14.061 16 13.055 16 12C16 10.945 15.9278 9.939 15.7988 9H8.20117ZM17.8184 9C17.9324 9.955 18 10.954 18 12C18 13.046 17.9324 14.045 17.8184 15H21.5391C21.8381 14.052 22 13.045 22 12C22 10.955 21.8381 9.948 21.5391 9H17.8184ZM3.35352 17C4.42952 18.854 6.07655 20.3355 8.06055 21.1895C7.39755 20.0615 6.86772 18.638 6.51172 17H3.35352ZM8.58594 17C9.34494 20.039 10.722 22 12 22C13.278 22 14.6551 20.039 15.4141 17H8.58594ZM17.4883 17C17.1323 18.638 16.6035 20.0615 15.9395 21.1895C17.9235 20.3355 19.5705 18.854 20.6465 17H17.4883Z"
-                                    fill="#005691" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_52_84">
-                                    <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>                        
-                        <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.company_website %></span>
-                    </div>
-                    <div class="flex gap-2">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_55_96)">
-                                <path
-                                    d="M9 3V8.02344C10.208 8.93644 11 10.37 11 12C11 13.112 10.6447 14.1194 10.0527 14.9414C11.8587 15.8954 13 17.4958 13 19.3848V21H23V3H9ZM13 7H15V9H13V7ZM17 7H19V9H17V7ZM6 9C5.20435 9 4.44129 9.31607 3.87868 9.87868C3.31607 10.4413 3 11.2044 3 12C3 12.7956 3.31607 13.5587 3.87868 14.1213C4.44129 14.6839 5.20435 15 6 15C6.79565 15 7.55871 14.6839 8.12132 14.1213C8.68393 13.5587 9 12.7956 9 12C9 11.2044 8.68393 10.4413 8.12132 9.87868C7.55871 9.31607 6.79565 9 6 9ZM13 11H15V13H13V11ZM17 11H19V13H17V11ZM13 15H15V17H13V15ZM17 15H19V17H17V15ZM6 16C3.149 16 1 17.4558 1 19.3848V21H11V19.3848C11 17.4558 8.851 16 6 16Z"
-                                    fill="#005691" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_55_96">
-                                    <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>                      
-                        <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.employee_count %> employees</span>
-                    </div>
+                    <% if @user.recruiter_profile.office_location.present? %>
+                        <div class="flex gap-2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_10_26)">
+                                    <path
+                                        d="M12 2C8.13 2 5 5.13 5 9C5 10.74 5.5 12.37 6.41 13.84C7.36 15.38 8.61 16.7 9.57 18.24C10.04 18.99 10.38 19.69 10.74 20.5C11 21.05 11.21 22 12 22C12.79 22 13 21.05 13.25 20.5C13.62 19.69 13.95 18.99 14.42 18.24C15.38 16.71 16.63 15.39 17.58 13.84C18.5 12.37 19 10.74 19 9C19 5.13 15.87 2 12 2ZM12 11.75C10.62 11.75 9.5 10.63 9.5 9.25C9.5 7.87 10.62 6.75 12 6.75C13.38 6.75 14.5 7.87 14.5 9.25C14.5 10.63 13.38 11.75 12 11.75Z"
+                                        fill="#005691" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_10_26">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.office_location %></span>
+                        </div>
+                    <% end %>
+                    <% if @user.recruiter_profile.company_email.present? %>
+                        <div class="flex gap-2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_10_29)">
+                                    <path
+                                        d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z"
+                                        fill="#005691" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_10_29">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.company_email %></span>
+                        </div>
+                    <% end %>
+                    <% if @user.recruiter_profile.company_website.present? %>
+                        <div class="flex gap-2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_52_84)">
+                                    <path
+                                        d="M12 2C10.722 2 9.34494 3.961 8.58594 7H15.4141C14.6551 3.961 13.278 2 12 2ZM8.06055 2.81055C6.07655 3.66455 4.42952 5.146 3.35352 7H6.51172C6.86772 5.362 7.39655 3.93855 8.06055 2.81055ZM15.9395 2.81055C16.6025 3.93855 17.1323 5.362 17.4883 7H20.6465C19.5705 5.146 17.9235 3.66455 15.9395 2.81055ZM2.46094 9C2.16294 9.948 2 10.955 2 12C2 13.045 2.16294 14.052 2.46094 15H6.18164C6.06764 14.045 6 13.046 6 12C6 10.954 6.06764 9.955 6.18164 9H2.46094ZM8.20117 9C8.07217 9.939 8 10.945 8 12C8 13.055 8.07217 14.061 8.20117 15H15.7988C15.9268 14.061 16 13.055 16 12C16 10.945 15.9278 9.939 15.7988 9H8.20117ZM17.8184 9C17.9324 9.955 18 10.954 18 12C18 13.046 17.9324 14.045 17.8184 15H21.5391C21.8381 14.052 22 13.045 22 12C22 10.955 21.8381 9.948 21.5391 9H17.8184ZM3.35352 17C4.42952 18.854 6.07655 20.3355 8.06055 21.1895C7.39755 20.0615 6.86772 18.638 6.51172 17H3.35352ZM8.58594 17C9.34494 20.039 10.722 22 12 22C13.278 22 14.6551 20.039 15.4141 17H8.58594ZM17.4883 17C17.1323 18.638 16.6035 20.0615 15.9395 21.1895C17.9235 20.3355 19.5705 18.854 20.6465 17H17.4883Z"
+                                        fill="#005691" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_52_84">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>                        
+                            <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.company_website %></span>
+                        </div>
+                    <% end %>
+                    <% if @user.recruiter_profile.employee_count.present? %>
+                        <div class="flex gap-2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_55_96)">
+                                    <path
+                                        d="M9 3V8.02344C10.208 8.93644 11 10.37 11 12C11 13.112 10.6447 14.1194 10.0527 14.9414C11.8587 15.8954 13 17.4958 13 19.3848V21H23V3H9ZM13 7H15V9H13V7ZM17 7H19V9H17V7ZM6 9C5.20435 9 4.44129 9.31607 3.87868 9.87868C3.31607 10.4413 3 11.2044 3 12C3 12.7956 3.31607 13.5587 3.87868 14.1213C4.44129 14.6839 5.20435 15 6 15C6.79565 15 7.55871 14.6839 8.12132 14.1213C8.68393 13.5587 9 12.7956 9 12C9 11.2044 8.68393 10.4413 8.12132 9.87868C7.55871 9.31607 6.79565 9 6 9ZM13 11H15V13H13V11ZM17 11H19V13H17V11ZM13 15H15V17H13V15ZM17 15H19V17H17V15ZM6 16C3.149 16 1 17.4558 1 19.3848V21H11V19.3848C11 17.4558 8.851 16 6 16Z"
+                                        fill="#005691" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_55_96">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>                      
+                            <span class="text-base text-[#333333] flex-1 break-all"><%= @user.recruiter_profile.employee_count %> employees</span>
+                        </div>
+                    <% end %>
                 </div>
-                <button class="flex gap-2 p-4 items-center justify-center bg-[#0C71C3]">
+                <button class="flex gap-2 p-4 items-center justify-center bg-[#1499DC] hover:bg-[#0d7bbd] rounded-md">
                     <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M13.0001 0C6.08134 0 0.452881 4.89248 0.452881 10.9056C0.452881 14.2851 2.27942 17.4966 5.35411 19.554C5.28517 20.1198 5.00062 21.536 3.82908 23.1984C3.72019 23.3532 3.70596 23.5557 3.79296 23.7242C3.87997 23.8927 4.05343 23.9989 4.24276 24C4.2537 24 4.26355 24 4.27504 24C7.25616 23.9995 9.26273 22.1576 9.90185 21.4769C10.9103 21.6985 11.9506 21.8112 13.0001 21.8112C19.9188 21.8112 25.5473 16.9193 25.5473 10.9056C25.5473 4.89193 19.9188 0 13.0001 0ZM6.98092 7.07524H19.0192C19.3213 7.07524 19.5664 7.31984 19.5664 7.62244C19.5664 7.92503 19.3213 8.16963 19.0192 8.16963H6.98092C6.67887 8.16963 6.43373 7.92503 6.43373 7.62244C6.43373 7.31984 6.67887 7.07524 6.98092 7.07524ZM4.79214 11.4528C4.49009 11.4528 4.24495 11.2082 4.24495 10.9056C4.24495 10.603 4.49009 10.3584 4.79214 10.3584H14.0945C14.3965 10.3584 14.6417 10.603 14.6417 10.9056C14.6417 11.2082 14.3965 11.4528 14.0945 11.4528H4.79214ZM19.0192 14.736H6.98092C6.67887 14.736 6.43373 14.4914 6.43373 14.1888C6.43373 13.8862 6.67887 13.6416 6.98092 13.6416H19.0192C19.3213 13.6416 19.5664 13.8862 19.5664 14.1888C19.5664 14.4914 19.3213 14.736 19.0192 14.736ZM21.208 11.4528H17.3776C17.0756 11.4528 16.8304 11.2082 16.8304 10.9056C16.8304 10.603 17.0756 10.3584 17.3776 10.3584H21.208C21.5101 10.3584 21.7552 10.603 21.7552 10.9056C21.7552 11.2082 21.5101 11.4528 21.208 11.4528Z"
@@ -86,7 +94,7 @@
                     <h1 class="text-[32px] font-bold text-[#333333]"><%= @user.recruiter_profile.company_name %></h1>
                     <h2 class="text-base text-[#AAAAAA]"><%= @user.recruiter_profile.industry %></h2>
                 </div>
-                <%= link_to @edit_profile_path, class: 'self-start text-center py-2 px-4 bg-[#0C71C3]' do %>
+                <%= link_to @edit_profile_path, class: 'self-start text-center py-2 px-4 bg-[#1499DC] hover:bg-[#0d7bbd] rounded-md' do %>
                     <div class="flex gap-2">
                         <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path

@@ -1,2 +1,24 @@
-<h1>Student<%= current_user.id %>::Dashboards#index</h1>
-<p>Find me in app/views/student/dashboards/index.html.erb</p>
+<div class="min-h-[50vh] grid place-content-center text-[#333333] text-center">
+
+    <h1 class="text-3xl font-bold mb-4">Welcome to Your Dashboard</h1>
+
+    <div class="space-y-4 text-base">
+        <p class="">
+            Our platform is currently under development. In the meantime, you can get started by updating your profile and submitting your digital resume.
+        </p>
+        <p class="">
+            This will help recruiters and career officers learn more about you.
+        </p>
+    </div>      
+
+    <%= link_to @edit_profile_path, class: 'mt-6 justify-self-center text-center py-2 px-4 bg-[#1499DC] hover:bg-[#0d7bbd] rounded-md' do %>
+        <div class="flex gap-2">
+            <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M9.7352 0.5C9.57359 0.5 9.41181 0.561559 9.28865 0.685033L8.21053 1.76316L10.7368 4.28947L11.815 3.21135C12.0619 2.9644 12.0619 2.56457 11.815 2.31826L10.1817 0.685033C10.0583 0.561559 9.8968 0.5 9.7352 0.5ZM7.26316 2.71053L1.26316 8.71053C1.26316 8.71053 1.89789 8.71368 2.21053 9.02632C2.52316 9.33895 2.51645 9.96382 2.51645 9.96382C2.51645 9.96382 3.16042 9.97621 3.47368 10.2895C3.78695 10.6027 3.78947 11.2368 3.78947 11.2368L9.78947 5.23684L7.26316 2.71053ZM0.423109 9.97368L0 12.5L2.52632 12.0769L0.423109 9.97368Z"
+                    fill="#F5F5F5" />
+            </svg>
+            <span class="text-white text-xs font-medium">Edit Profile</span>
+        </div>
+    <% end %>    
+</div>

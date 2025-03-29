@@ -81,7 +81,7 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
         send_data pdf,
           filename: "student_profiles_#{Date.today.strftime('%Y%m%d')}.pdf",
           type: "application/pdf",
-          disposition: "inline"
+          disposition: "attachment"
       end
     end
   end
