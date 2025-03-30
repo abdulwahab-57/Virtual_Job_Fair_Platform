@@ -13,7 +13,10 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client \
+    libasound2 libatk-bridge2.0-0 \
+    libatk1.0-0 libcups2 libdbus-1-3 libgbm1 libnss3 \
+    libxcomposite1 libxdamage1 libxrandr2 libxshmfence1 libxtst6 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
@@ -27,7 +30,8 @@ FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config && \
+    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config \
+    nodejs npm && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
@@ -35,6 +39,12 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
+
+# Set up Puppeteer
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production && \
+    # Clean up npm cache
+    npm cache clean --force
 
 # Copy application code
 COPY . .
@@ -53,12 +63,19 @@ FROM base
 
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+COPY --from=build /rails/node_modules /rails/node_modules
 COPY --from=build /rails /rails
+# Create the directory for Times New Roman fonts
+RUN mkdir -p /usr/share/fonts/truetype/times-new-roman/
+# Copy Times New Roman fonts to the system fonts directory (used by Chromium for PDFs)
+COPY vendor/assets/times_new_roman*.ttf /usr/share/fonts/truetype/times-new-roman/
+# Rebuild font cache to recognize new fonts
+RUN fc-cache -fv
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
+    chown -R rails:rails db log storage tmp node_modules
 USER 1000:1000
 
 # Entrypoint prepares the database.
