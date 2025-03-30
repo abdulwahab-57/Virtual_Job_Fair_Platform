@@ -104,12 +104,14 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
     port: 587,
-    domain: "your-production-domain.com",
+    domain: "gmail.com",
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: ENV["EMAIL_USERNAME"], # From .env
-    password: ENV["EMAIL_PASSWORD"] # From .env
+    # user_name: ENV["EMAIL_USERNAME"], # From .env
+    user_name: "muhammadahmadsarfraz2020@gmail.com", # From .env
+    # password: ENV["EMAIL_PASSWORD"] # From .env
+    password: "zjdzpvfrfzxtdqoc" # From .env
   }
 
-  config.ation_mailer.default_url_options = { host: "your-production-domain.com", protocol: "https" }
+  config.action_mailer.default_url_options = { host: "localhost", port:3000 }
 end
