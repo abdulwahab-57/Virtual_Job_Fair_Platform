@@ -86,5 +86,3 @@ test:
 production:
   <<: *default
   database: virtual_job_fair_platform_production
-  username: virtual_job_fair_platform
-  password: <%= ENV["VIRTUAL_JOB_FAIR_PLATFORM_DATABASE_PASSWORD"] %>
