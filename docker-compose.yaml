@@ -1,4 +1,4 @@
-name: "virtual_job_fair_platform"
+name: "virtual_job_fair_platform_production"
 
 services:
   rails-app:
