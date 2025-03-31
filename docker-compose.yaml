@@ -5,10 +5,10 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    #Exposing port externally
+    environment:
+      - RAILS_MASTER_KEY
     ports:
     - 3000:3000
-
     depends_on:
     - redis
     - postgres
