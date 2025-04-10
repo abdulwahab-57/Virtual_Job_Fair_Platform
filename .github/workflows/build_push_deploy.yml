@@ -35,6 +35,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             docker pull wahab457/virtual_job_fair_platform:latest
             docker stop virtual_job_fair_platform || true
