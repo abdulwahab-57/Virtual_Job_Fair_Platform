@@ -24,6 +24,17 @@ jobs:
         run: |
           docker push wahab457/virtual_job_fair_platform:latest
 
+      - name: Copy docker-compose.yaml to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          source: "docker-compose.yaml"
+          target: "/home/jobfair/"
+
       - name: Deploy to Remote Server via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -35,6 +46,5 @@ jobs:
           scp: 'docker-compose.yaml:/home/jobfair/'
           script: |
             cd /home/jobfair/
-            docker stop virtual_job_fair_platform_production-rails-app || true
-            docker rm virtual_job_fair_platform_production-rails-app || true
+            docker compose down || true
             RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d
