@@ -113,5 +113,5 @@ Rails.application.configure do
     password: "zjdzpvfrfzxtdqoc" # From .env
   }
 
-  config.action_mailer.default_url_options = { host: "localhost", port:3000 }
+  config.action_mailer.default_url_options = { host: Rails.application.credentials[:HOST_IP], port: Rails.application.credentials[:HOST_PORT] }
 end
