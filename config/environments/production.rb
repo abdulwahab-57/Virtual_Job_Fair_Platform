@@ -107,10 +107,8 @@ Rails.application.configure do
     domain: "gmail.com",
     authentication: "plain",
     enable_starttls_auto: true,
-    # user_name: ENV["EMAIL_USERNAME"], # From .env
-    user_name: "muhammadahmadsarfraz2020@gmail.com", # From .env
-    # password: ENV["EMAIL_PASSWORD"] # From .env
-    password: "zjdzpvfrfzxtdqoc" # From .env
+    user_name: Rails.application.credentials[:EMAIL_USERNAME],
+    password: Rails.application.credentials[:EMAIL_PASSWORD]
   }
 
   config.action_mailer.default_url_options = { host: Rails.application.credentials[:HOST_IP], port: Rails.application.credentials[:HOST_PORT] }
