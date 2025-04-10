@@ -47,4 +47,5 @@ jobs:
           script: |
             cd /home/jobfair/
             docker compose down || true
+            docker rmi wahab457/virtual_job_fair_platform:latest || true
             RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d
