@@ -2,15 +2,13 @@ name: "virtual_job_fair_platform_production"
 
 services:
   rails-app:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    image: wahab457/virtual_job_fair_platform:latest
     environment:
       - RAILS_MASTER_KEY
       - DB_HOST=postgres
     ports:
     - 3000:3000
-    depends_on:
+    depends_on: 
     - redis
     - postgres
 

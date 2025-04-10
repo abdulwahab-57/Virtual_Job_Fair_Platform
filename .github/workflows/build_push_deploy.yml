@@ -16,13 +16,9 @@ jobs:
       - name: Docker Hub Login
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-      - name: Build with docker-compose
+      - name: Build image
         run: |
-          RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose -f docker-compose.yaml build
-
-      - name: Tag the image
-        run: |
-          docker tag virtual_job_fair_platform_production-rails-app wahab457/virtual_job_fair_platform:latest
+          docker build -t wahab457/virtual_job_fair_platform:latest .
 
       - name: Push image to Docker Hub
         run: |
@@ -37,7 +33,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            docker pull wahab457/virtual_job_fair_platform:latest
             docker stop virtual_job_fair_platform || true
             docker rm virtual_job_fair_platform || true
-            docker run -d --name virtual_job_fair_platform -p 3000:3000 wahab457/virtual_job_fair_platform:latest
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d
