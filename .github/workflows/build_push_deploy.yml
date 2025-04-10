@@ -1,0 +1,41 @@
+name: Build, Push, and Deploy Rails App
+
+on:
+  push:
+    branches:
+      - cleanup/v1
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Docker Hub Login
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Build with docker-compose
+        run: |
+          RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose -f docker-compose.yaml build
+
+      - name: Tag the image
+        run: |
+          docker tag virtual_job_fair_platform_production-rails-app wahab457/virtual_job_fair_platform:latest
+
+      - name: Push image to Docker Hub
+        run: |
+          docker push wahab457/virtual_job_fair_platform:latest
+
+      - name: Deploy to Remote Server via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull wahab457/virtual_job_fair_platform:latest
+            docker stop virtual_job_fair_platform || true
+            docker rm virtual_job_fair_platform || true
+            docker run -d --name virtual_job_fair_platform -p 3000:3000 wahab457/virtual_job_fair_platform:latest
