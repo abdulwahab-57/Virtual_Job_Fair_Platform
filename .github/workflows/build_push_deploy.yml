@@ -29,11 +29,12 @@ jobs:
           docker push wahab457/virtual_job_fair_platform:latest
 
       - name: Deploy to Remote Server via SSH
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
             docker pull wahab457/virtual_job_fair_platform:latest
             docker stop virtual_job_fair_platform || true
