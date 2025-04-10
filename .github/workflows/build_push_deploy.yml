@@ -32,7 +32,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          scp: 'docker-compose.yaml:/home/jobfair/'
           script: |
-            docker stop virtual_job_fair_platform || true
-            docker rm virtual_job_fair_platform || true
+            cd /home/jobfair/
+            docker stop virtual_job_fair_platform_production-rails-app || true
+            docker rm virtual_job_fair_platform_production-rails-app || true
             RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d
