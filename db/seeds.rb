@@ -476,18 +476,18 @@
 # puts "Created 3 career_officer users with complete profiles!"
 
 # Creating a Career Officer User with an associated profile
-# User.create!(
-#   full_name: "Aysha Shafiq",
-#   email: "aysha.shafiq@nu.edu.pk",
-#   password: "123456789",
-#   password_confirmation: "123456789",
-#   user_type: "career_officer",
-#   career_officer_profile_attributes: {
-#     designation: "Career Advisor"
-#   }
-# )
+User.create!(
+  full_name: "Aysha Shafiq",
+  email: "cfd.cso@nu.edu.pk",
+  password: "123456789",
+  password_confirmation: "123456789",
+  user_type: "career_officer",
+  career_officer_profile_attributes: {
+    designation: "Deputy Manager"
+  }
+)
 
-# puts "Career Officer user with profile seeded successfully!"
+puts "Career Officer user with profile seeded successfully!"
 
 
 # Creating a Student User with an associated profile
