@@ -487,7 +487,19 @@ User.create!(
   }
 )
 
-puts "Career Officer user with profile seeded successfully!"
+
+User.create!(
+  full_name: "Noor Mughal",
+  email: "f223634@cfd.nu.edu.pk",
+  password: "123456789",
+  password_confirmation: "123456789",
+  user_type: "career_officer",
+  career_officer_profile_attributes: {
+    designation: "Career Services Manager"
+  }
+)
+
+puts "Career Officer users with profile seeded successfully!"
 
 
 # Creating a Student User with an associated profile

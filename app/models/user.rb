@@ -168,7 +168,7 @@ class User < ApplicationRecord
   end
 
   def validate_email_domain
-    if user_type.in?(%w[student career_officer]) && !email.end_with?("@cfd.nu.edu.pk")
+    if user_type.in?(%w[student]) && !email.end_with?("@cfd.nu.edu.pk")
       errors.add(:email, "must be a valid @cfd.nu.edu.pk email address")
     end
   end
