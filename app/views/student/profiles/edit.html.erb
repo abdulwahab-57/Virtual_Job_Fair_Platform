@@ -41,10 +41,11 @@
             <fieldset class="mb-4">
               <legend class="block mb-2 font-medium">Email</legend>
               <div class="space-y-2">
-                <%= f.email_field :email, class: "w-full p-2 border border-gray-300 rounded-md", 
+                <%= f.email_field :email, class: "w-full p-2 border-none text-gray-500 bg-gray-200 rounded-md", 
                                   placeholder: "f123456@cfd.nu.edu.pk",
                                   pattern: "f\\d{6}@cfd\\.nu\\.edu\\.pk",
-                                  title: "Email must start with 'f', followed by exactly 6 digits, and end with '@cfd.nu.edu.pk'. Example: f123456@cfd.nu.edu.pk" %>
+                                  title: "Email must start with 'f', followed by exactly 6 digits, and end with '@cfd.nu.edu.pk'. Example: f123456@cfd.nu.edu.pk",
+                                  disabled: true %>
                 <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
                   <%= sf.email_field :email_personal, class: "w-full p-2 border border-gray-300 rounded-md", 
                                     placeholder: "personal@gmail.com",

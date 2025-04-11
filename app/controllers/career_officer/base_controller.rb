@@ -10,7 +10,9 @@ class CareerOfficer::BaseController < ApplicationController
 
   def set_sidebar
     @sidebar_tabs = [
-      { label: "Student Profiles", icon: "users", path: career_officer_student_profiles_path }
+      { label: "Student Profiles", icon: "users", path: career_officer_student_profiles_path },
+      { label: "Job Fair Arena", icon: "video", path: "#" },
+      { label: "Meetings", icon: "calendar", path: "#" }
     ]
   end
 

@@ -9,7 +9,7 @@ class Student::BaseController < ApplicationController
   end
 
   def set_sidebar
-    @sidebar_tabs = []
+    @sidebar_tabs = [ { label: "Job Fair Arena", icon: "video", path: "#" } ]
   end
 
   def set_path
