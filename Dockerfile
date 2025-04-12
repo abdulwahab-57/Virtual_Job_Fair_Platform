@@ -16,7 +16,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y nodejs npm curl libjemalloc2 libvips postgresql-client \
     libasound2 libatk-bridge2.0-0 \
     libatk1.0-0 libcups2 libdbus-1-3 libgbm1 libnss3 \
-    libxcomposite1 libxdamage1 libxrandr2 libxshmfence1 libxtst6 && \
+    libxcomposite1 libxdamage1 libxrandr2 libxshmfence1 libxtst6 libxfixes3 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
@@ -39,10 +39,10 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
-# Set up Puppeteer
+# Set up Puppeteer and Install Chrome
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production && \
-    # Clean up npm cache
+RUN npm ci --only=production \
+    npx puppeteer browsers install chrome && \
     npm cache clean --force
 
 # Copy application code
@@ -62,8 +62,10 @@ FROM base
 
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails/node_modules /rails/node_modules
 COPY --from=build /rails /rails
+COPY --from=build /rails/node_modules /rails/node_modules
+COPY --from=build /home/rails/.cache/puppeteer /home/rails/.cache/puppeteer
+
 # Create the directory for Times New Roman fonts
 RUN mkdir -p /usr/share/fonts/truetype/times-new-roman/
 # Copy Times New Roman fonts to the system fonts directory (used by Chromium for PDFs)
