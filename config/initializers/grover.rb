@@ -6,7 +6,12 @@ Grover.configure do |config|
       left: "0.5in",
       right: "0.5in"
     },
-    launch_args: [ "--no-sandbox", "--disable-setuid-sandbox" ],
+    launch_args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-crash-reporter",
+      "--disable-breakpad"
+    ],
     prefer_css_page_size: true,
     emulate_media: "screen",
     wait_until: "domcontentloaded",

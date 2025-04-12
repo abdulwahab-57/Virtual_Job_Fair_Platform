@@ -42,7 +42,7 @@ RUN bundle install && \
 # Set up Puppeteer and Install Chrome
 COPY package.json package-lock.json* ./
 RUN npm ci --only=production \
-    npx puppeteer browsers install chrome && \
+    npx puppeteer browsers install chrome -- --disable-crash-reporter --disable-breakpad && \
     npm cache clean --force
 
 # Copy application code
