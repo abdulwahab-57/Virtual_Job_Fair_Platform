@@ -15,7 +15,7 @@ Grover.configure do |config|
     ],
     prefer_css_page_size: true,
     emulate_media: "screen",
-    wait_until: "domcontentloaded",
+    wait_until: "networkidle0",
     print_background: true
   }
 end
