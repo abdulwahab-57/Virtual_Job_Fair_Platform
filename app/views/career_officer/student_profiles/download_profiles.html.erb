@@ -1,14 +1,14 @@
 <% @users.each_with_index do |user, index| %>
   <div class="max-w-4xl mx-auto">
     <div class="flex justify-between mb-9">
-      <img src="<%=  request.base_url + '/fast_logo_top_left.png' %>" alt="National University Logo" style="height: 66.24px; width: auto;">
-      <img src="<%=  request.base_url + '/fast_logo_top_right.png' %>" alt="National University Logo" style="height: 66.24px; width: auto;">
+      <img src="http://localhost:3000/fast_logo_top_left.png" alt="National University Logo" style="height: 66.24px; width: auto;">
+      <img src="http://localhost:3000/fast_logo_top_right.png" alt="National University Logo" style="height: 66.24px; width: auto;">
     </div>
     <div class="grid grid-cols-[20%_1fr] grid-rows-[auto] gap-x-4 gap-y-6">
       <div class="col-start-1 row-start-1 justify-self-center">
         <% if user.profile_picture.attached? %>
           <% base64_image = Base64.strict_encode64(user.profile_picture.download) %>
-          <img src="data:image/<%= user.profile_picture.content_type %>;base64,<%= base64_image %>" width="120" height="120">
+          <img src="data:image/<%= user.profile_picture.content_type %>;base64,<%= base64_image %>" style="height: 120px; width: 120px;">
         <% else %>
           <%= image_tag "https://placehold.co/120x120", size: "120x120" %>
         <% end %>
