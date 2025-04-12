@@ -80,6 +80,9 @@ RUN groupadd --system --gid 1000 rails && \
     chown -R rails:rails db log storage tmp node_modules
 USER 1000:1000
 
+# Install chrome
+RUN npx puppeteer browsers install chrome 
+
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
