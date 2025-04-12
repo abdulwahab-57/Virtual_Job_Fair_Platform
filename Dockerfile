@@ -41,8 +41,7 @@ RUN bundle install && \
 
 # Set up Puppeteer and Install Chrome
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production \
-    npx puppeteer browsers install chrome && \
+RUN npm ci --only=production && \
     npm cache clean --force
 
 # Copy application code
@@ -73,6 +72,9 @@ RUN mkdir -p /usr/share/fonts/truetype/times-new-roman/
 COPY vendor/assets/times_new_roman*.ttf /usr/share/fonts/truetype/times-new-roman/
 # Rebuild font cache to recognize new fonts
 RUN fc-cache -fv
+
+# Install chrome
+RUN npx puppeteer browsers install chrome 
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
