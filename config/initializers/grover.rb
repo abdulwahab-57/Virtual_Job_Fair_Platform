@@ -7,10 +7,8 @@ Grover.configure do |config|
       right: "0.5in"
     },
     launch_args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-crash-reporter",
-      "--disable-breakpad"
+      "--user-data-dir=/tmp/chrome-user-data",
+      "--crash-dumps-dir=/tmp/chrome-crash-dumps"
     ],
     prefer_css_page_size: true,
     emulate_media: "screen",
