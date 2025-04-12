@@ -1,6 +1,7 @@
 Grover.configure do |config|
   config.options = {
     timeout: 0,
+    protocolTimeout: 0,
     format: "A4",
     margin: {
       top: "0.5in",
@@ -10,9 +11,7 @@ Grover.configure do |config|
     launch_args: [
       "--no-sandbox",
       "--disable-crash-reporter",
-      "--disable-crashpad-for-testing",
-      "--user-data-dir=/tmp/chrome-user-data",
-      "--crash-dumps-dir=/tmp/chrome-crash-dumps"
+      "--disable-crashpad-for-testing"
     ],
     prefer_css_page_size: true,
     emulate_media: "screen",

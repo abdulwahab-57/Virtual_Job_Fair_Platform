@@ -80,10 +80,6 @@ RUN groupadd --system --gid 1000 rails && \
     chown -R rails:rails db log storage tmp node_modules
 USER 1000:1000
 
-# Create directories for Chromium user data and crash dumps
-RUN mkdir -p /tmp/chrome-user-data /tmp/chrome-crash-dumps && \
-    chown -R rails:rails /tmp/chrome-user-data /tmp/chrome-crash-dumps
-
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
