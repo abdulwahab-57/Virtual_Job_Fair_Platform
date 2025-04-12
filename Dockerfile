@@ -13,7 +13,7 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y nodejs npm curl libjemalloc2 libvips postgresql-client \
+    apt-get install --no-install-recommends -y nano nodejs npm curl libjemalloc2 libvips postgresql-client \
     libasound2 libatk-bridge2.0-0 \
     libatk1.0-0 libcups2 libdbus-1-3 libgbm1 libnss3 \
     libxcomposite1 libxdamage1 libxrandr2 libxshmfence1 libxtst6 libxfixes3 libxkbcommon0 && \
