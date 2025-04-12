@@ -7,6 +7,7 @@ Grover.configure do |config|
       right: "0.5in"
     },
     launch_args: [
+      "--no-sandbox",
       "--disable-crash-reporter",
       "--disable-crashpad-for-testing",
       "--user-data-dir=/tmp/chrome-user-data",
