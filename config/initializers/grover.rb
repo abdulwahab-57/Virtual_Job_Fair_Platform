@@ -1,7 +1,6 @@
 Grover.configure do |config|
   config.options = {
     timeout: 0,
-    protocolTimeout: 0,
     format: "A4",
     margin: {
       top: "0.5in",

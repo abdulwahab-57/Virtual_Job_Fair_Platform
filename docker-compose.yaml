@@ -6,6 +6,7 @@ services:
     environment:
       - RAILS_MASTER_KEY
       - DB_HOST=postgres
+      - chrome_launchOptions_protocolTimeout=600000
     ports:
     - 3000:3000
     depends_on: 
