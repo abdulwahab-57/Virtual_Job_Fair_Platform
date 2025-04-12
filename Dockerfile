@@ -63,8 +63,6 @@ FROM base
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 COPY --from=build /rails/node_modules /rails/node_modules
-COPY --from=build /root/.cache/puppeteer /home/rails/.cache/puppeteer
-
 
 # Create the directory for Times New Roman fonts
 RUN mkdir -p /usr/share/fonts/truetype/times-new-roman/
