@@ -1,6 +1,5 @@
  <nav class="fixed w-full h-[72px] px-16 flex items-center justify-between z-50 backdrop-blur-lg shadow-sm">
-    <img src="http://localhost:3000/icon.png" style="height: 52px; width: auto;">
-
+    <img src="<%= asset_path('logo') %>" alt="Fast Nuces Logo" style="height: 52px; width: auto;">
     <div class="flex items-center gap-4 font-normal text-white text-base">
       <%= link_to 'Log in', new_user_session_path , class: 'px-5 py-2 border border-white' %>
       <%= link_to 'Sign up', new_user_registration_path , class: 'px-5 py-2 border border-[#1569E0] bg-[#1569E0]' %>
