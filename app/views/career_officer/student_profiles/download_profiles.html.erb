@@ -19,7 +19,7 @@
           <h1 class="text-[28pt] font-bold"><%= user.full_name %></h1>
           <p class="text-[17pt] font-bold"><%= user.student_profile.educations.first&.degree %></p>
       </div>
-      <div class="col-start-1 row-start-2 bg-[#1499DC]">
+      <div class="col-start-1 row-start-2 bg-[#1499DC] leading-tight">
         <div class="text-right text-[9.5pt] text-white px-4 pt-8">
           <ul class="break-all space-y-4">
             <li>
@@ -56,19 +56,19 @@
           </ul>
         </div>
       </div>
-      <div class="col-start-2 row-start-2 -mt-12 text-justify">
+      <div class="col-start-2 row-start-2 -mt-12 text-justify leading-tight">
           <!-- Education Section -->
           <section class="mb-2">
             <h2 class="text-[12pt] font-bold border-b text-[#1499DC] border-[#1499DC]">Education</h2>
-            <ul class="mt-2">
+            <ul class="mt-1">
               <% user.student_profile.educations.each_with_index do |education, index| %>
                 <li>
                   <% if index == 0 %>
-                    <p class="text-[10pt] font-bold">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
-                    <p class="text-[10pt]"><%= "#{education.degree} - #{Date.today.year}" %></p>
+                    <p class="text-[10.5pt] font-bold">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
+                    <p class="text-[10.5pt]"><%= "#{education.degree} - #{Date.today.year}" %></p>
                   <% else %>
-                    <p class="text-[10pt] font-bold"><%= education.institution_name %></p>
-                    <p class="text-[10pt]"><%= "#{education.degree} - #{education.graduation_year}" %></p>
+                    <p class="text-[10.5pt] font-bold"><%= education.institution_name %></p>
+                    <p class="text-[10.5pt]"><%= "#{education.degree} - #{education.graduation_year}" %></p>
                   <% end %>
                 </li>
               <% end %>
@@ -78,11 +78,11 @@
           <!-- Projects Section -->
           <section class="mb-1">
             <h2 class="text-[12pt] font-bold border-b text-[#1499DC] border-[#1499DC]">Projects/Portfolio</h2>
-            <ul class="mt-2">
+            <ul class="mt-1">
               <% user.student_profile.projects.each do |project| %>
                 <li>
-                  <p class="text-[10pt] font-bold"><%= project.project_name %></p>
-                  <p class="text-[10pt]"><%= project.description %></p>
+                  <p class="text-[10.5pt] font-bold"><%= project.project_name %></p>
+                  <p class="text-[10.5pt]"><%= project.description %></p>
                 </li>
               <% end %>
             </ul>
@@ -91,10 +91,10 @@
           <!-- Activities Section -->
           <section class="mb-1">
             <h2 class="text-[12pt] font-bold border-b text-[#1499DC] border-[#1499DC]">Activities, Honors & Awards</h2>
-            <ul class="mt-2">
+            <ul class="mt-1">
               <% user.student_profile.activities_honors.each do |activity| %>
                 <li>
-                  <span class="text-[10pt] font-bold"><%= activity.title %></span>, <span class="text-[10pt]"><%= activity.organization %></span>
+                  <span class="text-[10.5pt] font-bold"><%= activity.title %></span>, <span class="text-[10.5pt]"><%= activity.organization %></span>
                 </li>
               <% end %>
             </ul>
@@ -103,11 +103,11 @@
           <!-- Skills Section -->
           <section class="mb-1">
             <h2 class="text-[12pt] font-bold border-b text-[#1499DC] border-[#1499DC]">Skills & Tools</h2>
-            <ul class="mt-2">
+            <ul class="mt-1">
               <% user.student_profile.skills.each do |skill| %>
                 <li>
-                  <p class="text-[10pt] font-bold"><%= skill.title %></p>
-                  <p class="text-[10pt]"><%= skill.skill_list %></p>
+                  <p class="text-[10.5pt] font-bold"><%= skill.title %></p>
+                  <p class="text-[10.5pt]"><%= skill.skill_list %></p>
                 </li>
               <% end %>
             </ul>
@@ -116,7 +116,7 @@
           <!-- Interests Section -->
           <section>
             <h2 class="text-[12pt] font-bold border-b text-[#1499DC] border-[#1499DC]">Interests & Hobbies</h2>
-            <p class="mt-2 text-[10pt]"><%= user.student_profile&.interests&.first&.interest_list %></p>
+            <p class="mt-1 text-[10.5pt]"><%= user.student_profile&.interests&.first&.interest_list %></p>
           </section>
       </div>
     </div>

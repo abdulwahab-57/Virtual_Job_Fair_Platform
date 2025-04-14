@@ -148,19 +148,24 @@
         <%= f.fields_for :student_profile, @user.student_profile do |sf| %>
             <!-- Requirement message -->
             <p class="text-sm text-red-600 mb-2">
-              * A minimum of 3 projects are required. The first must be your Final Year Project (200 characters max). Titles and descriptions should start each word with a capital letter.
+              * A minimum of 3 projects are required. The first must be your Final Year Project. Please use the full character space available for titles and descriptions, starting each word with a capital letter for title only.
             </p>
             <% 5.times do |i| %>
               <%= sf.fields_for :projects, @user.student_profile.projects[i] || @user.student_profile.projects.build do |pf| %>
                   <% label_text = (i == 0) ? "Final Year Project Name" : "Project Name" %>
                   <% required_field = i < 3 %>
+                  <% description_maxlength = case i
+                               when 0 then 450
+                               when 1, 2 then 250
+                               else 150
+                               end %>
                   <%= pf.text_field :project_name, class: "w-full p-2 border border-gray-300 rounded-md capitalize", 
                                     placeholder: label_text, 
                                     maxlength: 80,
                                     required: required_field %>
-                  <%= pf.text_area :description, class: "mt-2 w-full p-2 border border-gray-300 resize-none rounded-md capitalize", rows: 4, 
+                  <%= pf.text_area :description, class: "mt-2 w-full p-2 border border-gray-300 resize-none rounded-md", rows: 4, 
                                     placeholder: "Enter project details", 
-                                    maxlength: 200,
+                                    maxlength: description_maxlength,
                                     required: required_field %>
               <% end %>
             <% end %>
@@ -179,27 +184,14 @@
             <% 3.times do |i| %>
               <%= sf.fields_for :activities_honors, @user.student_profile.activities_honors[i] || @user.student_profile.activities_honors.build do |ahf| %>
                   <div class="flex flex-wrap gap-2 mb-2">
-                    <% title_placeholder = case i
-                        when 0 then "Dean's List of Honor, 2019"
-                        when 1 then "Teaching Assistant for Programming Fundamentals - 2022"
-                        when 2 then "4th Position in ICPC Nationwide, 2022"
-                      end 
-                    %>
-
-                    <% org_placeholder = case i
-                        when 0 then "FAST NU, Faisalabad"
-                        when 1 then "ACM Society, FAST Islamabad"
-                        when 2 then "Freelancing on Fiverr / Upwork"
-                      end 
-                    %>
 
                     <%= ahf.text_field :title, class: "flex-1 p-2 border border-gray-300 rounded-md capitalize", 
-                                        placeholder: title_placeholder, 
+                                        placeholder: "Achievement", 
                                         size: 20, 
                                         maxlength: 30,
                                         required: i == 0 %>
                     <%= ahf.text_field :organization, class: "flex-1 p-2 border border-gray-300 rounded-md capitalize", 
-                                        placeholder: org_placeholder, 
+                                        placeholder: "Associated Organization", 
                                         size: 20, 
                                         maxlength: 30,
                                         required: i == 0 %>
@@ -230,7 +222,7 @@
                                         required: i == 0 %>
                     <%= skf.text_field :skill_list, class: "mt-2 w-full p-2 border border-gray-300 resize-none rounded-md capitalize", 
                                         placeholder: skill_list_placeholder, 
-                                        maxlength: 80,
+                                        maxlength: 185,
                                         required: i == 0 %> 
                   </div>
               <% end %>
