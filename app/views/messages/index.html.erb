@@ -1,0 +1,9 @@
+<div class="message <%= message.sender_id == current_user.id ? 'sent' : 'received' %>">
+  <% if message.text? %>
+    <%= message.message_content %>
+  <% elsif message.image? %>
+    <img src="<%= message.message_content %>" alt="Image message" />
+  <% elsif message.file? %>
+    <a href="<%= message.message_content %>" download>Download file</a>
+  <% end %>
+</div>

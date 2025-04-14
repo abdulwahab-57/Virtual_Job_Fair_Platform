@@ -1,3 +1,12 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails"
-import "controllers"
+import { Application } from "@hotwired/stimulus"
+import consumer from "../channels/consumer"
+
+const application = Application.start()
+
+// Configure Stimulus
+application.debug = process.env.NODE_ENV === "development"
+window.Stimulus = application
+window.ChatConsumer = consumer
+
+// Export for potential module usage
+export { application }

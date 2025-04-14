@@ -1,15 +1,457 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+/* Main Container */
+.main-container {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: #e5ddd5;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar (Search) */
+.search-container {
+  width: 30%;
+  padding: 15px;
+  background: #ffffff;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #ccc;
+}
+ /* Styling the voice message button like WhatsApp */
+ #voice-btn {
+  background-color: #25D366; /* WhatsApp Green */
+  color: white;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#voice-btn:hover {
+  background-color: #128C7E; /* Darker Green on Hover */
+}
+
+/* Animation for the recording state */
+.recording {
+  background-color: #FF0000; /* Red for recording */
+  animation: pulse 1s infinite; /* Add pulse effect while recording */
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* When voice recording is in progress, change the icon to a stop icon */
+.stop-recording i {
+  display: none;
+}
+
+.stop-recording.active i {
+  display: inline-block;
+}
+
+.stop-recording i.fa-stop {
+  font-size: 30px;
+}
+
+.search-box {
+  display:flex;
+  align-items:end;
+  gap: 8px;
+  background: #f0f0f0;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 8px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+  align-items: normal;
+  position: absolute;  /* Position it absolutely inside the parent container */
+  right: 10px;         /* Push it to the right corner */
+  top: 50%;            /* Vertically center it */
+  transform: translateY(-50%); /* Adjust to perfect vertical centering */
+}
+
+.search-box {
+  position: relative;  /* Set the container as relative to position the button inside it */
+}
+
+
+.search-btn:hover {
+  color: #25D366;
+}
+
+/* Chat Section */
+.chat-container {
+  width: 65%;
+  padding: 10px;
+  background: #efeae2;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid #ccc;
+  
+    
+    
+  
+  
+}
+/* WhatsApp-style message bubble */
+.whatsapp-message {
+  max-width: 60%;
+  background-color: #dcf8c6;
+  padding: 8px;
+  border-radius: 10px;
+  margin: 8px 0;
+  position: relative;
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure content appears in order (not parallel) */
+.whatsapp-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* Timestamp in bottom-right */
+.whatsapp-time {
+  font-size: 12px;
+  color: #555;
+  align-self: flex-end;
+  margin-top: 5px;
+}
+
+/* Image Styling */
+.whatsapp-image {
+  max-width: 100%;
+  border-radius: 8px;
+  display: block;
+  margin-top: 5px;
+}
+
+/* Video Styling */
+/* Ensure images appear like WhatsApp */
+.whatsapp-image {
+  max-width: 60%; /* Prevents images from being too wide */
+  max-height: 300px; /* Limits height like WhatsApp */
+  border-radius: 8px;
+  object-fit: cover; /* Ensures the image fits properly */
+  display: block;
+  margin-top: 5px;
+}
+
+
+/* Document Styling */
+.whatsapp-document {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.document-icon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.document-name {
+  color: blue;
+  text-decoration: underline;
+  font-size: 14px;
+  flex-grow: 1;
+}
+/* Ensure videos appear like WhatsApp */
+.whatsapp-video {
+  max-width: 60%; /* Prevents videos from being too wide */
+  max-height: 300px; /* Limits height like WhatsApp */
+  border-radius: 8px;
+  object-fit: cover; /* Ensures the video fits properly */
+  display: block;
+  margin-top: 5px;
+}
+
+
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 70vh; /* Adjust this as needed */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  word-wrap: break-word; /* Ensure long messages wrap */
+  white-space: pre-wrap; /* Preserve spaces and line breaks */
+  scrollbar-width: thin; /* For Firefox */
+}
+
+/* For Webkit browsers like Chrome and Edge */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #075e54;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.image-modal img {
+  border-radius: 8px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+
+.chat-header-icons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.chat-header-icons button {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: white;
+}
+
+.chat-header-icons button:hover {
+  color: #25D366;
+}
+
+/* Chat Messages */
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding: 10px;
+  background: #efeae2;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Chat Footer */
+.chat-footer {
+  background: #ffffff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  border-radius: 25px;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+}
+
+#message-input {
+  flex-grow: 1;
+  padding: 8px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+}
+
+.input-container button {
+  background: none;
+  border: none;
+  font-size: 1.3em;
+  cursor: pointer;
+  color: #555;
+}
+
+.input-container button:hover {
+  color: #25D366;
+}
+
+/* Message Bubbles */
+.message-bubble {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  max-width: 70%;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+.message-bubble.user {
+  background-color: #dcf8c6;
+  align-self: flex-end;
+}
+
+.message-bubble.receiver {
+  background-color: #ffffff;
+  align-self: flex-start;
+}
+
+/* User Item */
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s;
+}
+
+.user-item:hover {
+  background-color: #f9f9f9;
+}
+
+/* Scrollable Chat Messages */
+.scroll-container {
+  width: 100%;
+  height: 600px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #efeae2;
+  border-radius: 5px;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* Profile Section */
+.chat-profile {
+  width: 30%;
+  padding: 20px;
+  background-color: #ffffff;
+  display: none;
+  border-left: 2px solid #ccc;
+}
+
+/* Gallery/File Sharing in Chat Footer */
+.media-btn {
+  background: none;
+  border: none;
+  font-size: 1.3em;
+  cursor: pointer;
+  padding: 0 8px;
+  color: #555;
+}
+
+.media-btn:hover {
+  color: #25D366;
+}
+
+.gallery-container {
+  position: relative;
+  display: inline-block;
+}
+
+.gallery-dropdown {
+  display: none;
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.gallery-option {
+  display: block;
+  width: 200px;
+  padding: 12px;
+  text-align: left;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.gallery-option:hover {
+  background: #f1f1f1;
+}

@@ -1,0 +1,187 @@
+<div class="flex h-screen bg-gray-100" 
+     data-controller="chat chat-ui chat-media chat-voice"
+     data-chat-ui-default-message-value="Select a user to start chatting."
+     data-chat-user-id-value="<%= current_user.id %>">
+
+  <!-- Left Sidebar -->
+  <div class="w-1/3 bg-white shadow-md border-r border-gray-200 overflow-y-auto" data-chat-ui-target="sidebar">
+    <div class="p-4 border-b border-gray-200">
+      <h1 class="text-xl font-semibold text-gray-800">All messages</h1>
+    </div>
+
+    <!-- Search Box -->
+    <div class="p-4">
+      <%= form_with url: search_profiles_path, method: :get, local: true, class: "relative" do |form| %>
+        <input 
+          type="text" 
+          name="query" 
+          class="w-full pl-4 pr-10 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" 
+          placeholder="Search users..."
+        >
+        <button type="submit" class="absolute right-3 top-2 text-gray-500 hover:text-green-500">
+          <i class="fas fa-search"></i>
+        </button>
+      <% end %>
+    </div>
+
+    <!-- User List -->
+    <div class="overflow-y-auto h-[calc(100vh-150px)]">
+      <% if @search_results.present? %>
+        <ul>
+          <% @search_results.each do |user| %>
+            <li 
+              class="flex justify-between items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100"
+              data-user-id="<%= user.id %>"
+              data-action="click->chat#openChatWithUser"
+              data-chat-user-name-param="<%= user.name %>"
+              data-chat-user-id-param="<%= user.id %>"
+            >
+              <div class="flex items-center space-x-3">
+                <img 
+                  src="<%= user.profile_picture || 'https://via.placeholder.com/50' %>" 
+                  alt="Profile" 
+                  class="w-12 h-12 rounded-full object-cover"
+                >
+                <div>
+                  <p class="font-medium text-gray-900"><%= user.name %></p>
+                  <p class="text-sm text-gray-500">Last message preview...</p>
+                </div>
+              </div>
+              <span class="text-gray-400 hover:text-green-500">✉️ ⭐</span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="p-4 text-red-500">⚠ No users found.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Right Chat Area -->
+  <div 
+    id="chat-container" 
+    class="w-2/3 flex flex-col bg-[#efeae2] bg-[url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png')] bg-repeat"
+    data-chat-target="container"
+    style="display: none;"
+  >
+    <!-- Chat Header -->
+    <div class="flex justify-between items-center p-3 bg-gray-50 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <img 
+          id="chat-user-avatar" 
+          src="<%= asset_path('default_avatar.png') %>" 
+          alt="User Profile" 
+          class="w-10 h-10 rounded-full"
+        >
+        <h3 id="chat-user-name" class="font-medium text-gray-900" data-chat-target="header">Select a user</h3>
+      </div>
+      <button 
+        id="close-chat" 
+        class="text-gray-500 hover:text-green-500 text-xl"
+        data-action="click->chat#closeChat"
+      >
+        ✖
+      </button>
+    </div>
+
+    <!-- Messages Container -->
+    <div 
+      class="flex-1 overflow-y-auto p-4 space-y-2"
+      data-chat-target="messages"
+      data-chat-media-target="messages"
+      data-chat-voice-target="messages"
+      data-chat-ui-target="messages"
+    >
+      <div class="default-message flex items-center justify-center h-full text-gray-500">
+        <p>Select a user to start chatting.</p>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="bg-white p-3 border-t border-gray-200">
+      <form class="flex items-center space-x-2" data-action="submit->chat#sendMessage">
+        <!-- Emoji Button (hidden by default) -->
+        <button 
+          id="emoji-button" 
+          type="button"
+          class="text-gray-500 hover:text-green-500 text-xl"
+          data-chat-ui-target="emojiButton"
+          style="display: none;"
+        >
+          😊
+        </button>
+
+        <!-- Media Button -->
+        <button 
+          id="gallery-share" 
+          type="button"
+          class="text-gray-500 hover:text-green-500 text-xl"
+          data-action="click->chat-media#openGallery"
+          data-chat-media-target="button"
+        >
+          <i class="fas fa-images"></i>
+        </button>
+
+        <!-- Voice Button -->
+        <button 
+          id="voice-btn" 
+          type="button"
+          class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center hover:bg-green-600 transition-colors"
+          data-chat-voice-target="button"
+          data-action="
+            mousedown->chat-voice#startRecording 
+            mouseup->chat-voice#stopRecording
+            touchstart->chat-voice#startRecording
+            touchend->chat-voice#stopRecording
+          "
+        >
+          <i class="fas fa-microphone"></i>
+        </button>
+
+        <!-- Message Input -->
+        <input 
+          type="text" 
+          id="message-input" 
+          class="flex-1 py-2 px-4 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Type a message..."
+          data-chat-target="input"
+        >
+
+        <!-- Send Button -->
+        <button 
+          id="send-message" 
+          type="submit"
+          class="text-gray-500 hover:text-green-500 text-xl"
+          data-chat-target="sendButton"
+        >
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Emoji Picker Initialization -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const button = document.querySelector('#emoji-button');
+    if (button) {
+      const picker = new EmojiButton({
+        position: 'top-start',
+        autoHide: false
+      });
+      
+      picker.on('emoji', emoji => {
+        const input = document.querySelector('#message-input');
+        if (input) {
+          input.value += emoji;
+          input.focus();
+        }
+      });
+      
+      button.addEventListener('click', () => {
+        picker.togglePicker(button);
+      });
+    }
+  });
+</script>

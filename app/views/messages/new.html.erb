@@ -1,0 +1,11 @@
+<div id="chat-container" data-chat-id="<%= @chat.id %>">
+  <div id="chat-header">
+    <span>Chat with <%= @chat.user_name %></span>
+    <button id="close-chat">Close</button>
+  </div>
+  <div class="chat-messages">
+    <!-- Messages will be displayed here -->
+  </div>
+  <input type="text" id="message-input" placeholder="essage...">
+  <button id="send-message">Send</button>
+</div>
