@@ -29,7 +29,7 @@ class Student::ProfilesController < Student::BaseController
 
   private
   def set_user
-    @user = User.select(:id, :full_name, :email).includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).find(params[:id])
+    @user = User.select(:id, :full_name, :email).includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).find(current_user.id)
   end
 
   def user_params
