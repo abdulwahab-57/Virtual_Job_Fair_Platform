@@ -1,15 +1,10 @@
-<div class="min-w-64 bg-[#1499DC]">
-    <div class="px-8 py-6">
+<div class="w-64 bg-[#1499DC]">
+    <div class="px-8 py-4">
         <h1 class="text-2xl font-bold text-white">VJFP</h1>
     </div>
-    <nav class="p-4 mt-4 space-y-1">
-        <%= link_to @home_path, class: 'sidebar-nav-item' do %>
-            <%= svg_icon('home') %>
-            <span>Home</span>
-        <% end %>
-
+    <nav class="p-4 mt-4 space-y-2">
         <% @tabs.each do |tab| %>
-            <%= link_to tab[:path], class: 'sidebar-nav-item' do %>
+            <%= link_to tab[:path], class: 'flex items-center px-4 py-2 text-white hover:bg-white hover:text-[#858EAC] rounded-md' do %>
                 <%= svg_icon(tab[:icon]) %>
                 <span><%= tab[:label] %></span>
             <% end %>

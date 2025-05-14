@@ -10,11 +10,11 @@ class Recruiter::BaseController < ApplicationController
 
   def set_sidebar
     @sidebar_tabs = [
+      { label: "Home", icon: "home", path: recruiter_dashboard_path },
       { label: "Virtual Booth", icon: "video", path: "#" },
       { label: "Student Profiles", icon: "users", path: "#" },
       { label: "Meetings", icon: "calendar", path: "#" },
-      { label: "Analytics", icon: "chart-bar", path: analytics_path },
-      { label: "Enhanced Analytics", icon: "chart-line", path: enhanced_analytics_recruiter_dashboard_path(current_user) }
+      { label: "Analytics", icon: "chart-bar", path: analytics_path }
     ]
   end
 

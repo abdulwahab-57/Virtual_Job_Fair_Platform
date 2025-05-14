@@ -98,23 +98,30 @@ class EnhancedAnalyticsController < ApplicationController
     case current_user.user_type
     when "student"
       @sidebar_tabs = [
+        { label: "Home", icon: "home", path: student_dashboard_path },
+        { label: "Student Profiles", icon: "users", path: "#" },
         { label: "Job Fair Arena", icon: "video", path: "#" },
-        { label: "Analytics", icon: "chart-bar", path: analytics_path },
-        { label: "Enhanced Analytics", icon: "chart-line", path: enhanced_analytics_student_dashboard_path(current_user) }
+        { label: "Meetings", icon: "calendar", path: "#" },
+        { label: "Analytics", icon: "chart-bar", path: analytics_path }
       ]
       @home_path = student_dashboard_path
     when "recruiter"
       @sidebar_tabs = [
-        { label: "Job Fair Arena", icon: "video", path: "#" },
-        { label: "Analytics", icon: "chart-bar", path: analytics_path },
-        { label: "Enhanced Analytics", icon: "chart-line", path: enhanced_analytics_recruiter_dashboard_path(current_user) }
+        { label: "Home", icon: "home", path: recruiter_dashboard_path },
+        { label: "Virtual Booth", icon: "video", path: "#" },
+        { label: "Student Profiles", icon: "users", path: "#" },
+        { label: "Meetings", icon: "calendar", path: "#" },
+        { label: "Analytics", icon: "chart-bar", path: analytics_path }
       ]
       @home_path = recruiter_dashboard_path
     when "career_officer"
       @sidebar_tabs = [
+        { label: "Home", icon: "home", path: career_officer_dashboard_path },
+        { label: "Student Profiles", icon: "users", path: career_officer_student_profiles_path },
+        { label: "Recruiter Profiles", icon: "briefcase", path: "#" },
         { label: "Job Fair Arena", icon: "video", path: "#" },
-        { label: "Analytics", icon: "chart-bar", path: analytics_path },
-        { label: "Enhanced Analytics", icon: "chart-line", path: enhanced_analytics_career_officer_dashboard_path }
+        { label: "Meetings", icon: "calendar", path: "#" },
+        { label: "Analytics", icon: "chart-bar", path: analytics_path }
       ]
       @home_path = career_officer_dashboard_path
     end
