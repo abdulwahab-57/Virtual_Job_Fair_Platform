@@ -1,0 +1,13 @@
+<div class="bg-white p-6 rounded-lg shadow-md">
+  <h1 class="text-2xl font-bold mb-6">Analytics Dashboard</h1>
+  
+  <% if current_user.student? %>
+    <%= render 'analytics/student_dashboard', student: current_user %>
+  <% elsif current_user.recruiter? %>
+    <%= render 'analytics/recruiter_dashboard', recruiter: current_user %>
+  <% elsif current_user.career_officer? %>
+    <%= render 'analytics/career_officer_dashboard' %>
+  <% else %>
+    <p class="text-gray-500">No analytics available for your user type.</p>
+  <% end %>
+</div> 

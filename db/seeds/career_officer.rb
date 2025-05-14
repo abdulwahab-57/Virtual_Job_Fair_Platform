@@ -18,7 +18,7 @@ career_officer.build_career_officer_profile(
   introduction: "I help students connect with potential employers and prepare for their professional careers.",
   education: "PhD in Career Counseling, MBA",
   office_location: "Room 301, Admin Building",
-  phone_number: "+923001234567"
+  phone_number: "+92 300 1234567"
 )
 
 # Skip the confirmation email and directly confirm the user
@@ -28,4 +28,4 @@ career_officer.save!
 # Confirm the career officer is active
 career_officer.confirm!
 
-puts "Career Officer user with profile seeded successfully!"
+puts "Career Officer user with profile seeded successfully!"

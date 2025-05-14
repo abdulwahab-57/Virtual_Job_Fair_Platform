@@ -1,0 +1,105 @@
+<div class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Student Profiles</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="text-3xl font-bold text-blue-600"><%= User.where(user_type: "student").count %></div>
+        <p class="text-sm text-gray-600">Total student profiles</p>
+        <%= link_to "View All Students", career_officer_student_profiles_path, class: "mt-2 text-blue-600 hover:underline text-sm block" %>
+      </div>
+    </div>
+
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Recruiter Profiles</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="text-3xl font-bold text-blue-600"><%= User.where(user_type: "recruiter").count %></div>
+        <p class="text-sm text-gray-600">Total recruiter profiles</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="analytics-card">
+    <div class="analytics-card-header">
+      <h2 class="text-lg font-semibold text-blue-700">Student Status</h2>
+    </div>
+    <div class="analytics-card-body">
+      <table class="min-w-full">
+        <thead>
+          <tr>
+            <th class="text-left">Status</th>
+            <th class="text-right">Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% student_statuses = StudentProfile.group(:status).count %>
+          <% student_statuses.each do |status, count| %>
+            <tr>
+              <td class="py-2"><%= status || "Not Specified" %></td>
+              <td class="py-2 text-right"><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="analytics-card">
+    <div class="analytics-card-header">
+      <h2 class="text-lg font-semibold text-blue-700">Industry Distribution</h2>
+    </div>
+    <div class="analytics-card-body">
+      <table class="min-w-full">
+        <thead>
+          <tr>
+            <th class="text-left">Industry</th>
+            <th class="text-right">Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% industry_counts = RecruiterProfile.group(:industry).count %>
+          <% industry_counts.each do |industry, count| %>
+            <tr>
+              <td class="py-2"><%= industry || "Not Specified" %></td>
+              <td class="py-2 text-right"><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="analytics-card">
+    <div class="analytics-card-header">
+      <h2 class="text-lg font-semibold text-blue-700">Recent Students</h2>
+    </div>
+    <div class="analytics-card-body">
+      <div class="space-y-2">
+        <% User.where(user_type: "student").order(created_at: :desc).limit(5).each do |student| %>
+          <div class="border-b pb-2">
+            <div class="flex justify-between">
+              <span class="font-medium"><%= student.full_name %></span>
+              <div>
+                <%= link_to "Profile", career_officer_student_profile_path(student), class: "text-blue-600 hover:underline text-sm mr-2" %>
+                <%= link_to "Analytics", student_analytics_path(student), class: "text-green-600 hover:underline text-sm" %>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600">Profile Completion: <%= calculate_profile_completion(student) %>%</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 text-center">
+    <%= link_to enhanced_analytics_career_officer_dashboard_path, class: "analytics-btn" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" />
+      </svg>
+      View Enhanced Analytics
+    <% end %>
+  </div>
+</div> 

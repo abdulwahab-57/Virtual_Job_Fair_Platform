@@ -1,0 +1,61 @@
+module AnalyticsHelper
+  # Formats a percentage with one decimal place
+  def format_percentage(percentage)
+    number_to_percentage(percentage, precision: 1)
+  end
+  
+  # Create a simple progress bar
+  def progress_bar(percentage, options = {})
+    color = options[:color] || 'blue'
+    
+    content_tag :div, class: "w-full bg-gray-200 rounded-full h-2.5" do
+      content_tag :div, "", 
+        class: "bg-#{color}-600 h-2.5 rounded-full", 
+        style: "width: #{percentage}%"
+    end
+  end
+
+  # Calculate profile completion percentage
+  def calculate_profile_completion(user)
+    case user.user_type
+    when "student"
+      profile = user.student_profile
+      return 0 unless profile
+
+      # Calculate completion percentage based on filled fields
+      fields = [
+        profile.date_of_birth.present?,
+        profile.email_personal.present?,
+        profile.phone_number.present?,
+        profile.address.present?,
+        profile.linkedin_url.present?,
+        user.profile_picture.attached?,
+        profile.educations.any?,
+        profile.projects.any?,
+        profile.skills.any?
+      ]
+
+      completed = fields.count(true)
+      (completed.to_f / fields.size * 100).round
+    when "recruiter"
+      profile = user.recruiter_profile
+      return 0 unless profile
+
+      # Calculate completion percentage based on filled fields
+      fields = [
+        profile.company_name.present?,
+        profile.industry.present?,
+        profile.about_company.present?,
+        profile.office_location.present?,
+        profile.company_email.present?,
+        profile.company_website.present?,
+        profile.employee_count.present?
+      ]
+
+      completed = fields.count(true)
+      (completed.to_f / fields.size * 100).round
+    else
+      0
+    end
+  end
+end 

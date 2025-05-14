@@ -1,0 +1,361 @@
+<div class="analytics-dashboard space-y-6">
+  <h1 class="text-2xl font-bold mb-4">Enhanced Analytics Dashboard</h1>
+  
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Student Profiles</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="text-3xl font-bold text-blue-600"><%= User.where(user_type: "student").count %></div>
+        <p class="mt-2 text-sm text-gray-600">Total student profiles</p>
+        <%= link_to "View All Students", career_officer_student_profiles_path, class: "mt-2 analytics-btn inline-block text-sm" %>
+      </div>
+    </div>
+    
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Recruiter Profiles</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="text-3xl font-bold text-blue-600"><%= User.where(user_type: "recruiter").count %></div>
+        <p class="mt-2 text-sm text-gray-600">Total recruiter profiles</p>
+      </div>
+    </div>
+    
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Profile Completion</h2>
+      </div>
+      <div class="analytics-card-body">
+        <% 
+          students = User.where(user_type: "student").to_a
+          recruiters = User.where(user_type: "recruiter").to_a
+          
+          student_completion = students.empty? ? 0 : students.sum { |s| calculate_profile_completion(s) } / students.size
+          recruiter_completion = recruiters.empty? ? 0 : recruiters.sum { |r| calculate_profile_completion(r) } / recruiters.size
+        %>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Students:</span>
+              <span class="font-semibold"><%= student_completion %>%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill blue" style="width: <%= student_completion %>%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Recruiters:</span>
+              <span class="font-semibold"><%= recruiter_completion %>%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill green" style="width: <%= recruiter_completion %>%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Student Status Distribution -->
+  <div class="card p-4 border rounded-lg shadow-md bg-white">
+    <h2 class="text-lg font-semibold mb-4 text-blue-700">Student Status Distribution</h2>
+    <% if @student_statuses[:values].any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <canvas id="student-status-chart" height="250"
+            data-status="<%= @student_statuses.to_json %>"></canvas>
+        </div>
+        
+        <div class="self-center">
+          <h3 class="font-medium text-gray-800 mb-3">Status Breakdown</h3>
+          <div class="space-y-3">
+            <% @student_statuses[:labels].each_with_index do |status, i| %>
+              <div class="flex justify-between">
+                <span class="text-sm"><%= status %></span>
+                <span class="text-sm font-semibold"><%= @student_statuses[:values][i] %> students</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5">
+                <div class="h-1.5 rounded-full" style="width: <%= (@student_statuses[:values][i].to_f / @student_statuses[:values].sum * 100).round %>%; background-color: <%= ['#22c55e', '#eab308', '#3b82f6', '#6366f1', '#a855f7', '#ef4444'][i % 6] %>"></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <p class="text-gray-500 italic">No student status data available.</p>
+    <% end %>
+  </div>
+  
+  <!-- Profile Completion Trends -->
+  <div class="card p-4 border rounded-lg shadow-md bg-white">
+    <h2 class="text-lg font-semibold mb-4 text-blue-700">Profile Completion Distribution</h2>
+    <canvas id="completion-trends-chart" height="250"
+      data-trends="<%= @completion_trends.to_json %>"></canvas>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <div class="p-3 bg-blue-50 rounded-lg">
+        <h3 class="font-medium text-blue-700 mb-2">Student Insight</h3>
+        <% 
+          student_incomplete = @completion_trends[:students][0] + @completion_trends[:students][1]
+          student_total = @completion_trends[:students].sum
+          student_incomplete_pct = student_total > 0 ? (student_incomplete.to_f / student_total * 100).round : 0
+        %>
+        <p class="text-sm text-gray-700">
+          <%= student_incomplete %> students (<%= student_incomplete_pct %>%) have profiles that are less than 50% complete.
+          <%= link_to "View Students", career_officer_student_profiles_path, class: "text-blue-600 hover:underline" %>
+        </p>
+      </div>
+      
+      <div class="p-3 bg-indigo-50 rounded-lg">
+        <h3 class="font-medium text-indigo-700 mb-2">Recruiter Insight</h3>
+        <% 
+          recruiter_incomplete = @completion_trends[:recruiters][0] + @completion_trends[:recruiters][1]
+          recruiter_total = @completion_trends[:recruiters].sum
+          recruiter_incomplete_pct = recruiter_total > 0 ? (recruiter_incomplete.to_f / recruiter_total * 100).round : 0
+        %>
+        <p class="text-sm text-gray-700">
+          <%= recruiter_incomplete %> recruiters (<%= recruiter_incomplete_pct %>%) have profiles that are less than 50% complete.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Top Skills Analysis -->
+  <div class="card p-4 border rounded-lg shadow-md bg-white">
+    <h2 class="text-lg font-semibold mb-4 text-blue-700">Top Skills Analysis</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="font-medium text-gray-800 mb-3">Top Student Skills</h3>
+        <canvas id="skills-distribution-chart" height="250"
+          data-skills="<%= @top_skills.to_json %>"></canvas>
+      </div>
+      
+      <div>
+        <h3 class="font-medium text-gray-800 mb-3">Education Timeline</h3>
+        <canvas id="education-timeline-chart" height="250"
+          data-education="<%= @education_timeline.to_json %>"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Recent Activity -->
+  <div class="card p-4 border rounded-lg shadow-md bg-white">
+    <h2 class="text-lg font-semibold mb-4 text-blue-700">Recent Students</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white">
+        <thead class="bg-gray-50 border-b">
+          <tr>
+            <th class="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registration Date</th>
+            <th class="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profile</th>
+            <th class="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% User.where(user_type: "student").order(created_at: :desc).limit(5).each do |student| %>
+            <tr class="hover:bg-gray-50">
+              <td class="py-3 px-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <% if student.profile_picture.attached? %>
+                    <div class="h-8 w-8 rounded-full overflow-hidden mr-3">
+                      <%= image_tag student.profile_picture, class: "h-full w-full object-cover" %>
+                    </div>
+                  <% else %>
+                    <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                      <span class="text-blue-600 text-sm font-medium"><%= student.full_name.first.upcase %></span>
+                    </div>
+                  <% end %>
+                  <div>
+                    <div class="font-medium text-gray-900"><%= student.full_name %></div>
+                    <div class="text-gray-500 text-sm"><%= student.email %></div>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-500">
+                <%= student.created_at.strftime("%b %d, %Y") %>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap">
+                <% status = student.student_profile&.status || "New" %>
+                <span class="px-2 py-1 text-xs rounded-full <%= status == 'Active' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %>">
+                  <%= status %>
+                </span>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap">
+                <% completion = calculate_profile_completion(student) %>
+                <div class="flex items-center">
+                  <div class="w-16 mr-2"><%= progress_bar(completion, color: completion >= 70 ? "green" : (completion >= 40 ? "blue" : "red")) %></div>
+                  <span class="text-sm text-gray-500"><%= completion %>%</span>
+                </div>
+              </td>
+              <td class="py-3 px-4 whitespace-nowrap text-sm">
+                <div class="flex space-x-2">
+                  <%= link_to "View", career_officer_student_profile_path(student), class: "text-blue-600 hover:underline" %>
+                  <%= link_to "Analytics", enhanced_analytics_student_dashboard_path(student), class: "text-green-600 hover:underline" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= link_to "View All Students", career_officer_student_profiles_path, class: "mt-4 text-blue-600 hover:underline text-sm block" %>
+  </div>
+  
+  <script>
+    document.addEventListener('turbo:load', function() {
+      // Initialize Student Status Chart
+      const statusChartCanvas = document.getElementById('student-status-chart');
+      if (statusChartCanvas) {
+        const statusData = JSON.parse(statusChartCanvas.dataset.status);
+        new Chart(statusChartCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: statusData.labels,
+            datasets: [{
+              data: statusData.values,
+              backgroundColor: [
+                'rgba(34, 197, 94, 0.6)',
+                'rgba(234, 179, 8, 0.6)',
+                'rgba(59, 130, 246, 0.6)',
+                'rgba(99, 102, 241, 0.6)',
+                'rgba(168, 85, 247, 0.6)',
+                'rgba(239, 68, 68, 0.6)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'right',
+              },
+              title: {
+                display: true,
+                text: 'Student Status Distribution'
+              }
+            }
+          }
+        });
+      }
+      
+      // Initialize Completion Trends Chart
+      const trendChartCanvas = document.getElementById('completion-trends-chart');
+      if (trendChartCanvas) {
+        const trendsData = JSON.parse(trendChartCanvas.dataset.trends);
+        new Chart(trendChartCanvas, {
+          type: 'bar',
+          data: {
+            labels: ['0-25%', '26-50%', '51-75%', '76-100%'],
+            datasets: [
+              {
+                label: 'Students',
+                data: trendsData.students,
+                backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                borderColor: 'rgb(59, 130, 246)',
+                borderWidth: 1
+              },
+              {
+                label: 'Recruiters',
+                data: trendsData.recruiters,
+                backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                borderColor: 'rgb(99, 102, 241)',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0
+                }
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: 'Profile Completion Distribution'
+              }
+            }
+          }
+        });
+      }
+      
+      // Initialize Skills Distribution Chart
+      const skillsChartCanvas = document.getElementById('skills-distribution-chart');
+      if (skillsChartCanvas) {
+        const skillsData = JSON.parse(skillsChartCanvas.dataset.skills);
+        new Chart(skillsChartCanvas, {
+          type: 'bar',
+          data: {
+            labels: skillsData.labels,
+            datasets: [{
+              label: 'Students with Skill',
+              data: skillsData.values,
+              backgroundColor: 'rgba(16, 185, 129, 0.6)',
+              borderColor: 'rgb(16, 185, 129)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              title: {
+                display: true,
+                text: 'Top Skills by Popularity'
+              }
+            }
+          }
+        });
+      }
+      
+      // Initialize Education Timeline Chart
+      const educationChartCanvas = document.getElementById('education-timeline-chart');
+      if (educationChartCanvas) {
+        const educationData = JSON.parse(educationChartCanvas.dataset.education);
+        new Chart(educationChartCanvas, {
+          type: 'line',
+          data: {
+            labels: educationData.labels,
+            datasets: [{
+              label: 'Graduation Count',
+              data: educationData.values,
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0
+                }
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: 'Graduations by Year'
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+</div> 

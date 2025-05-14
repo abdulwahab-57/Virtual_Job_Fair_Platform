@@ -1,0 +1,9 @@
+<div class="bg-white p-6 rounded-lg shadow-md">
+  <h1 class="text-2xl font-bold mb-6">Platform Analytics Dashboard</h1>
+  
+  <% if current_user.career_officer? %>
+    <%= render 'analytics/career_officer_dashboard' %>
+  <% else %>
+    <p class="text-gray-500">This dashboard is only available to career officers.</p>
+  <% end %>
+</div> 
