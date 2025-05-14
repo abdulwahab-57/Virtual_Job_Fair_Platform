@@ -4,9 +4,7 @@
       <h2 class="text-lg font-semibold text-blue-700">Profile Completion</h2>
     </div>
     <div class="analytics-card-body">
-      <div class="progress-bar-container">
-        <div class="progress-bar-fill blue" style="width: <%= calculate_profile_completion(recruiter) %>%"></div>
-      </div>
+      <%= progress_bar(calculate_profile_completion(recruiter), color: "blue") %>
       <p class="mt-2 text-sm text-gray-600"><%= calculate_profile_completion(recruiter) %>% complete</p>
     </div>
   </div>

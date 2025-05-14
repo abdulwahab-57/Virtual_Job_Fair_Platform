@@ -1,5 +1,20 @@
-<div class="analytics-dashboard space-y-6">
-  <h1 class="text-2xl font-bold mb-4">Enhanced Analytics Dashboard</h1>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<style>
+  /* Hide the Skills and Education Analysis section */
+  .grid:has(canvas#skills-distribution-chart),
+  .grid:has(canvas#education-timeline-chart) {
+    display: none !important;
+  }
+  /* Hide the Skills and Education Analysis section */
+  .grid:has(canvas#skills-distribution-chart),
+  .grid:has(canvas#education-timeline-chart),
+  .card:has(canvas#skills-category-breakdown-chart),
+  .card:has(h2:contains("Skills Breakdown")),
+  .card:has(h2:contains("Top Skills Analysis")) {
+    display: none !important;
+  }
+</style>
+  <h1 class="text-2xl font-bold mb-6">Enhanced Analytics Dashboard</h1>
   
   <!-- Summary Cards -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -42,18 +57,14 @@
               <span class="text-gray-600">Students:</span>
               <span class="font-semibold"><%= student_completion %>%</span>
             </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar-fill blue" style="width: <%= student_completion %>%"></div>
-            </div>
+            <%= progress_bar(student_completion, color: "blue") %>
           </div>
           <div>
             <div class="flex justify-between">
               <span class="text-gray-600">Recruiters:</span>
               <span class="font-semibold"><%= recruiter_completion %>%</span>
             </div>
-            <div class="progress-bar-container">
-              <div class="progress-bar-fill green" style="width: <%= recruiter_completion %>%"></div>
-            </div>
+            <%= progress_bar(recruiter_completion, color: "green") %>
           </div>
         </div>
       </div>
@@ -61,32 +72,86 @@
   </div>
   
   <!-- Student Status Distribution -->
-  <div class="card p-4 border rounded-lg shadow-md bg-white">
-    <h2 class="text-lg font-semibold mb-4 text-blue-700">Student Status Distribution</h2>
+  <div class="card p-4 border-2 border-blue-100 rounded-lg shadow-lg bg-white mb-8">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold text-blue-800 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        Student Status Distribution
+      </h2>
+      <span class="px-3 py-1 bg-blue-50 text-blue-800 rounded-full font-medium text-sm">
+        Total: <%= @student_statuses[:values].sum %> students
+      </span>
+    </div>
+    
     <% if @student_statuses[:values].any? %>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <canvas id="student-status-chart" height="250"
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="flex justify-center items-center bg-gradient-to-br from-white to-blue-50 p-4 rounded-lg shadow-inner">
+          <canvas id="student-status-chart" height="300"
             data-status="<%= @student_statuses.to_json %>"></canvas>
         </div>
         
         <div class="self-center">
-          <h3 class="font-medium text-gray-800 mb-3">Status Breakdown</h3>
-          <div class="space-y-3">
+          <h3 class="font-semibold text-gray-800 mb-5 text-lg border-b pb-2 border-gray-200">Status Breakdown</h3>
+          <div class="space-y-6">
+            <% 
+              status_colors = {
+                'Pending' => '#22c55e',    # Green
+                'New' => '#eab308',        # Yellow
+                'Active' => '#3b82f6',     # Blue
+                'Graduate' => '#8b5cf6'    # Purple
+              }
+              # Default colors for any other status
+              default_colors = ['#6366f1', '#a855f7', '#ef4444', '#14b8a6', '#f97316', '#06b6d4']
+            %>
             <% @student_statuses[:labels].each_with_index do |status, i| %>
-              <div class="flex justify-between">
-                <span class="text-sm"><%= status %></span>
-                <span class="text-sm font-semibold"><%= @student_statuses[:values][i] %> students</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-1.5">
-                <div class="h-1.5 rounded-full" style="width: <%= (@student_statuses[:values][i].to_f / @student_statuses[:values].sum * 100).round %>%; background-color: <%= ['#22c55e', '#eab308', '#3b82f6', '#6366f1', '#a855f7', '#ef4444'][i % 6] %>"></div>
+              <% 
+                # Set color based on status name if available, otherwise use default colors
+                color = status_colors[status] || default_colors[i % default_colors.length]
+                percent = (@student_statuses[:values][i].to_f / @student_statuses[:values].sum * 100).round
+              %>
+              <div class="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="flex items-center">
+                    <div class="w-3 h-3 rounded-full mr-2" style="background-color: <%= color %>"></div>
+                    <span class="text-md font-medium"><%= status %></span>
+                  </div>
+                  <span class="text-md font-bold flex items-center">
+                    <%= @student_statuses[:values][i] %> 
+                    <span class="text-sm text-gray-500 ml-1">students</span>
+                  </span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden shadow-inner">
+                  <div class="h-3 rounded-full flex items-center justify-end pr-1 text-xs font-bold text-white" 
+                       style="width: <%= percent %>%; background-color: <%= color %>">
+                    <% if percent >= 15 %>
+                      <%= percent %>%
+                    <% end %>
+                  </div>
+                </div>
               </div>
             <% end %>
           </div>
         </div>
       </div>
+      
+      <div class="mt-6 text-right">
+        <%= link_to career_officer_student_profiles_path, class: "inline-flex items-center text-blue-600 hover:text-blue-800 font-medium" do %>
+          View all students
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        <% end %>
+      </div>
     <% else %>
-      <p class="text-gray-500 italic">No student status data available.</p>
+      <div class="flex flex-col items-center justify-center py-10 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-gray-500 text-lg font-medium">No student status data available.</p>
+        <p class="text-gray-400 mt-2">Data will appear here once students are registered in the system.</p>
+      </div>
     <% end %>
   </div>
   
@@ -118,6 +183,44 @@
           recruiter_incomplete_pct = recruiter_total > 0 ? (recruiter_incomplete.to_f / recruiter_total * 100).round : 0
         %>
         <p class="text-sm text-gray-700">
+          <%= recruiter_incomplete %> recruiters (<%= recruiter_incomplete_pct %>%) have profiles that are less than 50% complete.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Profile Completion Trends -->
+  <div class="card p-4 border rounded-lg shadow-md bg-white mb-6">
+    <h2 class="text-lg font-semibold mb-4 text-blue-700">Profile Completion Distribution</h2>
+    <div class="flex justify-center">
+      <canvas id="completion-trends-chart" height="300"
+        data-trends="<%= @completion_trends.to_json %>"></canvas>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div class="p-4 bg-blue-50 rounded-lg">
+        <h3 class="font-medium text-blue-700 mb-3 text-lg">Student Insight</h3>
+        <% 
+          student_incomplete = @completion_trends[:students][0] + @completion_trends[:students][1]
+          student_total = @completion_trends[:students].sum
+          student_incomplete_pct = student_total > 0 ? (student_incomplete.to_f / student_total * 100).round : 0
+        %>
+        <p class="text-md text-gray-700">
+          <%= student_incomplete %> students (<%= student_incomplete_pct %>%) have profiles that are less than 50% complete.
+        </p>
+        <div class="mt-3">
+          <%= link_to "View Students", career_officer_student_profiles_path, class: "text-blue-600 hover:underline font-medium" %>
+        </div>
+      </div>
+      
+      <div class="p-4 bg-indigo-50 rounded-lg">
+        <h3 class="font-medium text-indigo-700 mb-3 text-lg">Recruiter Insight</h3>
+        <% 
+          recruiter_incomplete = @completion_trends[:recruiters][0] + @completion_trends[:recruiters][1]
+          recruiter_total = @completion_trends[:recruiters].sum
+          recruiter_incomplete_pct = recruiter_total > 0 ? (recruiter_incomplete.to_f / recruiter_total * 100).round : 0
+        %>
+        <p class="text-md text-gray-700">
           <%= recruiter_incomplete %> recruiters (<%= recruiter_incomplete_pct %>%) have profiles that are less than 50% complete.
         </p>
       </div>
@@ -212,32 +315,72 @@
       const statusChartCanvas = document.getElementById('student-status-chart');
       if (statusChartCanvas) {
         const statusData = JSON.parse(statusChartCanvas.dataset.status);
+        
+        // Map status labels to specific colors, same as in the HTML
+        const statusColors = {
+          'Pending': '#22c55e',    // Green
+          'New': '#eab308',        // Yellow
+          'Active': '#3b82f6',     // Blue
+          'Graduate': '#8b5cf6'    // Purple
+        };
+        
+        // Default colors for any other status
+        const defaultColors = ['#6366f1', '#a855f7', '#ef4444', '#14b8a6', '#f97316', '#06b6d4'];
+        
+        // Create color array matching status labels
+        const backgroundColors = statusData.labels.map((label, index) => {
+          const baseColor = statusColors[label] || defaultColors[index % defaultColors.length];
+          return baseColor;
+        });
+        
         new Chart(statusChartCanvas, {
           type: 'doughnut',
           data: {
             labels: statusData.labels,
             datasets: [{
               data: statusData.values,
-              backgroundColor: [
-                'rgba(34, 197, 94, 0.6)',
-                'rgba(234, 179, 8, 0.6)',
-                'rgba(59, 130, 246, 0.6)',
-                'rgba(99, 102, 241, 0.6)',
-                'rgba(168, 85, 247, 0.6)',
-                'rgba(239, 68, 68, 0.6)'
-              ],
-              borderWidth: 1
+              backgroundColor: backgroundColors,
+              borderColor: backgroundColors.map(color => color),
+              borderWidth: 1,
+              hoverOffset: 15,
+              borderRadius: 4
             }]
           },
           options: {
+            cutout: '65%',
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
               legend: {
                 position: 'right',
+                labels: {
+                  font: {
+                    family: "'Inter', 'Helvetica', 'Arial', sans-serif",
+                    size: 12
+                  },
+                  padding: 15,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
               },
-              title: {
-                display: true,
-                text: 'Student Status Distribution'
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = Math.round((value / total) * 100);
+                    return `${label}: ${value} students (${percentage}%)`;
+                  }
+                },
+                padding: 12,
+                backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                titleFont: {
+                  size: 14
+                },
+                bodyFont: {
+                  size: 13
+                }
               }
             }
           }

@@ -43,18 +43,14 @@
                 <span class="text-gray-600">Students:</span>
                 <span class="font-semibold"><%= student_completion %>%</span>
               </div>
-              <div class="progress-bar-container">
-                <div class="progress-bar-fill blue" style="width: <%= student_completion %>%"></div>
-              </div>
+              <%= progress_bar(student_completion, color: "blue") %>
             </div>
             <div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Recruiters:</span>
                 <span class="font-semibold"><%= recruiter_completion %>%</span>
               </div>
-              <div class="progress-bar-container">
-                <div class="progress-bar-fill green" style="width: <%= recruiter_completion %>%"></div>
-              </div>
+              <%= progress_bar(recruiter_completion, color: "green") %>
             </div>
           </div>
         </div>

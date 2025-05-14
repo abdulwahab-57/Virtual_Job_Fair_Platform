@@ -16,8 +16,6 @@ class AnalyticsController < ApplicationController
       @analytics_data = recruiter_additional_analytics(current_user)
       @industry_data = industry_distribution_data
     when "career_officer"
-      @top_skills = top_skills_data
-      @education_timeline = education_timeline_data
       @student_statuses = student_status_distribution
       @completion_trends = profile_completion_distribution
     end
@@ -76,14 +74,11 @@ class AnalyticsController < ApplicationController
   def dashboard
     # Load enhanced analytics data for career officer dashboard
     begin
-      @top_skills = top_skills_data
-      @education_timeline = education_timeline_data
+      # No longer loading @top_skills and @education_timeline
       @student_statuses = student_status_distribution
       @completion_trends = profile_completion_distribution
     rescue => e
       Rails.logger.error "Error in dashboard: #{e.message}"
-      @top_skills = { labels: [], values: [] }
-      @education_timeline = { labels: [], values: [] }
       @student_statuses = { labels: [ "No Data" ], values: [ 0 ] }
       @completion_trends = { students: [ 0, 0, 0, 0 ], recruiters: [ 0, 0, 0, 0 ] }
       flash.now[:alert] = "There was an issue loading some analytics data."
