@@ -12,19 +12,16 @@ class EnhancedAnalyticsController < ApplicationController
 
     begin
       @analytics_data = student_additional_analytics(@student)
-      @skills_breakdown = @analytics_data[:skills_breakdown]
       @education_timeline = @analytics_data[:education_timeline]
     rescue => e
       Rails.logger.error "Error in student_dashboard: #{e.message}"
       @analytics_data = {
         education_timeline: [],
-        skills_breakdown: { labels: [], values: [] },
         projects_count: 0,
         activities_count: 0,
         interests_count: 0,
         location_preferences_count: 0
       }
-      @skills_breakdown = { labels: [], values: [] }
       @education_timeline = []
       flash.now[:alert] = "There was an issue loading some analytics data."
     end

@@ -3,21 +3,32 @@ module AnalyticsHelper
   def format_percentage(percentage)
     number_to_percentage(percentage, precision: 1)
   end
-  
+
   # Create a simple progress bar
   def progress_bar(percentage, options = {})
-    color = options[:color] || 'blue'
-    
+    color = options[:color] || "blue"
+
     content_tag :div, class: "w-full bg-gray-200 rounded-full h-2.5" do
-      content_tag :div, "", 
-        class: "bg-#{color}-600 h-2.5 rounded-full", 
+      content_tag :div, "",
+        class: "bg-#{color}-600 h-2.5 rounded-full",
         style: "width: #{percentage}%"
     end
   end
 
   # Calculate profile completion percentage
   def calculate_profile_completion(user)
-    case user.user_type
+    # Handle missing user_type attribute by checking the user's associations
+    user_type = if user.respond_to?(:user_type) && user.user_type.present?
+                  user.user_type
+    elsif user.respond_to?(:student_profile) && user.student_profile.present?
+                  "student"
+    elsif user.respond_to?(:recruiter_profile) && user.recruiter_profile.present?
+                  "recruiter"
+    else
+                  nil
+    end
+
+    case user_type
     when "student"
       profile = user.student_profile
       return 0 unless profile
@@ -58,4 +69,4 @@ module AnalyticsHelper
       0
     end
   end
-end 
+end

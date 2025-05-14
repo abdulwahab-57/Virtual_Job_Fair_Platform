@@ -52,37 +52,6 @@
       </div>
     </div>
     
-    <!-- Skills Breakdown -->
-    <div class="card p-4 border rounded-lg shadow-md bg-white">
-      <h2 class="text-lg font-semibold mb-4 text-blue-700">Skills Breakdown</h2>
-      <% if @skills_breakdown[:values].sum > 0 %>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <canvas id="skills-breakdown-chart" height="200" 
-              data-skills="<%= { labels: @skills_breakdown[:labels], values: @skills_breakdown[:values] }.to_json %>"></canvas>
-          </div>
-          <div>
-            <h3 class="font-medium text-gray-800 mb-3">Skills by Category</h3>
-            <div class="space-y-3">
-              <% @skills_breakdown[:labels].each_with_index do |category, i| %>
-                <div>
-                  <div class="flex justify-between">
-                    <span class="text-sm"><%= category %></span>
-                    <span class="text-sm font-semibold"><%= @skills_breakdown[:values][i] %> <%= "skill".pluralize(@skills_breakdown[:values][i]) %></span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                    <div class="h-1.5 rounded-full" style="width: <%= (@skills_breakdown[:values][i].to_f / @skills_breakdown[:values].sum * 100).round %>%; background-color: <%= ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'][i % 6] %>"></div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      <% else %>
-        <p class="text-gray-500 italic">No skills data available. Add skills to your profile to see your report.</p>
-      <% end %>
-    </div>
-    
     <!-- Education Timeline -->
     <div class="card p-4 border rounded-lg shadow-md bg-white">
       <h2 class="text-lg font-semibold mb-4 text-blue-700">Education Timeline</h2>
@@ -249,49 +218,15 @@
             </svg>
             <h3 class="font-medium text-purple-700">Q&A Sessions</h3>
           </div>
-          <p class="text-sm text-gray-700">Join industry Q&A sessions to learn more about career opportunities in your field.</p>
+          <p class="text-sm text-gray-700">Join upcoming Q&A sessions with industry professionals to gain insights.</p>
         </div>
       </div>
     </div>
   </div>
-  
-  <script>
-    document.addEventListener('turbo:load', function() {
-      // Initialize Skills Breakdown Chart
-      const skillsBreakdownCanvas = document.getElementById('skills-breakdown-chart');
-      if (skillsBreakdownCanvas) {
-        const skillsData = JSON.parse(skillsBreakdownCanvas.dataset.skills);
-        new Chart(skillsBreakdownCanvas, {
-          type: 'doughnut',
-          data: {
-            labels: skillsData.labels,
-            datasets: [{
-              data: skillsData.values,
-              backgroundColor: [
-                'rgba(59, 130, 246, 0.6)',
-                'rgba(16, 185, 129, 0.6)',
-                'rgba(245, 158, 11, 0.6)',
-                'rgba(239, 68, 68, 0.6)',
-                'rgba(139, 92, 246, 0.6)',
-                'rgba(236, 72, 153, 0.6)'
-              ],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'right',
-              },
-              title: {
-                display: true,
-                text: 'Skills by Category'
-              }
-            }
-          }
-        });
-      }
-    });
-  </script>
-</div> 
+</div>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    // No skills breakdown chart initialization - removed
+  });
+</script> 

@@ -1,16 +1,37 @@
-# Temporarily patch the User model to disable problematic associations
-module UserPatch
-  def self.apply
-    User.class_eval do
-      # Comment out problematic associations
-      has_many :meeting_participants, dependent: :destroy rescue nil
-      has_many :meetings, through: :meeting_participants rescue nil
-    end
+# Create a safer seed environment
+puts "Starting seed process..."
+
+# Monkey patch the User model to avoid issues with missing associations
+User.class_eval do
+  # Skip email domain validation
+  def validate_email_domain
+    # Skip validation temporarily
+  end
+
+  # Override problematic association methods
+  def meeting_participants
+    # Return empty array instead of accessing the database
+    []
+  end
+
+  def meetings
+    # Return empty array instead of accessing the database
+    []
   end
 end
 
-# Apply the patch
-UserPatch.apply
+# Remove problematic association definitions
+if defined?(User) && User.reflections['meeting_participants'].present?
+  User.reflections.delete('meeting_participants')
+  puts "Removed meeting_participants reflection"
+end
+
+if defined?(User) && User.reflections['meetings'].present?
+  User.reflections.delete('meetings')
+  puts "Removed meetings reflection"
+end
+
+puts "Patched User model for seeding"
 
 # Career Officer Seed Data
 
@@ -49,7 +70,7 @@ puts "Career Officer user with profile seeded successfully!"
 # First, let's clear any existing test students to avoid duplicates
 User.where('email LIKE ?', 'student%@nu.edu.pk').destroy_all
 
-# Student data
+# Student data for the first 10 basic profiles
 students_data = [
   {
     full_name: "Ahmed Khan",
@@ -158,4 +179,25 @@ students_data.each do |student_data|
   student.confirm!
 end
 
-puts "10 Student users with profiles seeded successfully!"
+puts "10 Basic student profiles seeded successfully!"
+
+# Load extended seeds
+begin
+  puts "Loading extended student profiles..."
+  require_relative 'seeds/extended_students'
+  puts "Extended student profiles loaded successfully!"
+rescue => e
+  puts "Error loading extended students: #{e.message}"
+  puts e.backtrace.join("\n")
+end
+
+begin
+  puts "Loading recruiter and career officer profiles..."
+  require_relative 'seeds/extended_recruiters_officers'
+  puts "Extended recruiter and career officer profiles loaded successfully!"
+rescue => e
+  puts "Error loading extended recruiters and officers: #{e.message}"
+  puts e.backtrace.join("\n")
+end
+
+puts "Seed process completed!"

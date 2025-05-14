@@ -143,6 +143,119 @@
       </div>
     </div>
     
+    <!-- Skills Breakdown -->
+    <div class="card p-4 border rounded-lg shadow-md bg-white mt-6">
+      <h2 class="text-lg font-semibold mb-4 text-blue-700">Skills Breakdown</h2>
+      <% 
+        # Get all skills
+        all_skills = Skill.all
+        puts "DEBUG: Total skills in database: #{all_skills.count}"
+        
+        # Extract all skill terms
+        all_skill_terms = []
+        all_skills.each do |skill|
+          if skill.skill_list.present?
+            if skill.skill_list.include?(',')
+              all_skill_terms += skill.skill_list.split(',').map(&:strip)
+            else
+              all_skill_terms << skill.skill_list.strip
+            end
+          end
+          
+          if skill.title.present? && skill.title != skill.skill_list
+            if skill.title.include?(',')
+              # Remove category labels that aren't actual skills
+              unless skill.title.include?('Languages') || skill.title.include?('Tools')
+                all_skill_terms += skill.title.split(',').map(&:strip)
+              end
+            else
+              # Remove category labels that aren't actual skills
+              unless skill.title.include?('Languages') || skill.title.include?('Tools')
+                all_skill_terms << skill.title.strip
+              end
+            end
+          end
+        end
+        
+        # Remove duplicates and empty strings, and sort alphabetically
+        all_skill_terms = all_skill_terms.reject(&:blank?).uniq.sort
+        
+        # Categorize skills
+        categories = {
+          "Programming" => [ "Java", "Python", "JavaScript", "Ruby", "C++", "C#", "PHP" ],
+          "Web Development" => [ "HTML", "CSS", "React", "Angular", "Vue.js", "Node.js", "Django", "Rails" ],
+          "Data Science" => [ "SQL", "R", "Python", "Machine Learning", "Data Analysis", "Tableau", "Power BI" ],
+          "Design" => [ "Photoshop", "Illustrator", "UI/UX", "Figma", "Adobe XD" ],
+          "Soft Skills" => [ "Communication", "Leadership", "Teamwork", "Problem Solving", "Critical Thinking" ],
+          "Other" => []
+        }
+        
+        categorized = Hash.new(0)
+        uncategorized_skills = []
+        
+        all_skill_terms.each do |term|
+          category_found = false
+          
+          categories.each do |cat, skills_list|
+            if skills_list.any? { |s| term.to_s.downcase.include?(s.downcase) || s.downcase.include?(term.to_s.downcase) }
+              categorized[cat] += 1
+              category_found = true
+              break
+            end
+          end
+          
+          unless category_found
+            categorized["Other"] += 1
+            uncategorized_skills << term
+          end
+        end
+        
+        puts "DEBUG: Categorized skills: #{categorized.inspect}"
+        puts "DEBUG: Uncategorized skills: #{uncategorized_skills.inspect}"
+      %>
+      
+      <% if all_skill_terms.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <% if categorized.any? %>
+              <canvas id="skills-category-breakdown-chart" height="250"
+                data-skills="<%= { labels: categorized.keys, values: categorized.values }.to_json %>"></canvas>
+            <% else %>
+              <div class="flex items-center justify-center h-full">
+                <p class="text-gray-500 italic">Unable to categorize skills data.</p>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="self-center">
+            <h3 class="font-medium text-gray-800 mb-3">Skills by Category</h3>
+            <div class="space-y-3">
+              <% categorized.each do |category, count| %>
+                <div class="flex justify-between">
+                  <span class="text-sm"><%= category %></span>
+                  <span class="text-sm font-semibold"><%= count %> <%= "skill".pluralize(count) %></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-1.5">
+                  <div class="h-1.5 rounded-full" style="width: <%= (count.to_f / categorized.values.sum * 100).round %>%; background-color: <%= ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'][categorized.keys.find_index(category) % 6] %>"></div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="font-medium text-gray-800 mb-3">All Skills</h3>
+          <div class="flex flex-wrap gap-2">
+            <% all_skill_terms.each do |skill_term| %>
+              <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"><%= skill_term %></span>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No skills data available. Students need to add skills to their profiles to see this breakdown.</p>
+      <% end %>
+    </div>
+    
     <!-- Recent Activity -->
     <div class="card p-4 border rounded-lg shadow-md bg-white">
       <h2 class="text-lg font-semibold mb-4 text-blue-700">Recent Students</h2>
@@ -543,6 +656,77 @@
             }
           }
         });
+      }
+      
+      // Initialize Skills Breakdown Chart
+      const skillsBreakdownCanvas = document.getElementById('skills-category-breakdown-chart');
+      if (skillsBreakdownCanvas) {
+        console.log("Skills breakdown canvas found:", skillsBreakdownCanvas);
+        console.log("Skills data:", skillsBreakdownCanvas.dataset.skills);
+        try {
+          const skillsData = JSON.parse(skillsBreakdownCanvas.dataset.skills);
+          console.log("Parsed skills data:", skillsData);
+          
+          if (skillsData && skillsData.labels && skillsData.values && 
+              skillsData.labels.length > 0 && skillsData.values.length > 0) {
+            
+            // Create an array of background colors with the same length as the data
+            const backgroundColors = [];
+            const colorPalette = [
+              'rgba(59, 130, 246, 0.7)',   // Blue
+              'rgba(16, 185, 129, 0.7)',   // Green
+              'rgba(245, 158, 11, 0.7)',   // Yellow
+              'rgba(239, 68, 68, 0.7)',    // Red
+              'rgba(139, 92, 246, 0.7)',   // Purple
+              'rgba(236, 72, 153, 0.7)'    // Pink
+            ];
+            
+            for (let i = 0; i < skillsData.labels.length; i++) {
+              backgroundColors.push(colorPalette[i % colorPalette.length]);
+            }
+            
+            new Chart(skillsBreakdownCanvas, {
+              type: 'doughnut',
+              data: {
+                labels: skillsData.labels,
+                datasets: [{
+                  data: skillsData.values,
+                  backgroundColor: backgroundColors,
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'right',
+                  },
+                  title: {
+                    display: true,
+                    text: 'Skills by Category'
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function(context) {
+                        const label = context.label || '';
+                        const value = context.raw || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = Math.round((value / total) * 100);
+                        return `${label}: ${value} skills (${percentage}%)`;
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          } else {
+            console.error("Skills data is empty or invalid:", skillsData);
+          }
+        } catch (error) {
+          console.error("Error parsing skills data:", error);
+        }
+      } else {
+        console.error("Skills breakdown canvas not found");
       }
     });
   </script>

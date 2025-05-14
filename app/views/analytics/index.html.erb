@@ -48,17 +48,6 @@
         </div>
       </div>
       
-      <!-- Skills Breakdown -->
-      <div class="card p-4 border rounded-lg shadow-md bg-white">
-        <h2 class="text-lg font-semibold mb-4 text-blue-700">Skills Breakdown</h2>
-        <% if @skills_breakdown[:values].sum > 0 %>
-          <canvas id="skills-breakdown-chart" height="200" 
-            data-skills="<%= { labels: @skills_breakdown[:labels], values: @skills_breakdown[:values] }.to_json %>"></canvas>
-        <% else %>
-          <p class="text-gray-500 italic">No skills data available. Add skills to your profile to see your report.</p>
-        <% end %>
-      </div>
-      
       <!-- Education Timeline -->
       <div class="card p-4 border rounded-lg shadow-md bg-white">
         <h2 class="text-lg font-semibold mb-4 text-blue-700">Education Timeline</h2>

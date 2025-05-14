@@ -135,7 +135,6 @@ module EnhancedAnalyticsHelper
   def student_additional_analytics(student)
     {
       education_timeline: student_education_timeline(student),
-      skills_breakdown: student_skills_breakdown(student),
       projects_count: student.student_profile&.projects&.count || 0,
       activities_count: student.student_profile&.activities_honors&.count || 0,
       interests_count: student.student_profile&.interests&.count || 0,
@@ -153,51 +152,6 @@ module EnhancedAnalyticsHelper
         degree: education.degree
       }
     end.sort_by { |e| e[:year] || 0 }
-  end
-
-  # Get a breakdown of a student's skills by category
-  def student_skills_breakdown(student)
-    skills = student.student_profile&.skills || []
-
-    # Handle empty data set
-    if skills.empty?
-      return { labels: [], values: [] }
-    end
-
-    # Categorize skills (this is a simplified example - in reality, you might use a more sophisticated categorization)
-    categories = {
-      "Programming" => [ "Java", "Python", "JavaScript", "Ruby", "C++", "C#", "PHP" ],
-      "Web Development" => [ "HTML", "CSS", "React", "Angular", "Vue.js", "Node.js", "Django", "Rails" ],
-      "Data Science" => [ "SQL", "R", "Python", "Machine Learning", "Data Analysis", "Tableau", "Power BI" ],
-      "Design" => [ "Photoshop", "Illustrator", "UI/UX", "Figma", "Adobe XD" ],
-      "Soft Skills" => [ "Communication", "Leadership", "Teamwork", "Problem Solving", "Critical Thinking" ],
-      "Other" => []
-    }
-
-    categorized = Hash.new(0)
-
-    skills.each do |skill|
-      category = "Other"
-
-      categories.each do |cat, skills_list|
-        if skills_list.any? { |s| skill.skill_list.to_s.downcase.include?(s.downcase) }
-          category = cat
-          break
-        end
-      end
-
-      categorized[category] += 1
-    end
-
-    # If no categories were found, return empty arrays
-    if categorized.empty?
-      return { labels: [], values: [] }
-    end
-
-    {
-      labels: categorized.keys,
-      values: categorized.values
-    }
   end
 
   # Additional recruiter analytics
