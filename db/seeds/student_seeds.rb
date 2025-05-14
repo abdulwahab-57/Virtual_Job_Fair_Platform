@@ -1,49 +1,3 @@
-# Temporarily patch the User model to disable problematic associations
-module UserPatch
-  def self.apply
-    User.class_eval do
-      # Comment out problematic associations
-      has_many :meeting_participants, dependent: :destroy rescue nil
-      has_many :meetings, through: :meeting_participants rescue nil
-    end
-  end
-end
-
-# Apply the patch
-UserPatch.apply
-
-# Career Officer Seed Data
-
-# First, let's clear any existing career officer with this email to avoid duplicates
-User.where(email: "career-officer@nu.edu.pk").destroy_all
-
-# Creating a Career Officer User
-career_officer = User.new(
-  full_name: "Career Services Officer",
-  email: "career-officer@nu.edu.pk",
-  password: "password123",
-  password_confirmation: "password123",
-  user_type: "career_officer"
-)
-
-# Create the associated career officer profile
-career_officer.build_career_officer_profile(
-  designation: "Senior Career Advisor",
-  introduction: "I help students connect with potential employers and prepare for their professional careers.",
-  education: "PhD in Career Counseling, MBA",
-  office_location: "Room 301, Admin Building",
-  phone_number: "+923001234567"
-)
-
-# Skip the confirmation email and directly confirm the user
-career_officer.skip_confirmation!
-career_officer.save!
-
-# Confirm the career officer is active
-career_officer.confirm!
-
-puts "Career Officer user with profile seeded successfully!"
-
 # Student Seed Data
 
 # First, let's clear any existing test students to avoid duplicates
@@ -135,6 +89,13 @@ students_data = [
 
 # Create student users and profiles
 students_data.each do |student_data|
+  # Skip validation for domain temporarily
+  User.class_eval do
+    def validate_email_domain
+      # Skip validation temporarily
+    end
+  end
+
   student = User.new(
     full_name: student_data[:full_name],
     email: student_data[:email],
