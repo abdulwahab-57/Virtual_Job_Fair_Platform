@@ -62,10 +62,12 @@ Rails.application.routes.draw do
   get "analytics/student/:id", to: "analytics#student_analytics", as: :student_analytics
   get "analytics/recruiter/:id", to: "analytics#recruiter_analytics", as: :recruiter_analytics
   get "analytics/dashboard", to: "analytics#dashboard", as: :analytics_dashboard
+  get "analytics/api/chart-data/:chart_type", to: "analytics#api_chart_data", as: :analytics_chart_data
 
+  # Remove the enhanced analytics routes since we've merged functionality
   # Enhanced Analytics routes
-  get "enhanced-analytics/student/:id", to: "enhanced_analytics#student_dashboard", as: :enhanced_analytics_student_dashboard
-  get "enhanced-analytics/recruiter/:id", to: "enhanced_analytics#recruiter_dashboard", as: :enhanced_analytics_recruiter_dashboard
-  get "enhanced-analytics/career-officer", to: "enhanced_analytics#career_officer_dashboard", as: :enhanced_analytics_career_officer_dashboard
-  get "enhanced-analytics/api/chart-data/:chart_type", to: "enhanced_analytics#api_chart_data", as: :enhanced_analytics_chart_data
+  # get "enhanced-analytics/student/:id", to: "enhanced_analytics#student_dashboard", as: :enhanced_analytics_student_dashboard
+  # get "enhanced-analytics/recruiter/:id", to: "enhanced_analytics#recruiter_dashboard", as: :enhanced_analytics_recruiter_dashboard
+  # get "enhanced-analytics/career-officer", to: "enhanced_analytics#career_officer_dashboard", as: :enhanced_analytics_career_officer_dashboard
+  # get "enhanced-analytics/api/chart-data/:chart_type", to: "enhanced_analytics#api_chart_data", as: :enhanced_analytics_chart_data
 end

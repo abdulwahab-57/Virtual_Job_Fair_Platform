@@ -1,22 +1,22 @@
-# Career Officer Seed Data
+# db/seeds.rb
 
-# Remove existing user if it exists
-User.where(email: "career-officer@nu.edu.pk").destroy_all
+# Remove any existing Career Officer with this email to prevent duplicates
+User.where(email: "f219498@cfd.nu.edu.pk").destroy_all
 
-# Create a new Career Officer user
-career_officer = User.new(
+# Create a new Career Officer user with associated profile
+career_officer = User.create!(
   full_name: "Career Services Officer",
-  email: "career-officer@nu.edu.pk",
+  email: "f219498@cfd.nu.edu.pk",
   password: "password123",
   password_confirmation: "password123",
-  user_type: "career_officer"
+  user_type: "career_officer",
+  career_officer_profile_attributes: {
+    designation: "Career Services Officer",
+    phone_number: "+1234567890"
+  }
 )
 
-# Skip email confirmation (if using Devise confirmable)
-career_officer.skip_confirmation! if career_officer.respond_to?(:skip_confirmation!)
-career_officer.save!
+puts "Created career officer: #{career_officer.full_name}"
 
-# Confirm the user (optional, only if confirmable module is used)
-career_officer.confirm! if career_officer.respond_to?(:confirm!)
-
-puts "Career Officer user registered successfully!"
+# Load student seed data
+load File.join(Rails.root, 'db', 'seeds', 'saeed.rb')
