@@ -14,7 +14,7 @@ class Student::BaseController < ApplicationController
       { label: "Student Profiles", icon: "users", path: "#" },
       { label: "Job Fair Arena", icon: "video", path: "#" },
       { label: "Meetings", icon: "calendar", path: "#" },
-      { label: "Analytics", icon: "chart-bar", path: analytics_path }
+      { label: "Report", icon: "document", path: analytics_path }
     ]
   end
 

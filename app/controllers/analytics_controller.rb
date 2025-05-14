@@ -36,9 +36,10 @@ class AnalyticsController < ApplicationController
         { label: "Student Profiles", icon: "users", path: "#" },
         { label: "Job Fair Arena", icon: "video", path: "#" },
         { label: "Meetings", icon: "calendar", path: "#" },
-        { label: "Analytics", icon: "chart-bar", path: analytics_path }
+        { label: "Report", icon: "document", path: analytics_path }
       ]
       @home_path = student_dashboard_path
+      @header_text = "Report Dashboard"
     when "recruiter"
       @sidebar_tabs = [
         { label: "Home", icon: "home", path: recruiter_dashboard_path },
@@ -48,18 +49,18 @@ class AnalyticsController < ApplicationController
         { label: "Analytics", icon: "chart-bar", path: analytics_path }
       ]
       @home_path = recruiter_dashboard_path
+      @header_text = "Analytics Dashboard"
     when "career_officer"
       @sidebar_tabs = [
         { label: "Home", icon: "home", path: career_officer_dashboard_path },
         { label: "Student Profiles", icon: "users", path: career_officer_student_profiles_path },
-        { label: "Recruiter Profiles", icon: "briefcase", path: "#" },
         { label: "Job Fair Arena", icon: "video", path: "#" },
         { label: "Meetings", icon: "calendar", path: "#" },
         { label: "Analytics", icon: "chart-bar", path: analytics_path }
       ]
       @home_path = career_officer_dashboard_path
+      @header_text = "Analytics Dashboard"
     end
-    @header_text = "Analytics Dashboard"
   end
 
   def analytics_data

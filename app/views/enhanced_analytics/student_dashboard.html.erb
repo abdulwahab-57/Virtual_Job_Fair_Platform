@@ -1,5 +1,5 @@
 <div class="analytics-dashboard space-y-6">
-  <h1 class="text-2xl font-bold mb-4">Enhanced Analytics for <%= @student.full_name %></h1>
+  <h1 class="text-2xl font-bold mb-4">Enhanced Report for <%= @student.full_name %></h1>
   
   <!-- Profile Overview Section -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -53,7 +53,7 @@
       <canvas id="skills-breakdown-chart" height="200" 
         data-skills="<%= { labels: @skills_breakdown[:labels], values: @skills_breakdown[:values] }.to_json %>"></canvas>
     <% else %>
-      <p class="text-gray-500 italic">No skills data available. Add skills to your profile to see analytics.</p>
+      <p class="text-gray-500 italic">No skills data available. Add skills to your profile to see your report.</p>
     <% end %>
   </div>
   

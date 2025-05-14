@@ -4,9 +4,9 @@
     </div>
     <nav class="p-4 mt-4 space-y-2">
         <% @tabs.each do |tab| %>
-            <%= link_to tab[:path], class: 'flex items-center px-4 py-2 text-white hover:bg-white hover:text-[#858EAC] rounded-md' do %>
+            <%= link_to tab[:path], class: 'flex items-center px-4 py-2 text-white hover:bg-white hover:text-[#858EAC] rounded-md w-full truncate' do %>
                 <%= svg_icon(tab[:icon]) %>
-                <span><%= tab[:label] %></span>
+                <span class="ml-2 truncate"><%= tab[:label] %></span>
             <% end %>
         <% end %>
     </nav>
