@@ -1,27 +1,90 @@
-<nav class="px-4 py-2 bg-white shadow-sm">
+<nav class="px-4 py-3 bg-white shadow-md border-b border-gray-200">
     <div class="flex justify-between items-center">
-        <% if local_assigns[:header_text] %>
-            <h1 class="text-2xl font-semibold text-[#333333]"><%= header_text %></h1>
-        <% end %>
+        <!-- Left section with header and breadcrumbs -->
+        <div class="flex items-center">
+            <% if local_assigns[:header_text] %>
+                <% 
+                   # Set user-specific styles
+                   header_color = case current_user.user_type
+                                 when "student" then "text-blue-600"
+                                 when "recruiter" then "text-indigo-600"
+                                 when "career_officer" then "text-purple-600"
+                                 else "text-gray-800"
+                                 end
+                   
+                   # Set user-specific icons
+                   header_icon = case current_user.user_type
+                               when "student" then "academic-cap"
+                               when "recruiter" then "briefcase"
+                               when "career_officer" then "library"
+                               else "home"
+                               end
+                %>
+                
+                <div class="flex items-center">
+                    <!-- Icon for the header -->
+                    <span class="<%= header_color %> mr-2">
+                        <%= render partial: "shared/icons/#{header_icon}" %>
+                    </span>
+                    
+                    <h1 class="text-2xl font-semibold text-gray-800"><%= header_text %></h1>
+                    
+                    <!-- User role badge -->
+                    <span class="ml-3 px-2 py-1 text-xs font-medium rounded-full <%= header_color.gsub('text', 'bg') %> bg-opacity-10 <%= header_color %>">
+                        <%= current_user.user_type.titleize %>
+                    </span>
+                </div>
+            <% end %>
+        </div>
 
-        <!-- Profile Dropdown -->
-        <div class="relative" data-controller="profile-menu">
-            <!-- Profile Button -->
-            <button id="profile-button" class="flex items-center focus:outline-none" data-action="click->profile-menu#toggle">
-                <% if current_user.profile_picture.attached? %>
-                    <%= image_tag current_user.profile_picture.variant(resize_to_fill: [40, 40]).processed, 
-                                alt: "Profile",
-                                class: "rounded-full w-10 h-10 border border-gray-300" %>
-                <% else %>
-                    <img src="https://placehold.co/40x40" alt="Profile"
-                        class="rounded-full w-10 h-10 border border-gray-300" />
-                <% end %>
-            </button>
+        <!-- Right section with user info and actions -->
+        <div class="flex items-center space-x-4">
+            <!-- User greeting -->
+            <span class="hidden md:block text-sm text-gray-600">
+                Welcome, <%= current_user.full_name || current_user.email.split('@').first %>
+            </span>
+            
+            <!-- Profile Dropdown -->
+            <div class="relative" data-controller="profile-menu">
+                <!-- Profile Button -->
+                <button id="profile-button" class="flex items-center focus:outline-none" data-action="click->profile-menu#toggle">
+                    <% if current_user.profile_picture.attached? %>
+                        <%= image_tag current_user.profile_picture.variant(resize_to_fill: [40, 40]).processed, 
+                                    alt: "Profile",
+                                    class: "rounded-full w-10 h-10 border border-gray-200 shadow-sm" %>
+                    <% else %>
+                        <div class="rounded-full w-10 h-10 border border-gray-200 shadow-sm flex items-center justify-center bg-gray-100">
+                            <span class="text-gray-600 font-medium">
+                                <%= current_user.full_name&.first || current_user.email.first.upcase %>
+                            </span>
+                        </div>
+                    <% end %>
+                </button>
 
-            <!-- Dropdown Menu -->
-            <div id="profile-menu" class="absolute z-10 right-0 mt-2 hidden bg-white border rounded-md shadow-lg w-40">
-                <%= link_to 'My Profile', @show_profile_path, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
-                <%= link_to 'Logout', destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+                <!-- Dropdown Menu -->
+                <div id="profile-menu" class="absolute z-10 right-0 mt-2 hidden bg-white border rounded-md shadow-lg w-48">
+                    <div class="px-4 py-2 border-b border-gray-100">
+                        <p class="text-sm font-medium text-gray-800">
+                            <%= current_user.email %>
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            <%= current_user.user_type.titleize %>
+                        </p>
+                    </div>
+                    <%= link_to @show_profile_path, class: 'flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50' do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                        My Profile
+                    <% end %>
+                    <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: 'flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50' do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm9 4a1 1 0 11-2 0 1 1 0 012 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-2.121-2.121a1 1 0 00-1.414 0L8 9.586l-1.293-.707A1 1 0 005.293 10.3l2 2a1 1 0 001.414 0l1.829-1.829z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 110-12 6 6 0 010 12z" clip-rule="evenodd" />
+                        </svg>
+                        Logout
+                    <% end %>
+                </div>
             </div>
         </div>
     </div>

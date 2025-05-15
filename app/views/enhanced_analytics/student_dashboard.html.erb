@@ -1,0 +1,150 @@
+<div class="analytics-dashboard space-y-6">
+  <h1 class="text-2xl font-bold mb-4">Enhanced Report for <%= @student.full_name %></h1>
+  
+  <!-- Profile Overview Section -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="card p-4 border rounded-lg shadow-md bg-white">
+      <h2 class="text-lg font-semibold mb-2 text-blue-700">Profile Completion</h2>
+      <div class="text-3xl font-bold text-blue-600"><%= calculate_profile_completion(@student) %>%</div>
+      <%= progress_bar(calculate_profile_completion(@student), color: "blue") %>
+      <p class="mt-2 text-sm text-gray-600">Complete your profile to improve visibility to recruiters</p>
+    </div>
+    
+    <div class="card p-4 border rounded-lg shadow-md bg-white">
+      <h2 class="text-lg font-semibold mb-2 text-blue-700">Profile Stats</h2>
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600">Skills</span>
+          <span class="font-semibold"><%= @student.student_profile&.skills&.count || 0 %></span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600">Projects</span>
+          <span class="font-semibold"><%= @analytics_data[:projects_count] %></span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600">Education</span>
+          <span class="font-semibold"><%= @student.student_profile&.educations&.count || 0 %></span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600">Activities</span>
+          <span class="font-semibold"><%= @analytics_data[:activities_count] %></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card p-4 border rounded-lg shadow-md bg-white">
+      <h2 class="text-lg font-semibold mb-2 text-blue-700">Profile Completeness Ranking</h2>
+      <% 
+        students = User.where(user_type: "student").to_a
+        completion_scores = students.map { |s| calculate_profile_completion(s) }
+        my_score = calculate_profile_completion(@student)
+        my_rank = completion_scores.count { |score| score > my_score } + 1
+        percentile = (100 - (my_rank.to_f / students.count * 100)).round
+      %>
+      <div class="text-3xl font-bold text-blue-600"><%= percentile %>%</div>
+      <p class="mt-2 text-sm text-gray-600">Your profile completeness is better than <%= percentile %>% of students</p>
+    </div>
+  </div>
+  
+  <!-- Education Timeline -->
+  <div class="card p-4 border rounded-lg shadow-md bg-white">
+    <h2 class="text-lg font-semibold mb-4 text-blue-700">Education Timeline</h2>
+    <% if @education_timeline.any? %>
+      <div class="relative">
+        <!-- Timeline Line -->
+        <div class="absolute h-full w-0.5 bg-blue-200 left-5 top-0"></div>
+        
+        <!-- Timeline Items -->
+        <div class="space-y-4 ml-12">
+          <% @education_timeline.each do |education| %>
+            <div class="relative">
+              <!-- Timeline Dot -->
+              <div class="absolute rounded-full w-3 h-3 bg-blue-500 -left-8 top-1.5"></div>
+              
+              <div class="p-3 border rounded-lg shadow-sm bg-blue-50">
+                <div class="font-semibold"><%= education[:degree] %></div>
+                <div class="text-sm text-gray-600"><%= education[:institution] %></div>
+                <div class="text-xs text-gray-500 mt-1">Graduated: <%= education[:year] %></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <p class="text-gray-500 italic">No education data available. Add your education details to see this timeline.</p>
+    <% end %>
+  </div>
+  
+  <!-- Job Matching Insights -->
+  <div class="card p-4 border rounded-lg shadow-md bg-white">
+    <h2 class="text-lg font-semibold mb-4 text-blue-700">Job Matching Insights</h2>
+    <div class="p-4 bg-blue-50 rounded-lg">
+      <h3 class="font-medium mb-2">Skills in High Demand</h3>
+      <% 
+        # Mock data - in a real app this would be from actual recruiter data
+        top_skills = top_skills_data(5)
+        student_skills = @student.student_profile&.skills&.pluck(:skill_list) || []
+        
+        # Check for empty data
+        if top_skills[:labels].present?
+          matching_skills = top_skills[:labels] & student_skills
+          missing_skills = top_skills[:labels] - student_skills
+        else
+          matching_skills = []
+          missing_skills = []
+        end
+      %>
+      
+      <% if matching_skills.any? %>
+        <div class="mb-3">
+          <p class="text-sm mb-1">Your matching skills:</p>
+          <div class="flex flex-wrap gap-1">
+            <% matching_skills.each do |skill| %>
+              <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                <%= skill %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <% if missing_skills.any? %>
+        <div>
+          <p class="text-sm mb-1">Skills to consider adding:</p>
+          <div class="flex flex-wrap gap-1">
+            <% missing_skills.each do |skill| %>
+              <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
+                <%= skill %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="mt-4">
+      <h3 class="font-medium mb-2">Improvement Suggestions</h3>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+        <% completion = calculate_profile_completion(@student) %>
+        <% if completion < 100 %>
+          <li>Complete your profile to increase visibility to recruiters</li>
+        <% end %>
+        <% if @student.student_profile&.skills&.count.to_i < 5 %>
+          <li>Add more skills to your profile (aim for at least 5)</li>
+        <% end %>
+        <% if @analytics_data[:projects_count] < 2 %>
+          <li>Add more projects to showcase your experience</li>
+        <% end %>
+        <% if !@student.profile_picture.attached? %>
+          <li>Add a professional profile picture</li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('turbo:load', function() {
+      // No skills breakdown chart initialization - removed
+    });
+  </script>
+</div> 

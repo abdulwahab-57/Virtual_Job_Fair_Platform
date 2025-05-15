@@ -1,0 +1,23 @@
+<div class="bg-white p-4 rounded-lg shadow mb-4">
+  <div class="flex justify-between items-center mb-2">
+    <h3 class="text-lg font-semibold">Profile Completion</h3>
+    <%= link_to "View Analytics", analytics_path, class: "text-sm text-blue-600 hover:underline" %>
+  </div>
+  
+  <% completion = calculate_profile_completion(user) %>
+  
+  <%= progress_bar(completion, color: completion >= 80 ? 'green' : 'blue') %>
+  
+  <p class="mt-2 text-sm text-gray-600">
+    <% if completion < 50 %>
+      Your profile is <span class="font-medium text-red-600"><%= completion %>% complete</span>. 
+      Add more information to increase visibility to recruiters.
+    <% elsif completion < 80 %>
+      Your profile is <span class="font-medium text-yellow-600"><%= completion %>% complete</span>. 
+      You're doing well, but could add more details.
+    <% else %>
+      Your profile is <span class="font-medium text-green-600"><%= completion %>% complete</span>. 
+      Great job keeping your profile current!
+    <% end %>
+  </p>
+</div> 

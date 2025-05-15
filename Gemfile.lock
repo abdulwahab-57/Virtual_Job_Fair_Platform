@@ -115,6 +115,8 @@ GEM
       logger
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
+    faker (3.5.1)
+      i18n (>= 1.8.11, < 2)
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-arm-linux-gnu)
     ffi (1.17.1-arm64-darwin)
@@ -394,6 +396,7 @@ DEPENDENCIES
   csv (~> 3.3, >= 3.3.4)
   debug
   devise
+  faker (~> 3.2)
   grover (~> 1.2, >= 1.2.3)
   httparty (~> 0.23.1)
   image_processing (~> 1.2)

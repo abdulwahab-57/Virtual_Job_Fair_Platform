@@ -65,4 +65,11 @@ Rails.application.routes.draw do
   # PWA routes
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+
+  # Analytics routes
+  get "analytics", to: "analytics#index", as: :analytics
+  get "analytics/student/:id", to: "analytics#student_analytics", as: :student_analytics
+  get "analytics/recruiter/:id", to: "analytics#recruiter_analytics", as: :recruiter_analytics
+  get "analytics/dashboard", to: "analytics#dashboard", as: :analytics_dashboard
+  get "analytics/api/chart-data/:chart_type", to: "analytics#api_chart_data", as: :analytics_chart_data
 end

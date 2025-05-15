@@ -1,0 +1,938 @@
+<div class="bg-white p-6 rounded-lg shadow-md">
+<style>
+  /* Hide the Skills and Education Analysis section */
+  .grid:has(canvas#skills-distribution-chart),
+  .grid:has(canvas#education-timeline-chart) {
+    display: none !important;
+  }
+  /* Hide the Skills and Education Analysis section */
+  .grid:has(canvas#skills-distribution-chart),
+  .grid:has(canvas#education-timeline-chart),
+  .card:has(canvas#skills-category-breakdown-chart),
+  .card:has(h2:contains("Skills Breakdown")) {
+    display: none !important;
+  }
+</style>
+  <h1 class="text-2xl font-bold mb-6"><%= current_user.student? ? "Report Dashboard" : "Analytics Dashboard" %></h1>
+  
+  <% if current_user.student? %>
+    <div class="analytics-dashboard space-y-6">
+      <!-- Profile Overview Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-2 text-blue-700">Profile Completion</h2>
+          <div class="text-3xl font-bold text-blue-600"><%= calculate_profile_completion(current_user) %>%</div>
+          <%= progress_bar(calculate_profile_completion(current_user), color: "blue") %>
+          <p class="mt-2 text-sm text-gray-600">Complete your profile to improve visibility to recruiters</p>
+        </div>
+        
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-2 text-blue-700">Profile Stats</h2>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Skills</span>
+              <span class="font-semibold"><%= current_user.student_profile&.skills&.count || 0 %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Projects</span>
+              <span class="font-semibold"><%= @analytics_data[:projects_count] %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Education</span>
+              <span class="font-semibold"><%= current_user.student_profile&.educations&.count || 0 %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Activities</span>
+              <span class="font-semibold"><%= @analytics_data[:activities_count] %></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-2 text-blue-700">Profile Completeness Ranking</h2>
+          <% 
+            students = User.where(user_type: "student").to_a
+            completion_scores = students.map { |s| calculate_profile_completion(s) }
+            my_score = calculate_profile_completion(current_user)
+            my_rank = completion_scores.count { |score| score > my_score } + 1
+            percentile = (100 - (my_rank.to_f / students.count * 100)).round
+          %>
+          <div class="text-3xl font-bold text-blue-600"><%= percentile %>%</div>
+          <p class="mt-2 text-sm text-gray-600">Your profile completeness is better than <%= percentile %>% of students</p>
+        </div>
+      </div>
+      
+      <!-- Education Timeline -->
+      <div class="card p-4 border rounded-lg shadow-md bg-white">
+        <h2 class="text-lg font-semibold mb-4 text-blue-700">Education Timeline</h2>
+        <% if @education_timeline.any? %>
+          <div class="relative">
+            <!-- Timeline Line -->
+            <div class="absolute h-full w-0.5 bg-blue-200 left-5 top-0"></div>
+            
+            <!-- Timeline Items -->
+            <div class="space-y-4 ml-12">
+              <% @education_timeline.each do |education| %>
+                <div class="relative">
+                  <!-- Timeline Dot -->
+                  <div class="absolute rounded-full w-3 h-3 bg-blue-500 -left-8 top-1.5"></div>
+                  
+                  <div class="p-3 border rounded-lg shadow-sm bg-blue-50">
+                    <div class="font-semibold"><%= education[:degree] %></div>
+                    <div class="text-sm text-gray-600"><%= education[:institution] %></div>
+                    <div class="text-xs text-gray-500 mt-1">Graduated: <%= education[:year] %></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% else %>
+          <p class="text-gray-500 italic">No education data available. Add your education details to see this timeline.</p>
+        <% end %>
+      </div>
+      
+      <!-- Job Matching Insights -->
+      <div class="card p-4 border rounded-lg shadow-md bg-white">
+        <h2 class="text-lg font-semibold mb-4 text-blue-700">Job Matching Insights</h2>
+        <div class="p-4 bg-blue-50 rounded-lg">
+          <h3 class="font-medium mb-2">Skills in High Demand</h3>
+          <% 
+            # Mock data - in a real app this would be from actual recruiter data
+            top_skills = top_skills_data(5)
+            student_skills = current_user.student_profile&.skills&.pluck(:skill_list) || []
+            
+            # Check for empty data
+            if top_skills[:labels].present?
+              matching_skills = top_skills[:labels] & student_skills
+              missing_skills = top_skills[:labels] - student_skills
+            else
+              matching_skills = []
+              missing_skills = []
+            end
+          %>
+          
+          <% if matching_skills.any? %>
+            <div class="mb-3">
+              <p class="text-sm mb-1">Your matching skills:</p>
+              <div class="flex flex-wrap gap-1">
+                <% matching_skills.each do |skill| %>
+                  <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                    <%= skill %>
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          
+          <% if missing_skills.any? %>
+            <div>
+              <p class="text-sm mb-1">Skills to consider adding:</p>
+              <div class="flex flex-wrap gap-1">
+                <% missing_skills.each do |skill| %>
+                  <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
+                    <%= skill %>
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        
+        <div class="mt-4">
+          <h3 class="font-medium mb-2">Improvement Suggestions</h3>
+          <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+            <% completion = calculate_profile_completion(current_user) %>
+            <% if completion < 100 %>
+              <li>Complete your profile to increase visibility to recruiters</li>
+            <% end %>
+            <% if current_user.student_profile&.skills&.count.to_i < 5 %>
+              <li>Add more skills to your profile (aim for at least 5)</li>
+            <% end %>
+            <% if @analytics_data[:projects_count] < 2 %>
+              <li>Add more projects to showcase your experience</li>
+            <% end %>
+            <% if !current_user.profile_picture.attached? %>
+              <li>Add a professional profile picture</li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% elsif current_user.recruiter? %>
+    <div class="analytics-dashboard space-y-6">
+      <!-- Profile Overview Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-2 text-blue-700">Profile Completion</h2>
+          <div class="text-3xl font-bold text-blue-600"><%= calculate_profile_completion(current_user) %>%</div>
+          <%= progress_bar(calculate_profile_completion(current_user), color: "blue") %>
+          <p class="mt-2 text-sm text-gray-600">Complete your profile to improve visibility to students</p>
+        </div>
+        
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-2 text-blue-700">Company Info</h2>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Company Name:</span>
+              <span class="font-semibold"><%= @analytics_data[:company_info][:company_name] || "Not provided" %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Industry:</span>
+              <span class="font-semibold"><%= @analytics_data[:company_info][:industry] || "Not provided" %></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Employees:</span>
+              <span class="font-semibold"><%= @analytics_data[:company_info][:employee_count] || "Not provided" %></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-2 text-blue-700">Potential Matches</h2>
+          <div class="text-3xl font-bold text-blue-600"><%= @analytics_data[:potential_matches] %></div>
+          <p class="mt-2 text-sm text-gray-600">Students with skills matching your industry</p>
+        </div>
+      </div>
+      
+      <!-- Industry Position -->
+      <% if @analytics_data[:company_industry_position] && @analytics_data[:company_industry_position][:industry].present? %>
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-4 text-blue-700">Industry Position</h2>
+          <div class="flex items-center">
+            <div class="w-1/3 text-center p-4">
+              <div class="text-5xl font-bold text-blue-700">
+                <%= @analytics_data[:company_industry_position][:similar_recruiters] %>
+              </div>
+              <p class="text-sm text-gray-600 mt-2">Other Companies<br>in <%= @analytics_data[:company_industry_position][:industry] %></p>
+            </div>
+            
+            <div class="w-1/3 text-center border-l border-r border-gray-200 p-4">
+              <div class="text-3xl font-bold text-gray-800">
+                <%= ((@analytics_data[:company_industry_position][:similar_recruiters].to_f / @analytics_data[:company_industry_position][:total_recruiters]) * 100).round %>%
+              </div>
+              <p class="text-sm text-gray-600 mt-2">Of Total<br>Companies</p>
+            </div>
+            
+            <div class="w-1/3 text-center p-4">
+              <div class="text-5xl font-bold text-gray-700">
+                <%= @analytics_data[:company_industry_position][:total_recruiters] %>
+              </div>
+              <p class="text-sm text-gray-600 mt-2">Total<br>Companies</p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Industry Distribution -->
+      <div class="card p-4 border rounded-lg shadow-md bg-white">
+        <h2 class="text-lg font-semibold mb-4 text-blue-700">Industry Distribution</h2>
+        <% if @industry_data[:values].any? %>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <canvas id="industry-distribution-chart" height="250"
+                data-industries="<%= { labels: @industry_data[:labels], values: @industry_data[:values] }.to_json %>"></canvas>
+            </div>
+            
+            <div class="self-center">
+              <h3 class="font-medium text-gray-800 mb-3">Industry Breakdown</h3>
+              <div class="space-y-3">
+                <% @industry_data[:labels].each_with_index do |industry, i| %>
+                  <div class="flex justify-between">
+                    <span class="text-sm"><%= industry %></span>
+                    <span class="text-sm font-semibold"><%= @industry_data[:values][i] %> companies</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-1.5">
+                    <div class="h-1.5 rounded-full" style="width: <%= (@industry_data[:values][i].to_f / @industry_data[:values].sum * 100).round %>%; background-color: <%= ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#c7c7c7'][i % 7] %>"></div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <p class="text-gray-500 italic">No industry data available.</p>
+        <% end %>
+      </div>
+      
+      <!-- Recommendations -->
+      <div class="card p-4 border rounded-lg shadow-md bg-white">
+        <h2 class="text-lg font-semibold mb-4 text-blue-700">Recommendations</h2>
+        
+        <div class="space-y-4">
+          <% completion = calculate_profile_completion(current_user) %>
+          <% if completion < 100 %>
+            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 class="font-medium text-blue-700 mb-1">Complete Your Profile</h3>
+              <p class="text-sm text-gray-700">Your profile is <%= completion %>% complete. Completing your profile helps students find your company more easily.</p>
+            </div>
+          <% end %>
+          
+          <% if @analytics_data[:company_info][:industry].blank? %>
+            <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <h3 class="font-medium text-yellow-700 mb-1">Add Your Industry</h3>
+              <p class="text-sm text-gray-700">Specifying your industry helps match your company with students who have relevant skills.</p>
+            </div>
+          <% end %>
+          
+          <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+            <h3 class="font-medium text-green-700 mb-1">Student Outreach</h3>
+            <p class="text-sm text-gray-700">Based on your industry, there are <%= @analytics_data[:potential_matches] %> students with matching skills who could be good candidates for your company.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% elsif current_user.career_officer? %>
+    <div class="analytics-dashboard space-y-6">
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <h2 class="text-lg font-semibold text-blue-700">Student Profiles</h2>
+          </div>
+          <div class="analytics-card-body">
+            <div class="text-3xl font-bold text-blue-600"><%= User.where(user_type: "student").count %></div>
+            <p class="mt-2 text-sm text-gray-600">Total student profiles</p>
+            <%= link_to "View All Students", career_officer_student_profiles_path, class: "mt-2 analytics-btn inline-block text-sm" %>
+          </div>
+        </div>
+        
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <h2 class="text-lg font-semibold text-blue-700">Recruiter Profiles</h2>
+          </div>
+          <div class="analytics-card-body">
+            <div class="text-3xl font-bold text-blue-600"><%= User.where(user_type: "recruiter").count %></div>
+            <p class="mt-2 text-sm text-gray-600">Total recruiter profiles</p>
+          </div>
+        </div>
+        
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <h2 class="text-lg font-semibold text-blue-700">Student Completion</h2>
+          </div>
+          <div class="analytics-card-body">
+            <% 
+              students = User.where(user_type: "student").to_a
+              student_completion = students.empty? ? 0 : students.sum { |s| calculate_profile_completion(s) } / students.size
+            %>
+            <div class="text-3xl font-bold text-blue-600"><%= student_completion %>%</div>
+            <%= progress_bar(student_completion, color: "blue") %>
+            <p class="mt-2 text-sm text-gray-600">Avg. student completion</p>
+          </div>
+        </div>
+        
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <h2 class="text-lg font-semibold text-blue-700">Recruiter Completion</h2>
+          </div>
+          <div class="analytics-card-body">
+            <% 
+              recruiters = User.where(user_type: "recruiter").to_a
+              recruiter_completion = recruiters.empty? ? 0 : recruiters.sum { |r| calculate_profile_completion(r) } / recruiters.size
+            %>
+            <div class="text-3xl font-bold text-blue-600"><%= recruiter_completion %>%</div>
+            <%= progress_bar(recruiter_completion, color: "green") %>
+            <p class="mt-2 text-sm text-gray-600">Avg. recruiter completion</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Key Metrics -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Student Status Distribution -->
+        <div class="card p-4 border-2 border-blue-100 rounded-lg shadow-lg bg-white">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-blue-800 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Student Status Distribution
+            </h2>
+            <span class="px-3 py-1 bg-blue-50 text-blue-800 rounded-full font-medium text-sm">
+              Total: <%= @student_statuses[:values].sum %> students
+            </span>
+          </div>
+          
+          <% if @student_statuses[:values].any? %>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div class="flex justify-center items-center bg-gradient-to-br from-white to-blue-50 p-4 rounded-lg shadow-inner">
+                <canvas id="student-status-chart" height="250"
+                  data-status="<%= @student_statuses.to_json %>"></canvas>
+              </div>
+              
+              <div class="self-center">
+                <h3 class="font-semibold text-gray-800 mb-5 text-lg border-b pb-2 border-gray-200">Status Breakdown</h3>
+                <div class="space-y-6">
+                  <% 
+                    status_colors = {
+                      'Pending' => '#22c55e',    # Green
+                      'New' => '#eab308',        # Yellow
+                      'Active' => '#3b82f6',     # Blue
+                      'Graduate' => '#8b5cf6'    # Purple
+                    }
+                    # Default colors for any other status
+                    default_colors = ['#6366f1', '#a855f7', '#ef4444', '#14b8a6', '#f97316', '#06b6d4']
+                  %>
+                  <% @student_statuses[:labels].each_with_index do |status, i| %>
+                    <% 
+                      # Set color based on status name if available, otherwise use default colors
+                      color = status_colors[status] || default_colors[i % default_colors.length]
+                      percent = (@student_statuses[:values][i].to_f / @student_statuses[:values].sum * 100).round
+                    %>
+                    <div class="bg-white p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                      <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                          <div class="w-3 h-3 rounded-full mr-2" style="background-color: <%= color %>"></div>
+                          <span class="text-md font-medium"><%= status %></span>
+                        </div>
+                        <span class="text-md font-bold flex items-center">
+                          <%= @student_statuses[:values][i] %> 
+                          <span class="text-sm text-gray-500 ml-1">students</span>
+                        </span>
+                      </div>
+                      <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden shadow-inner">
+                        <div class="h-3 rounded-full flex items-center justify-end pr-1 text-xs font-bold text-white" 
+                             style="width: <%= percent %>%; background-color: <%= color %>">
+                          <% if percent >= 15 %>
+                            <%= percent %>%
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-6 text-right">
+              <%= link_to career_officer_student_profiles_path, class: "inline-flex items-center text-blue-600 hover:text-blue-800 font-medium" do %>
+                View all students
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="flex flex-col items-center justify-center py-10 text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="text-gray-500 text-lg font-medium">No student status data available.</p>
+              <p class="text-gray-400 mt-2">Data will appear here once students are registered in the system.</p>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Profile Completion Distribution -->
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-4 text-blue-700">Profile Completion Distribution</h2>
+          <canvas id="completion-trends-chart" height="220"
+            data-trends="<%= @completion_trends.to_json %>"></canvas>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div class="p-3 bg-blue-50 rounded-lg">
+              <h3 class="font-medium text-blue-700 mb-2">Student Insight</h3>
+              <% 
+                student_incomplete = @completion_trends[:students][0] + @completion_trends[:students][1]
+                student_total = @completion_trends[:students].sum
+                student_incomplete_pct = student_total > 0 ? (student_incomplete.to_f / student_total * 100).round : 0
+              %>
+              <p class="text-sm text-gray-700">
+                <%= student_incomplete %> students (<%= student_incomplete_pct %>%) have profiles that are less than 50% complete.
+                <%= link_to "View Students", career_officer_student_profiles_path, class: "text-blue-600 hover:underline" %>
+              </p>
+            </div>
+            
+            <div class="p-3 bg-indigo-50 rounded-lg">
+              <h3 class="font-medium text-indigo-700 mb-2">Recruiter Insight</h3>
+              <% 
+                recruiter_incomplete = @completion_trends[:recruiters][0] + @completion_trends[:recruiters][1]
+                recruiter_total = @completion_trends[:recruiters].sum
+                recruiter_incomplete_pct = recruiter_total > 0 ? (recruiter_incomplete.to_f / recruiter_total * 100).round : 0
+              %>
+              <p class="text-sm text-gray-700">
+                <%= recruiter_incomplete %> recruiters (<%= recruiter_incomplete_pct %>%) have profiles that are less than 50% complete.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Skills and Education Analysis -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Top Skills Analysis -->
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-4 text-blue-700">Top Student Skills</h2>
+          <canvas id="skills-distribution-chart" height="250"
+            data-skills="<%= @top_skills.to_json %>"></canvas>
+        </div>
+        
+        <!-- Education Timeline -->
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-4 text-blue-700">Education Timeline</h2>
+          <canvas id="education-timeline-chart" height="250"
+            data-education="<%= @education_timeline.to_json %>"></canvas>
+        </div>
+      </div>
+      
+      <!-- Industry vs. Skills Match Analysis -->
+      <div class="card p-4 border rounded-lg shadow-md bg-white">
+        <h2 class="text-lg font-semibold mb-4 text-blue-700">Industry vs. Skills Match Analysis</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-4 bg-blue-50 rounded-lg">
+            <h3 class="font-medium text-blue-700 mb-3">Top Industries</h3>
+            <% 
+              # Get top industries
+              top_industries = RecruiterProfile.where.not(industry: [nil, ""]).group(:industry).count.sort_by{|k,v| -v}.take(5)
+            %>
+            <div class="space-y-3">
+              <% top_industries.each do |industry, count| %>
+                <div>
+                  <div class="flex justify-between">
+                    <span><%= industry %></span>
+                    <span class="font-semibold"><%= count %> <%= "company".pluralize(count) %></span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                    <div class="h-1.5 rounded-full bg-blue-500" style="width: <%= (count.to_f / top_industries.map(&:last).sum * 100).round %>%"></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="p-4 bg-green-50 rounded-lg">
+            <h3 class="font-medium text-green-700 mb-3">Skill-to-Industry Match</h3>
+            <% 
+              # Calculate potential matches per industry
+              matches = {}
+              top_industries.each do |industry, _|
+                student_count = 0
+                User.where(user_type: "student").includes(student_profile: :skills).each do |student|
+                  skills = student.student_profile&.skills&.pluck(:skill_list) || []
+                  if skills.any? { |skill| skill.to_s.downcase.include?(industry.downcase) || industry.downcase.include?(skill.to_s.downcase) }
+                    student_count += 1
+                  end
+                end
+                matches[industry] = student_count
+              end
+            %>
+            
+            <div class="space-y-3">
+              <% matches.sort_by{|k,v| -v}.each do |industry, count| %>
+                <div>
+                  <div class="flex justify-between">
+                    <span><%= industry %></span>
+                    <span class="font-semibold"><%= count %> potential <%= "match".pluralize(count) %></span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                    <div class="h-1.5 rounded-full bg-green-500" style="width: <%= (count.to_f / User.where(user_type: "student").count * 100).round %>%"></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent Activity Sections -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Recent Students -->
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-blue-700">Recent Students</h2>
+            <%= link_to "View All", career_officer_student_profiles_path, class: "text-blue-600 hover:underline text-sm" %>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead class="bg-gray-50 border-b">
+                <tr>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profile</th>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <% User.where(user_type: "student").order(created_at: :desc).limit(5).each do |student| %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <% if student.profile_picture.attached? %>
+                          <div class="h-7 w-7 rounded-full overflow-hidden mr-2">
+                            <%= image_tag student.profile_picture, class: "h-full w-full object-cover" %>
+                          </div>
+                        <% else %>
+                          <div class="h-7 w-7 rounded-full bg-blue-100 flex items-center justify-center mr-2">
+                            <span class="text-blue-600 text-xs font-medium"><%= student.full_name.first.upcase %></span>
+                          </div>
+                        <% end %>
+                        <div class="text-sm font-medium"><%= student.full_name %></div>
+                      </div>
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <% status = student.student_profile&.status || "New" %>
+                      <span class="px-2 py-0.5 text-xs rounded-full <%= status == 'Active' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %>">
+                        <%= status %>
+                      </span>
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <% completion = calculate_profile_completion(student) %>
+                      <div class="w-16"><%= progress_bar(completion, color: completion >= 70 ? "green" : (completion >= 40 ? "blue" : "red")) %></div>
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap text-sm">
+                      <%= link_to "Analytics", student_analytics_path(student), class: "text-blue-600 hover:underline" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Recent Recruiters -->
+        <div class="card p-4 border rounded-lg shadow-md bg-white">
+          <h2 class="text-lg font-semibold mb-4 text-blue-700">Recent Recruiters</h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead class="bg-gray-50 border-b">
+                <tr>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Industry</th>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profile</th>
+                  <th class="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <% User.where(user_type: "recruiter").order(created_at: :desc).limit(5).each do |recruiter| %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <% if recruiter.profile_picture.attached? %>
+                          <div class="h-7 w-7 rounded-full overflow-hidden mr-2">
+                            <%= image_tag recruiter.profile_picture, class: "h-full w-full object-cover" %>
+                          </div>
+                        <% else %>
+                          <div class="h-7 w-7 rounded-full bg-indigo-100 flex items-center justify-center mr-2">
+                            <span class="text-indigo-600 text-xs font-medium"><%= recruiter.full_name.first.upcase %></span>
+                          </div>
+                        <% end %>
+                        <div class="text-sm font-medium"><%= recruiter.recruiter_profile&.company_name || "Unknown Company" %></div>
+                      </div>
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap text-sm">
+                      <%= recruiter.recruiter_profile&.industry || "Not specified" %>
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <% completion = calculate_profile_completion(recruiter) %>
+                      <div class="w-16"><%= progress_bar(completion, color: completion >= 70 ? "green" : (completion >= 40 ? "indigo" : "red")) %></div>
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap text-sm">
+                      <% if recruiter.recruiter_profile %>
+                        <%= link_to "Analytics", recruiter_analytics_path(recruiter), class: "text-indigo-600 hover:underline" %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Platform Usage Stats -->
+      <div class="card p-4 border rounded-lg shadow-md bg-white">
+        <h2 class="text-lg font-semibold mb-4 text-blue-700">Platform Usage Statistics</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+          <div class="p-4 bg-blue-50 rounded-lg">
+            <div class="text-3xl font-bold text-blue-600">0</div>
+            <p class="text-sm text-gray-600">Active Sessions</p>
+          </div>
+          
+          <div class="p-4 bg-green-50 rounded-lg">
+            <div class="text-3xl font-bold text-green-600">0</div>
+            <p class="text-sm text-gray-600">Meetings Scheduled</p>
+          </div>
+          
+          <div class="p-4 bg-purple-50 rounded-lg">
+            <div class="text-3xl font-bold text-purple-600">0</div>
+            <p class="text-sm text-gray-600">Messages Sent</p>
+          </div>
+          
+          <div class="p-4 bg-yellow-50 rounded-lg">
+            <div class="text-3xl font-bold text-yellow-600">0</div>
+            <p class="text-sm text-gray-600">Job Fair Sessions</p>
+          </div>
+        </div>
+        
+        <div class="text-center mt-4">
+          <p class="text-sm text-gray-500">Platform usage data will be available once the system is fully implemented</p>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card p-4 border rounded-lg border-blue-200 shadow-md bg-blue-50">
+          <div class="flex items-center mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <h3 class="font-medium text-blue-700">Student Management</h3>
+          </div>
+          <p class="text-sm text-gray-700 mb-3">Review and manage student profiles, approvals, and status updates.</p>
+          <div class="text-right">
+            <%= link_to "Manage Students", career_officer_student_profiles_path, class: "text-sm text-blue-600 hover:underline" %>
+          </div>
+        </div>
+        
+        <div class="card p-4 border rounded-lg border-green-200 shadow-md bg-green-50">
+          <div class="flex items-center mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <h3 class="font-medium text-green-700">Event Scheduling</h3>
+          </div>
+          <p class="text-sm text-gray-700 mb-3">Schedule and manage virtual job fairs and networking events.</p>
+          <div class="text-right">
+            <%= link_to "Schedule Events", "#", class: "text-sm text-green-600 hover:underline" %>
+          </div>
+        </div>
+        
+        <div class="card p-4 border rounded-lg border-purple-200 shadow-md bg-purple-50">
+          <div class="flex items-center mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <h3 class="font-medium text-purple-700">System Notifications</h3>
+          </div>
+          <p class="text-sm text-gray-700 mb-3">Manage and send system notifications to students and recruiters.</p>
+          <div class="text-right">
+            <%= link_to "Send Notifications", "#", class: "text-sm text-purple-600 hover:underline" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-gray-500">No analytics available for your user type.</p>
+  <% end %>
+  
+  <!-- Load the JavaScript for charts -->
+  <script>
+    document.addEventListener('turbo:load', function() {
+      // Initialize Charts
+      initializeCharts();
+    });
+    
+    function initializeCharts() {
+      // Skills Breakdown Chart (for students)
+      const skillsBreakdownCanvas = document.getElementById('skills-breakdown-chart');
+      if (skillsBreakdownCanvas) {
+        const skillsData = JSON.parse(skillsBreakdownCanvas.dataset.skills);
+        new Chart(skillsBreakdownCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: skillsData.labels,
+            datasets: [{
+              data: skillsData.values,
+              backgroundColor: [
+                'rgba(59, 130, 246, 0.6)',
+                'rgba(16, 185, 129, 0.6)',
+                'rgba(245, 158, 11, 0.6)',
+                'rgba(239, 68, 68, 0.6)',
+                'rgba(139, 92, 246, 0.6)',
+                'rgba(236, 72, 153, 0.6)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'right',
+              },
+              title: {
+                display: true,
+                text: 'Skills by Category'
+              }
+            }
+          }
+        });
+      }
+      
+      // Industry Distribution Chart (for recruiters)
+      const industryChartCanvas = document.getElementById('industry-distribution-chart');
+      if (industryChartCanvas) {
+        const industryData = JSON.parse(industryChartCanvas.dataset.industries);
+        new Chart(industryChartCanvas, {
+          type: 'pie',
+          data: {
+            labels: industryData.labels,
+            datasets: [{
+              data: industryData.values,
+              backgroundColor: [
+                'rgba(59, 130, 246, 0.6)',
+                'rgba(16, 185, 129, 0.6)',
+                'rgba(245, 158, 11, 0.6)',
+                'rgba(239, 68, 68, 0.6)',
+                'rgba(139, 92, 246, 0.6)',
+                'rgba(236, 72, 153, 0.6)',
+                'rgba(199, 199, 199, 0.6)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'right',
+              },
+              title: {
+                display: true,
+                text: 'Companies by Industry'
+              }
+            }
+          }
+        });
+      }
+      
+      // Career Officer Dashboard - Student Status Chart
+      const statusChartCanvas = document.getElementById('student-status-chart');
+      if (statusChartCanvas) {
+        const statusData = JSON.parse(statusChartCanvas.dataset.status);
+        
+        // Map status labels to specific colors, same as in the HTML
+        const statusColors = {
+          'Pending': '#22c55e',    // Green
+          'New': '#eab308',        // Yellow
+          'Active': '#3b82f6',     // Blue
+          'Graduate': '#8b5cf6'    // Purple
+        };
+        
+        // Default colors for any other status
+        const defaultColors = ['#6366f1', '#a855f7', '#ef4444', '#14b8a6', '#f97316', '#06b6d4'];
+        
+        // Create color array matching status labels
+        const backgroundColors = statusData.labels.map((label, index) => {
+          const baseColor = statusColors[label] || defaultColors[index % defaultColors.length];
+          return baseColor;
+        });
+        
+        new Chart(statusChartCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: statusData.labels,
+            datasets: [{
+              data: statusData.values,
+              backgroundColor: backgroundColors,
+              borderColor: backgroundColors.map(color => color),
+              borderWidth: 1,
+              hoverOffset: 15,
+              borderRadius: 4
+            }]
+          },
+          options: {
+            cutout: '65%',
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  font: {
+                    family: "'Inter', 'Helvetica', 'Arial', sans-serif",
+                    size: 12
+                  },
+                  padding: 15,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = Math.round((value / total) * 100);
+                    return `${label}: ${value} students (${percentage}%)`;
+                  }
+                },
+                padding: 12,
+                backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                titleFont: {
+                  size: 14
+                },
+                bodyFont: {
+                  size: 13
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // Skills Distribution Chart (for career officer)
+      const skillsDistributionCanvas = document.getElementById('skills-distribution-chart');
+      if (skillsDistributionCanvas) {
+        const skillsData = JSON.parse(skillsDistributionCanvas.dataset.skills);
+        new Chart(skillsDistributionCanvas, {
+          type: 'bar',
+          data: {
+            labels: skillsData.labels,
+            datasets: [{
+              label: 'Students with Skill',
+              data: skillsData.values,
+              backgroundColor: 'rgba(59, 130, 246, 0.5)',
+              borderColor: 'rgb(59, 130, 246)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Top Skills Distribution'
+              }
+            }
+          }
+        });
+      }
+      
+      // Education Timeline Chart (for career officer)
+      const educationChartCanvas = document.getElementById('education-timeline-chart');
+      if (educationChartCanvas) {
+        const educationData = JSON.parse(educationChartCanvas.dataset.education);
+        new Chart(educationChartCanvas, {
+          type: 'line',
+          data: {
+            labels: educationData.labels,
+            datasets: [{
+              label: 'Graduation Count',
+              data: educationData.values,
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</div> 

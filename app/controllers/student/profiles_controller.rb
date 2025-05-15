@@ -17,8 +17,20 @@ class Student::ProfilesController < Student::BaseController
         @user.profile_picture.purge
       end
 
+      # Store original model for comparison
+      original_email = @user.student_profile.email_personal
+      new_email = user_params.dig(:student_profile_attributes, :email_personal)
+
       if @user.update!(user_params)
+        # Check if personal email was updated and if it's a non-NU email
+        if new_email &&
+           new_email != original_email &&
+           !new_email.match?(/\A[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.nu\.edu\.pk\z/)
+          redirect_to student_profile_path(@user.id),
+                      notice: "Profile updated successfully. Note: We recommend using your NU email address (campus.nu.edu.pk)."
+        else
         redirect_to student_profile_path(@user.id), notice: "Profile updated successfully."
+        end
       else
         render :edit, alert: "Failed to update the profile."
       end
