@@ -11,7 +11,7 @@ class Student::BaseController < ApplicationController
   def set_sidebar
     @sidebar_tabs = [
       { label: "Home", icon: "home", path: student_dashboard_path },
-      { label: "Job Fair Arena", icon: "video", path: "#" },
+      { label: "Job Fair Arena", icon: "video", path: student_job_fair_arena_index_path },
       { label: "Report", icon: "document", path: analytics_path }
     ]
   end

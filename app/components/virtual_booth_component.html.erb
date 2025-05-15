@@ -4,12 +4,12 @@
     <div class="text-xs font-semibold text-blue-700 bg-blue-100 rounded-full px-3 py-1">
       <%= meeting_status %>
     </div>
-    <div class="text-xs text-gray-500">ID: <%= meeting["id"] %></div>
+    <div class="text-xs text-gray-500">ID: <%= meeting.meeting_number %></div>
   </div>
   
   <!-- Meeting Info Section -->
   <div class="p-4">
-    <h3 class="text-lg font-semibold text-gray-800 mb-2" title="<%= meeting["topic"] %>"><%= truncated_topic %></h3>
+    <h3 class="text-lg font-semibold text-gray-800 mb-2" title="<%= meeting.topic %>"><%= truncated_topic %></h3>
     
     <div class="flex items-center mb-3">
       <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -25,6 +25,6 @@
       <span class="text-gray-600 text-sm">Duration: <%= meeting_duration %></span>
     </div>
 
-    <%= link_to "Join Meeting",career_officer_job_fair_arena_path(id: meeting["id"], join_url: meeting["join_url"]), class: "block w-full bg-[#1499DC] hover:bg-[#0d7bbd] text-white font-medium py-2 px-4 rounded-md text-center transition-colors duration-300" %>
+    <%= link_to "Join Meeting",career_officer_job_fair_arena_path(id: meeting.meeting_number, join_url: meeting.join_url), class: "block w-full bg-[#1499DC] hover:bg-[#0d7bbd] text-white font-medium py-2 px-4 rounded-md text-center transition-colors duration-300" %>
   </div>
 </div>

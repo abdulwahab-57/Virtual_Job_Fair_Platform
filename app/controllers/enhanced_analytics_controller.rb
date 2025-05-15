@@ -92,7 +92,7 @@ class EnhancedAnalyticsController < ApplicationController
     when "student"
       @sidebar_tabs = [
         { label: "Home", icon: "home", path: student_dashboard_path },
-        { label: "Job Fair Arena", icon: "video", path: "#" },
+        { label: "Job Fair Arena", icon: "video", path: student_job_fair_arena_index_path },
         { label: "Report", icon: "document", path: analytics_path }
       ]
       @home_path = student_dashboard_path
@@ -100,7 +100,7 @@ class EnhancedAnalyticsController < ApplicationController
     when "recruiter"
       @sidebar_tabs = [
         { label: "Home", icon: "home", path: recruiter_dashboard_path },
-        { label: "Job Fair Arena", icon: "video", path: "#" },
+        { label: "Job Fair Arena", icon: "video", path: recruiter_job_fair_arena_index },
         { label: "Analytics", icon: "chart-bar", path: analytics_path }
       ]
       @home_path = recruiter_dashboard_path

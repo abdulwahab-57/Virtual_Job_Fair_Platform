@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_14_110412) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_15_220810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,12 +86,33 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_110412) do
     t.index ["student_profile_id"], name: "index_interests_on_student_profile_id"
   end
 
+  create_table "invitees", force: :cascade do |t|
+    t.string "email"
+    t.bigint "meeting_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["meeting_id"], name: "index_invitees_on_meeting_id"
+  end
+
   create_table "location_preferences", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
     t.string "location", limit: 20
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_profile_id"], name: "index_location_preferences_on_student_profile_id"
+  end
+
+  create_table "meetings", force: :cascade do |t|
+    t.string "topic"
+    t.datetime "start_time"
+    t.integer "duration"
+    t.string "host_name"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "join_url"
+    t.string "meeting_number"
+    t.index ["user_id"], name: "index_meetings_on_user_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -177,7 +198,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_110412) do
   add_foreign_key "career_officer_profiles", "users"
   add_foreign_key "educations", "student_profiles"
   add_foreign_key "interests", "student_profiles"
+  add_foreign_key "invitees", "meetings"
   add_foreign_key "location_preferences", "student_profiles"
+  add_foreign_key "meetings", "users"
   add_foreign_key "projects", "student_profiles"
   add_foreign_key "recruiter_profiles", "users"
   add_foreign_key "skills", "student_profiles"

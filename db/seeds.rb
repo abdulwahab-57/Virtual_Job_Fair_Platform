@@ -181,23 +181,4 @@ end
 
 puts "10 Basic student profiles seeded successfully!"
 
-# Load extended seeds
-begin
-  puts "Loading extended student profiles..."
-  require_relative 'seeds/extended_students'
-  puts "Extended student profiles loaded successfully!"
-rescue => e
-  puts "Error loading extended students: #{e.message}"
-  puts e.backtrace.join("\n")
-end
-
-begin
-  puts "Loading recruiter and career officer profiles..."
-  require_relative 'seeds/extended_recruiters_officers'
-  puts "Extended recruiter and career officer profiles loaded successfully!"
-rescue => e
-  puts "Error loading extended recruiters and officers: #{e.message}"
-  puts e.backtrace.join("\n")
-end
-
 puts "Seed process completed!"

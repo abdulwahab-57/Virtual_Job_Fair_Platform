@@ -66,16 +66,20 @@
                                 data-action="change->select-all#checkRowSelection">
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <%= meeting['id'] %>
+                                <%= meeting.id %>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <%= meeting['start_time'] %>
+                                <%= meeting.start_time.strftime("%Y-%m-%d %H:%M") if meeting.start_time %>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <%= meeting['duration'] %>
+                                <%= meeting.duration %> minutes
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex space-x-2">
-                                <%= link_to "Join", meeting['join_url'], class: "text-white bg-[#1499DC] border hover:border-[#1499DC] px-3 py-1 rounded" %>
+                                <% if meeting.join_url.present? %>
+                                    <%= link_to "Join", meeting.join_url, target: "_blank", rel: "noopener", class: "text-white bg-[#1499DC] border hover:border-[#1499DC] px-3 py-1 rounded" %>
+                                <% else %>
+                                    <span class="text-gray-400">No Join Link</span>
+                                <% end %>
                                 <%# link_to "Edit", edit_career_officer_student_profile_path(user.id), class: "text-white bg-[#272F33] border hover:border-[#272F33] px-3 py-1 rounded" %>
                             </td>
                         </tr>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  topic: MyString
+  start_time: 2025-05-15 19:10:42
+  duration: 1
+  host_name: MyString
+  user: one
+
+two:
+  topic: MyString
+  start_time: 2025-05-15 19:10:42
+  duration: 1
+  host_name: MyString
+  user: two
