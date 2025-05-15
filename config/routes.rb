@@ -22,6 +22,12 @@ Rails.application.routes.draw do
     get "users/confirm_recruiter", to: "users/confirmations#confirm_recruiter", as: :confirm_recruiter
   end
 
+  # Zoom OAuth routes
+  get "zoom/auth", to: "zoom_auth#auth"
+  get "zoom/callback", to: "zoom_auth#callback"
+  delete "zoom/disconnect", to: "zoom_auth#disconnect"
+
+
   # Career Officer namespace
   namespace :career_officer do
     concerns :dashboardable
@@ -36,6 +42,9 @@ Rails.application.routes.draw do
         post :download_profiles
       end
     end
+
+    resources :meetings, only: [ :index, :new, :create ]
+    resources :job_fair_arena, only: [ :index, :show ]
   end
 
   # Recruiter namespace

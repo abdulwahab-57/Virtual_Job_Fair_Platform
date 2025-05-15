@@ -1,0 +1,2 @@
+module CareerOfficer::JobFairArenaHelper
+end

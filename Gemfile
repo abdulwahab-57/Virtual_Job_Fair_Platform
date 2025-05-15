@@ -66,3 +66,13 @@ gem "view_component", "~> 3.21"
 gem "inline_svg", "~> 1.10"
 
 gem "grover", "~> 1.2", ">= 1.2.3"
+
+gem "zoom_rb", "~> 1.2"
+
+gem "omniauth-oauth2", "~> 1.8"
+gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "httparty", "~> 0.23.1"
+
+gem "csv", "~> 3.3", ">= 3.3.4"
+
+gem "jwt", "~> 1.5", ">= 1.5.4"

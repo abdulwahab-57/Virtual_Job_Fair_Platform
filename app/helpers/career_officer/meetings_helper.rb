@@ -1,0 +1,2 @@
+module CareerOfficer::MeetingsHelper
+end

@@ -13,7 +13,8 @@
         <%= f.label :full_name, "Name", class: "block font-medium" %>
         <%= f.text_field :full_name, class: "w-full p-2 border border-gray-300 rounded-md", 
                           placeholder:"Enter your full name", 
-                          maxlength:50, 
+                          maxlength:50,
+                          required: true, 
                           pattern: "[A-Za-z\s]+", 
                           title:"Only letters and spaces are allowed. Please remove numbers or special characters." %>
       </div>
@@ -33,6 +34,7 @@
               <%= sf.text_field :phone_number, class: "w-full p-2 border border-gray-300 rounded-md", 
                                 placeholder: "+923001234567", 
                                 maxlength:13,
+                                required: true,
                                 pattern: "\\+92\\d{10}", 
                                 title: "Phone number must start with +92 and be followed by exactly 10 digits. Example: +923001234567. Do not include spaces, letters, or special characters." %>
             </li>
@@ -64,7 +66,8 @@
               <%= sf.text_field :linkedin_url, class: "w-full p-2 border border-gray-300 rounded-md", 
                                 placeholder: "https://linkedin.com/in/your-profile",
                                 pattern: 'https?:\/\/(www\.)?linkedin\.com\/.*', 
-                                title: "Enter a valid LinkedIn URL (e.g., https://linkedin.com/in/your-profile)" %>
+                                title: "Enter a valid LinkedIn URL (e.g., https://linkedin.com/in/your-profile)",
+                                required: true %>
             </li>
           <% end %>
           <li>
