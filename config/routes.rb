@@ -51,12 +51,14 @@ Rails.application.routes.draw do
   namespace :recruiter do
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
+    resources :job_fair_arena, only: [ :index, :show ]
   end
 
   # Student namespace
   namespace :student do
     concerns :dashboardable
     resources :profiles, only: [ :show, :edit, :update ]
+    resources :job_fair_arena, only: [ :index, :show ]
   end
 
   # Health check route
