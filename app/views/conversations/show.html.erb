@@ -1,0 +1,70 @@
+<div class="bg-white rounded-lg shadow-sm p-6 h-full flex flex-col">
+  <div class="flex items-center mb-6">
+    <div class="flex-1">
+      <h2 class="text-xl font-semibold">
+        <span class="text-gray-800">
+          <%= @conversation.other_participant(current_user).full_name %>
+        </span>
+        <% other_user_type = @conversation.other_participant(current_user).user_type %>
+        <span class="ml-2 px-3 py-1 text-sm rounded-full 
+          <%= other_user_type == 'student' ? 'text-blue-600 bg-blue-100' : 
+             (other_user_type == 'recruiter' ? 'text-indigo-600 bg-indigo-100' : 'text-purple-600 bg-purple-100') %>">
+          <%= other_user_type.titleize %>
+        </span>
+      </h2>
+      <p class="text-sm text-gray-500">
+        <% case @conversation.other_participant(current_user).user_type %>
+        <% when "student" %>
+          <%= @conversation.other_participant(current_user).student_profile&.educations&.first&.institution_name || "Student" %>
+        <% when "recruiter" %>
+          <%= @conversation.other_participant(current_user).recruiter_profile&.company_name || "Recruiter" %>
+        <% when "career_officer" %>
+          <%= @conversation.other_participant(current_user).career_officer_profile&.designation || "Career Officer" %>
+        <% end %>
+      </p>
+    </div>
+    
+    <%= link_to inbox_path, class: "text-gray-500 hover:text-gray-700 transition-colors" do %>
+      <span class="text-sm">Back to Inbox</span>
+    <% end %>
+  </div>
+  
+  <!-- Messages Container -->
+  <div class="flex-1 overflow-y-auto mb-4 space-y-4 px-2" style="max-height: 60vh;">
+    <% if @conversation.messages.any? %>
+      <% @conversation.messages.order(created_at: :asc).each do |message| %>
+        <% is_current_user = message.user == current_user %>
+        <div class="flex <%= is_current_user ? 'justify-end' : 'justify-start' %> mb-3">
+          <div class="max-w-[75%] <%= is_current_user ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800' %> rounded-lg px-4 py-3 shadow-sm">
+            <p class="<%= is_current_user ? 'text-white' : 'text-gray-900' %> text-sm">
+              <%= message.body %>
+            </p>
+            <div class="flex justify-between items-center mt-1">
+              <span class="<%= is_current_user ? 'text-blue-200' : 'text-gray-500' %> text-xs">
+                <%= message.user.full_name %>
+              </span>
+              <span class="<%= is_current_user ? 'text-blue-200' : 'text-gray-500' %> text-xs">
+                <%= message.created_at.strftime("%I:%M %p • %b %d") %>
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-12">
+        <p class="text-gray-500">No messages yet. Send the first message!</p>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Message Form -->
+  <div class="mt-auto border-t pt-4">
+    <%= form_with(model: [@conversation, @message], local: true, class: "flex") do |f| %>
+      <div class="flex-1 mr-2">
+        <%= f.text_area :body, rows: 2, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 resize-none", placeholder: "Type your message...", required: true %>
+      </div>
+      
+      <%= f.submit "Send", class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors self-end" %>
+    <% end %>
+  </div>
+</div> 

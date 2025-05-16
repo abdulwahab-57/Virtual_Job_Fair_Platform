@@ -12,8 +12,14 @@ class User < ApplicationRecord
   has_many :meetings, through: :meeting_participants
   has_many :hosted_meetings, class_name: "Meeting", foreign_key: "host_id"
 
+  # Messaging associations
+  has_many :sent_conversations, class_name: "Conversation", foreign_key: "sender_id", dependent: :destroy
+  has_many :received_conversations, class_name: "Conversation", foreign_key: "recipient_id", dependent: :destroy
+  has_many :messages, dependent: :destroy
+
   # Active storage association
   has_one_attached :profile_picture
+  has_one_attached :avatar
 
   # Nested attributes
   accepts_nested_attributes_for :student_profile, allow_destroy: true, reject_if: :all_blank
@@ -148,6 +154,20 @@ class User < ApplicationRecord
     end
 
     token
+  end
+
+  # Get all conversations for this user (sent or received)
+  def conversations
+    Conversation.involving(id).order(updated_at: :desc)
+  end
+
+  # Get total count of unread messages across all conversations
+  def unread_messages_count
+    count = 0
+    conversations.each do |conversation|
+      count += conversation.unread_messages_count_for(self)
+    end
+    count
   end
 
   private

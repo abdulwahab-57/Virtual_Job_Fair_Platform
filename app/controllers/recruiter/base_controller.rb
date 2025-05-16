@@ -11,7 +11,11 @@ class Recruiter::BaseController < ApplicationController
   def set_sidebar
     @sidebar_tabs = [
       { label: "Home", icon: "home", path: recruiter_dashboard_path },
-      { label: "Job Fair Arena", icon: "video", path: "#" },
+      { label: "Inbox", icon: "chat", path: inbox_path },
+      { label: "Job Fair Arena", icon: "video", path: recruiter_job_fair_arena_index_path },
+      { label: "GitHub Student Rankings", icon: "code", path: recruiter_github_analyzer_rankings_path },
+      { label: "GitHub Skills Analysis", icon: "code", path: recruiter_github_analyzer_skills_path },
+      { label: "GitHub Activity Timeline", icon: "code", path: recruiter_github_analyzer_activity_path },
       { label: "Analytics", icon: "chart-bar", path: analytics_path }
     ]
   end

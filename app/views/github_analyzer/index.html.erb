@@ -1,0 +1,223 @@
+<div class="container mx-auto p-6 bg-gradient-to-br from-gray-50 to-white overflow-y-auto" style="max-height: 100vh;">
+  <h1 class="text-4xl font-extrabold mb-8 text-gray-800 text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">GitHub Analysis Rankings</h1>
+
+  <% if flash[:notice] %>
+    <div class="mb-6 p-4 bg-green-100 text-green-700 rounded-lg shadow-md text-center max-w-2xl mx-auto animate-fade-in"><%= flash[:notice] %></div>
+  <% elsif flash[:alert] %>
+    <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg shadow-md text-center max-w-2xl mx-auto animate-fade-in"><%= flash[:alert] %></div>
+  <% end %>
+
+  <% if @analyses.any? %>
+    <!-- Metrics Overview with Bar Chart -->
+    <div class="bg-white rounded-xl shadow-xl p-6 mb-8 border border-gray-200">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800">Metrics Overview</h2>
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <canvas id="metricsBarChart" width="600" height="300"></canvas>
+        <div id="chartError" class="text-red-500 text-sm mt-2 hidden">Error loading chart. Check console for details.</div>
+      </div>
+    </div>
+
+    <!-- Main Content Card with Table -->
+    <div class="bg-white rounded-xl shadow-xl p-6 mb-8 border border-gray-200">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-100 sticky top-0">
+          <tr>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Rank</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Student</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">GitHub</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Commits</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Commit Frequency</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Code Quality</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Repo Activity</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Collaboration</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Total Score</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% @analyses.each_with_index do |analysis, index| %>
+            <tr class="hover:bg-gray-50 transition duration-200">
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center font-medium"><%= analysis.rank || (index + 1 + (@current_page - 1) * @per_page) %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900"><%= analysis.student.user.name %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900">
+                <a href="<%= analysis.github_url %>" target="_blank" class="text-blue-600 hover:text-blue-800">
+                  <%= analysis.github_url.split('/').last %>
+                </a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center"><%= analysis.commits_count || 0 %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center"><%= analysis.commit_frequency_score || 0 %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center"><%= analysis.code_quality_score || 0 %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center"><%= analysis.repo_activity_score || 0 %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center"><%= analysis.collaboration_score || 0 %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center font-semibold"><%= analysis.total_score || 0 %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900 text-center">
+                <div class="flex space-x-2">
+                  <%= link_to "View Report", github_analyzer_view_report_path(analysis), class: "px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200" %>
+                  <%= link_to "Download PDF", github_analyzer_download_report_path(analysis), class: "px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200" %>
+                  <%= button_to "Analyze", github_analyzer_analyze_github_path(analysis), method: :post, class: "px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-200" %>
+                  <%= form_with url: github_analyzer_evaluate_path(analysis.id), method: :post, local: true, class: "inline" do |f| %>
+                    <%= f.select :evaluation, options_for_select([["Select Evaluation", ""], ["Excellent", "excellent"], ["Good", "good"], ["Needs Improvement", "needs_improvement"]], analysis.evaluation || ""), class: "px-2 py-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" %>
+                    <%= f.submit "Evaluate", class: "px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200 ml-2" %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center">
+      <div class="flex overflow-x-auto space-x-2 py-2 scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+        <% if @total_pages > 1 %>
+          <% if @current_page > 1 %>
+            <%= link_to "Previous", github_analyzer_rankings_path(page: @current_page - 1), class: "px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-200 shadow-sm whitespace-nowrap" %>
+          <% else %>
+            <span class="px-4 py-2 bg-gray-200 text-gray-500 rounded-lg shadow-sm whitespace-nowrap">Previous</span>
+          <% end %>
+
+          <% (1..@total_pages).each do |page| %>
+            <% if page == @current_page %>
+              <span class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm whitespace-nowrap"><%= page %></span>
+            <% else %>
+              <%= link_to page, github_analyzer_rankings_path(page: page), class: "px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition duration-200 shadow-sm whitespace-nowrap" %>
+            <% end %>
+          <% end %>
+
+          <% if @current_page < @total_pages %>
+            <%= link_to "Next", github_analyzer_rankings_path(page: @current_page + 1), class: "px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-200 shadow-sm whitespace-nowrap" %>
+          <% else %>
+            <span class="px-4 py-2 bg-gray-200 text-gray-500 rounded-lg shadow-sm whitespace-nowrap">Next</span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="text-center text-gray-600 text-xl py-12 bg-white rounded-xl shadow-md">
+      No GitHub analysis reports available yet.
+    </div>
+  <% end %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('metricsBarChart');
+    if (!ctx) {
+      console.error('Canvas element not found');
+      return;
+    }
+    const chartContext = ctx.getContext('2d');
+    const chartError = document.getElementById('chartError');
+
+    try {
+      const labels = <%= raw(@analyses.map { |a| a.student.user.name }.to_json) %> || [];
+      const totalScores = <%= raw(@analyses.map { |a| a.total_score || 0 }.to_json) %> || [];
+      const commitFreqScores = <%= raw(@analyses.map { |a| a.commit_frequency_score || 0 }.to_json) %> || [];
+      const codeQualityScores = <%= raw(@analyses.map { |a| a.code_quality_score || 0 }.to_json) %> || [];
+      const repoActivityScores = <%= raw(@analyses.map { |a| a.repo_activity_score || 0 }.to_json) %> || [];
+      const collaborationScores = <%= raw(@analyses.map { |a| a.collaboration_score || 0 }.to_json) %> || [];
+
+      if (labels.length === 0) {
+        throw new Error('No data available for chart');
+      }
+
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Total Score',
+            data: totalScores,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Commit Frequency',
+            data: commitFreqScores,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Code Quality',
+            data: codeQualityScores,
+            backgroundColor: 'rgba(255, 159, 64, 0.6)',
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Repo Activity',
+            data: repoActivityScores,
+            backgroundColor: 'rgba(153, 102, 255, 0.6)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Collaboration',
+            data: collaborationScores,
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }
+        ]
+      };
+
+      new Chart(chartContext, {
+        type: 'bar',
+        data: data,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 200,
+              ticks: {
+                stepSize: 20
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14
+                }
+              }
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+    } catch (error) {
+      console.error('Chart initialization error:', error);
+      chartError.textContent = `Error: ${error.message}`;
+      chartError.classList.remove('hidden');
+    }
+  });
+</script>
+
+<style>
+  /* Custom Scrollbar Styling for Webkit Browsers */
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+  }
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: #9ca3af; /* Gray-400 */
+    border-radius: 4px;
+  }
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background-color: #e5e7eb; /* Gray-200 */
+    border-radius: 4px;
+  }
+
+  /* Sticky Header for Table */
+  .sticky {
+    position: sticky;
+    top: 0;
+    background: #f7fafc;
+    z-index: 1;
+  }
+</style> 

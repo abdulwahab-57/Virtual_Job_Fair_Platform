@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_14_110412) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_15_195842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,6 +68,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_110412) do
     t.index ["user_id"], name: "index_career_officer_profiles_on_user_id"
   end
 
+  create_table "conversations", force: :cascade do |t|
+    t.bigint "sender_id", null: false
+    t.bigint "recipient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipient_id"], name: "index_conversations_on_recipient_id"
+    t.index ["sender_id", "recipient_id"], name: "index_conversations_on_sender_id_and_recipient_id", unique: true
+    t.index ["sender_id"], name: "index_conversations_on_sender_id"
+  end
+
   create_table "educations", force: :cascade do |t|
     t.bigint "student_profile_id", null: false
     t.string "institution_name", limit: 80
@@ -92,6 +102,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_110412) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_profile_id"], name: "index_location_preferences_on_student_profile_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -175,9 +196,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_14_110412) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activities_honors", "student_profiles"
   add_foreign_key "career_officer_profiles", "users"
+  add_foreign_key "conversations", "users", column: "recipient_id"
+  add_foreign_key "conversations", "users", column: "sender_id"
   add_foreign_key "educations", "student_profiles"
   add_foreign_key "interests", "student_profiles"
   add_foreign_key "location_preferences", "student_profiles"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users"
   add_foreign_key "projects", "student_profiles"
   add_foreign_key "recruiter_profiles", "users"
   add_foreign_key "skills", "student_profiles"
