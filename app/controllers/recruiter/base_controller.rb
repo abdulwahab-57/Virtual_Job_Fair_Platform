@@ -9,15 +9,30 @@ class Recruiter::BaseController < ApplicationController
   end
 
   def set_sidebar
-    @sidebar_tabs = [
-      { label: "Home", icon: "home", path: recruiter_dashboard_path },
-      { label: "Inbox", icon: "chat", path: inbox_path },
-      { label: "Job Fair Arena", icon: "video", path: recruiter_job_fair_arena_index_path },
-      { label: "GitHub Student Rankings", icon: "code", path: recruiter_github_analyzer_rankings_path },
-      { label: "GitHub Skills Analysis", icon: "code", path: recruiter_github_analyzer_skills_path },
-      { label: "GitHub Activity Timeline", icon: "code", path: recruiter_github_analyzer_activity_path },
-      { label: "Analytics", icon: "chart-bar", path: analytics_path }
-    ]
+    begin
+      # Try using the route helpers, but fallback to hardcoded paths if they fail
+      @sidebar_tabs = [
+        { label: "Home", icon: "home", path: recruiter_dashboard_path },
+        { label: "Inbox", icon: "chat", path: inbox_path },
+        { label: "Job Fair Arena", icon: "video", path: recruiter_job_fair_arena_index_path },
+        { label: "GitHub Student Rankings", icon: "chart-bar", path: recruiter_github_analyzer_rankings_path },
+        { label: "GitHub Skills Analysis", icon: "chart-bar", path: recruiter_github_analyzer_skills_path },
+        { label: "GitHub Activity Timeline", icon: "chart-bar", path: recruiter_github_analyzer_activity_path },
+        { label: "Analytics", icon: "chart-bar", path: analytics_path }
+      ]
+    rescue => e
+      # If any route helpers fail, use hardcoded paths as fallback
+      @sidebar_tabs = [
+        { label: "Home", icon: "home", path: "/recruiter/dashboard" },
+        { label: "Inbox", icon: "chat", path: "/inbox" },
+        { label: "Job Fair Arena", icon: "video", path: "/recruiter/job_fair_arena" },
+        { label: "GitHub Student Rankings", icon: "chart-bar", path: "/recruiter/github_analyzer/rankings" },
+        { label: "GitHub Skills Analysis", icon: "chart-bar", path: "/recruiter/github_analyzer/skills" },
+        { label: "GitHub Activity Timeline", icon: "chart-bar", path: "/recruiter/github_analyzer/activity" },
+        { label: "Analytics", icon: "chart-bar", path: "/analytics" }
+      ]
+    end
+    @home_path = "/recruiter/dashboard" # Use a simple string path as fallback
   end
 
   def set_path

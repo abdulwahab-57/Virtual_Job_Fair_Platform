@@ -4,12 +4,17 @@ class SideBarComponent < ViewComponent::Base
   include InlineSvg::ActionView::Helpers
 
   def initialize(tabs:, home_path:)
-    @tabs = tabs
+    @tabs = tabs.map(&:symbolize_keys) if tabs.present?
     @home_path = home_path
   end
 
   def svg_icon(name)
-    inline_svg("icons/#{name}.svg", class: "w-5 h-5 stroke-current")
+    begin
+      inline_svg("icons/#{name}.svg", class: "w-5 h-5 stroke-current")
+    rescue StandardError => e
+      # fallback to a default icon
+      inline_svg("icons/home.svg", class: "w-5 h-5 stroke-current")
+    end
   end
 
   def request
