@@ -4,7 +4,12 @@ class SideBarComponent < ViewComponent::Base
   include InlineSvg::ActionView::Helpers
 
   def initialize(tabs:, home_path:)
-    @tabs = tabs.map(&:symbolize_keys) if tabs.present?
+    @tabs = if tabs.present?
+              tabs.map(&:symbolize_keys)
+    else
+              # Default empty array to prevent nil errors
+              []
+    end
     @home_path = home_path
   end
 

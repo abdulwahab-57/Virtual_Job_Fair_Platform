@@ -40,7 +40,16 @@ class InboxController < ApplicationController
         { label: "Report", icon: "document", path: analytics_path }
       ]
     when "recruiter"
-      # Do not set @sidebar_tabs here; let Recruiter::BaseController handle it.
+      # Set recruiter sidebar tabs
+      @sidebar_tabs = [
+        { label: "Home", icon: "home", path: recruiter_dashboard_path },
+        { label: "Inbox", icon: "chat", path: inbox_path },
+        { label: "Job Fair Arena", icon: "video", path: recruiter_job_fair_arena_index_path },
+        { label: "GitHub Student Rankings", icon: "chart-bar", path: recruiter_github_analyzer_rankings_path },
+        { label: "GitHub Skills Analysis", icon: "chart-bar", path: recruiter_github_analyzer_skills_path },
+        { label: "GitHub Activity Timeline", icon: "chart-bar", path: recruiter_github_analyzer_activity_path },
+        { label: "Analytics", icon: "chart-bar", path: "/analytics" }
+      ]
     when "career_officer"
       @sidebar_tabs = [
         { label: "Home", icon: "home", path: career_officer_dashboard_path },
