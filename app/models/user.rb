@@ -8,9 +8,7 @@ class User < ApplicationRecord
   has_one :recruiter_profile, dependent: :destroy, inverse_of: :user
   has_one :career_officer_profile, dependent: :destroy, inverse_of: :user
   has_one :zoom_credential, dependent: :destroy
-  has_many :meeting_participants, dependent: :destroy
-  has_many :meetings, through: :meeting_participants
-  has_many :hosted_meetings, class_name: "Meeting", foreign_key: "host_id"
+  has_many :meetings, dependent: :destroy
 
   # Active storage association
   has_one_attached :profile_picture

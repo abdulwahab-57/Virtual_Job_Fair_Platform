@@ -9,17 +9,16 @@ class VirtualBoothComponent < ViewComponent::Base
 
 
   def formatted_time
-    return "Time not specified" unless meeting["start_time"]
+    return "Time not specified" unless meeting.start_time
 
-    start_time = Time.parse(meeting["start_time"])
-    start_time.strftime("%b %d, %Y at %I:%M %p")
+    meeting.start_time.strftime("%b %d, %Y at %I:%M %p")
   end
 
   def meeting_duration
-    return "Duration not specified" unless meeting["duration"]
+    return "Duration not specified" unless meeting.duration
 
-    hours = meeting["duration"] / 60
-    minutes = meeting["duration"] % 60
+    hours = meeting.duration / 60
+    minutes = meeting.duration % 60
 
     duration_str = []
     duration_str << "#{hours} hr" if hours > 0
@@ -29,11 +28,11 @@ class VirtualBoothComponent < ViewComponent::Base
   end
 
   def truncated_topic
-    meeting["topic"].length > 50 ? "#{meeting["topic"][0..47]}..." : meeting["topic"]
+    meeting.topic.length > 50 ? "#{meeting.topic[0..47]}..." : meeting.topic
   end
 
 
   def meeting_status
-    Time.parse(meeting["start_time"]) > Time.now ? "Upcoming" : "In Progress"
+    meeting.start_time > Time.current ? "Upcoming" : "In Progress"
   end
 end

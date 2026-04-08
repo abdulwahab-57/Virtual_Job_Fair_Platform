@@ -2,36 +2,16 @@ class CareerOfficer::JobFairArenaController < CareerOfficer::BaseController
   before_action :set_zoom_access_token, only: [ :index ]
   def index
     @header_text = "Job Fair Arena"
+    user_email = current_user.email
 
-    if @access_token.present?
-      begin
-        zoom_client = Zoom::Client::OAuth.new(access_token: @access_token, timeout: 15)
-        user = zoom_client.user_get(id: "me")
-        response = zoom_client.meeting_list(user_id: user["id"], type: "scheduled")
-
-        all_meetings = response["meetings"] || []
-
-        # Filter meetings to only include those where the current user is an invitee
-        @meetings = all_meetings.select do |meeting|
-          # Get meeting details to access invitees
-          begin
-            meeting_details = zoom_client.meeting_get(meeting_id: meeting["id"])
-            invitees = meeting_details.dig("settings", "meeting_invitees") || []
-            invitees.any? { |invitee| invitee["email"] == current_user.email }
-          rescue Zoom::Error => e
-            Rails.logger.error("Error fetching meeting details: #{e.message}")
-            false
-          end
-        end
-        Rails.logger.info("Meetings Response: #{response}")
-      rescue Zoom::Error => e
-        Rails.logger.error("Zoom API error: #{e.message}")
-        flash.now[:alert] = "Unable to load Zoom meetings."
-        @meetings = []
-      end
-    else
-      @meetings = []
-    end
+    @meetings = Meeting
+      .joins(:invitees)
+      .where(invitees: { email: user_email })
+      .order(start_time: :asc)
+  rescue => e
+    Rails.logger.error("Error loading invited meetings: #{e.message}")
+    flash.now[:alert] = "Unable to load meetings."
+    @meetings = []
   end
 
   def show

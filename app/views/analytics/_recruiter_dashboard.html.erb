@@ -1,0 +1,45 @@
+<div class="space-y-6">
+  <div class="analytics-card">
+    <div class="analytics-card-header">
+      <h2 class="text-lg font-semibold text-blue-700">Profile Completion</h2>
+    </div>
+    <div class="analytics-card-body">
+      <%= progress_bar(calculate_profile_completion(recruiter), color: "blue") %>
+      <p class="mt-2 text-sm text-gray-600"><%= calculate_profile_completion(recruiter) %>% complete</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Company Information</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="space-y-2">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Company Name:</span>
+            <span><%= recruiter.recruiter_profile&.company_name || "Not provided" %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Industry:</span>
+            <span><%= recruiter.recruiter_profile&.industry || "Not provided" %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Office Location:</span>
+            <span><%= recruiter.recruiter_profile&.office_location || "Not provided" %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Potential Student Matches</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="text-3xl font-bold text-blue-600"><%= User.where(user_type: "student").count %></div>
+        <p class="text-sm text-gray-600">Total student profiles</p>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -9,6 +9,10 @@ class SideBarComponent < ViewComponent::Base
   end
 
   def svg_icon(name)
-    inline_svg("icons/#{name}.svg", class: "w-6 h-6 mr-3 stroke-current")
+    inline_svg("icons/#{name}.svg", class: "w-5 h-5 stroke-current")
+  end
+
+  def request
+    controller.request
   end
 end

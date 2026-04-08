@@ -1,0 +1,54 @@
+<div class="space-y-6">
+  <div class="analytics-card">
+    <div class="analytics-card-header">
+      <h2 class="text-lg font-semibold text-blue-700">Profile Completion</h2>
+    </div>
+    <div class="analytics-card-body">
+      <%= progress_bar(calculate_profile_completion(student), color: "blue") %>
+      <p class="mt-2 text-sm text-gray-600"><%= calculate_profile_completion(student) %>% complete</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Skills</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="text-3xl font-bold text-blue-600"><%= student.student_profile&.skills&.count || 0 %></div>
+        <p class="text-sm text-gray-600">Total skills listed</p>
+      </div>
+    </div>
+
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Education</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="text-3xl font-bold text-blue-600"><%= student.student_profile&.educations&.count || 0 %></div>
+        <p class="text-sm text-gray-600">Education entries</p>
+      </div>
+    </div>
+  </div>
+
+  <% if student.student_profile&.educations&.any? %>
+    <div class="analytics-card">
+      <div class="analytics-card-header">
+        <h2 class="text-lg font-semibold text-blue-700">Education Timeline</h2>
+      </div>
+      <div class="analytics-card-body">
+        <div class="space-y-3">
+          <% student.student_profile.educations.order(graduation_year: :desc).each do |education| %>
+            <div class="flex items-start">
+              <div class="min-w-20 font-medium"><%= education.graduation_year %></div>
+              <div>
+                <div class="font-medium"><%= education.degree %></div>
+                <div class="text-sm text-gray-600"><%= education.institution_name %></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div> 
