@@ -1,4 +1,7 @@
 class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
+  include StudentProfileFilterable
+  include ReadOnlyProfile
+
   before_action :set_users, only: [ :index ]
   before_action :set_user, only: [ :show, :edit, :update, :update_status ]
 
@@ -87,46 +90,6 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   end
 
   private
-
-  def set_users
-     page = params[:page].to_i
-     page = 1 if page < 1
-     per_page = 50
-     offset = (page - 1) * per_page
-
-     base_scope = User.where(user_type: "student")
-       .select(:id, :full_name, :email)
-       .includes(student_profile: :educations)
-
-     @total_count = User.where(user_type: "student").count
-     @total_pages = (@total_count.to_f / per_page).ceil
-     @page = page
-     @per_page = per_page
-
-     @users = base_scope
-       .order(id: :desc)
-       .offset(offset)
-       .limit(per_page)
-
-     @degree_options = [
-       "BS (Computer Science)",
-       "BS (Artificial Intelligence)",
-       "BS (Software Engineering)",
-       "BS (Business Analytics)",
-       "BS (Electrical Engineering)",
-       "Bachelor of Business Administration"
-     ]
-
-     data_years = @users.filter_map do |user|
-       educations = user.student_profile&.educations || []
-       primary_education = educations.find do |education|
-         education.degree.to_s.match?(/\ABS \(|\ABachelor of Business Administration/)
-       end
-       primary_education ? (primary_education.graduation_year || Date.current.year) : nil
-     end
-
-    @graduation_year_options = [ 2026, 2025 ]
-  end
 
   def set_user
     @user = User.find(params[:id])
