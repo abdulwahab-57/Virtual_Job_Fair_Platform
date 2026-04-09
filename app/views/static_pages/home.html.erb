@@ -16,8 +16,8 @@
         </p>
     </div>
     <div class="flex gap-4">
-        <%= link_to 'Join Now', new_user_registration_path , class: 'px-8 py-4 bg-[#1569E0] border border-[#1569E0]' %>
-        <%= link_to 'How it Works', '#how-it-works', class: 'px-8 py-4 border border-white' %>
+        <%= link_to 'Join Now', new_user_registration_path , class: 'px-8 py-4 bg-[#1569E0] border border-[#1569E0] hover:bg-[#0F5DC6] hover:border-[#0F5DC6] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
+        <%= link_to 'How it Works', '#how-it-works', class: 'px-8 py-4 border border-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
     </div>
   </div>
   
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-     <%= link_to 'Get Started', new_user_registration_path, class: 'self-start px-6 py-3 text-base border border-black' %>
+    <%= link_to 'Get Started', new_user_registration_path, class: 'self-start px-6 py-3 text-base border border-black hover:bg-black hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50' %>
 </div>
 
 <div class="px-16 py-28">
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <%= link_to 'Sign Up Now', new_user_registration_path, class: 'inline-block px-6 py-3 text-base border border-black' %>
+            <%= link_to 'Sign Up Now', new_user_registration_path, class: 'inline-block px-6 py-3 text-base border border-black hover:bg-black hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50' %>
         </div>
         <div class="relative flex-1 h-[640px] shadow-lg">
             <img src="<%= asset_path('interview') %>" alt="Recruiter Conducting Interview" class="w-full h-full object-cover shadow-lg">
@@ -96,22 +96,76 @@
     </div>
 </div>
 
-<div class="px-16 py-28 flex items-center justify-center bg-[#1569E0] text-white">
+<div class="px-16 py-28 flex items-center justify-center bg-[#0B4A78] text-white">
     <div class="space-y-8 text-center">
         <div class="space-y-6">
             <h2 class="font-bold text-5xl">Join the Future of Networking</h2>
             <p class="text-lg">Unlock new career opportunities and connect with top employers at our virtual job fair.</p>
         </div>
-        <div class="flex gap-3 text-base justify-center">
-             <%= link_to 'Sign Up', new_user_registration_path , class: 'px-6 py-3 text-black bg-white border border-white' %>
-             <%= link_to 'Login', new_user_session_path , class: 'px-6 py-3 border border-white' %>
+           <div class="flex gap-3 text-base justify-center">
+               <%= link_to 'Sign Up', new_user_registration_path , class: 'px-6 py-3 text-black bg-white border border-white hover:bg-white/90 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
+               <%= link_to 'Login', new_user_session_path , class: 'px-6 py-3 border border-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
         </div>
     </div>
 </div>
 
-<div class="px-16 py-2">
-    <div class="flex items-center justify-between">
-        <img src="<%= asset_path('logo') %>" alt="Fast Nuces Logo" style="height: 32px; width: auto;">
-        <span class="text-sm">© 2025 VJFP. All rights reserved.</span>
+<footer id="footer" class="bg-[#0F6DB5] text-white">
+    <div class="px-6 md:px-16 py-16">
+        <div class="grid gap-12 lg:grid-cols-4">
+            <div class="space-y-6">
+                <img src="<%= asset_path('logo') %>" alt="Fast Nuces Logo" style="height: 52px; width: auto;">
+                <p class="text-sm leading-6 text-white/90">
+                    Its the 5th campus of FAST-NU in the middle of Chiniot - Faisalabad. It has the honor
+                    of being Pakistan's first federal chartered multi-campus University.
+                </p>
+                <div class="flex items-center gap-4 text-sm">
+                    <a href="https://www.facebook.com/fast.cfd.official" class="hover:text-white/80" target="_blank" rel="noopener noreferrer">Facebook</a>
+                    <a href="https://www.youtube.com/channel/UCFHYfI_zCA58WW9UgOFjXug" class="hover:text-white/80" target="_blank" rel="noopener noreferrer">YouTube</a>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-sm font-semibold tracking-wide">Information</h4>
+                <div class="flex flex-col gap-2 text-sm text-white/90">
+                    <%= link_to 'Home', root_path, class: 'hover:text-white' %>
+                    <a href="#" class="hover:text-white">About Chiniot-Faisalabad Campus</a>
+                    <a href="#" class="hover:text-white">News</a>
+                    <a href="#" class="hover:text-white">Contact Us</a>
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms Of Use</a>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-sm font-semibold tracking-wide">Popular Post</h4>
+                <div class="space-y-4 text-sm text-white/90">
+                    <div>
+                        <p class="font-semibold text-white">Gender Equity, Inclusion and Anti Harassment</p>
+                        <p class="text-xs text-white/70">September 12, 2025</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-white">Faculty Positions</p>
+                        <p class="text-xs text-white/70">April 8, 2024</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-sm font-semibold tracking-wide">Contact Us</h4>
+                <div class="text-sm text-white/90 space-y-2">
+                    <p>FAST-NU, FAST Square,</p>
+                    <p>9 Km from Faisalabad Motorway</p>
+                    <p>Interchange towards Chiniot</p>
+                    <p>info.cfd@nu.edu.pk</p>
+                    <p>(041) 111 128 128</p>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="border-t border-white/20">
+        <div class="px-6 md:px-16 py-4 text-center text-xs text-white/80">
+            © 2026 VJFP. All rights reserved.
+        </div>
+    </div>
+</footer>
