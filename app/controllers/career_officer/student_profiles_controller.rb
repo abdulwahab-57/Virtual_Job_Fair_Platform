@@ -89,7 +89,24 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   private
 
   def set_users
-     @users = User.where(user_type: "student").select(:id, :full_name, :email).includes(:student_profile)
+     @users = User.where(user_type: "student")
+       .select(:id, :full_name, :email)
+       .includes(student_profile: :educations)
+
+     @degree_options = [
+       "BS (Computer Science)",
+       "BS (Artificial Intelligence)",
+       "BS (Software Engineering)",
+       "BS (Business Analytics)",
+       "BS (Electrical Engineering)",
+       "Bachelor of Business Administration"
+     ]
+
+     @graduation_year_options = @users.map { |user| user.student_profile&.educations&.first&.graduation_year }
+       .compact
+       .uniq
+       .sort
+       .reverse
   end
 
   def set_user

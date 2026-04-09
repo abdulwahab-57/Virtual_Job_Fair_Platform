@@ -20,27 +20,69 @@
 
       <!-- Table section -->
       <div class="p-6 bg-white rounded-md shadow-sm">
-        <!-- Status Tabs -->
-        <div class="flex border-b border-gray-200 mb-4">
-          <button 
-            data-tab="all" 
-            data-action="click->select-all#switchTab" 
-            class="px-6 py-3 text-sm font-medium hover:text-gray-700 text-[#1499DC] border-b-2 border-[#1499DC] focus:outline-none"
-            data-select-all-target="activeTab">
-            All
-          </button>
-          <button 
-            data-tab="reviewed" 
-            data-action="click->select-all#switchTab" 
-            class="px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">
-            Reviewed
-          </button>
-          <button 
-            data-tab="not-reviewed" 
-            data-action="click->select-all#switchTab" 
-            class="px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent focus:outline-none">
-            Not Reviewed
-          </button>
+        <!-- Status Filters + Degree/Year Filters -->
+        <div class="flex flex-wrap items-center justify-between border-b border-gray-200 mb-4">
+          <div class="flex flex-wrap items-center gap-6 py-3 text-sm text-gray-700">
+            <label class="flex items-center gap-2">
+              <input type="checkbox"
+                value="reviewed"
+                class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
+                data-select-all-target="statusCheckbox"
+                data-action="change->select-all#applyFilters">
+              <span>Reviewed</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="checkbox"
+                value="not-reviewed"
+                class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
+                data-select-all-target="statusCheckbox"
+                data-action="change->select-all#applyFilters">
+              <span>Not Reviewed</span>
+            </label>
+            <span class="text-xs text-gray-400">(Leave unchecked to show all)</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 py-3">
+          <details class="group relative">
+            <summary class="cursor-pointer list-none rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+              Graduation Year
+            </summary>
+            <div class="absolute left-0 z-20 mt-2 w-56 rounded-md border border-gray-200 bg-white p-3 shadow-lg">
+              <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-gray-700">
+                <% @graduation_year_options.each do |year| %>
+                  <label class="flex items-center gap-2">
+                    <input type="checkbox"
+                      value="<%= year %>"
+                      class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
+                      data-select-all-target="yearCheckbox"
+                      data-action="change->select-all#applyFilters">
+                    <span><%= year %></span>
+                  </label>
+                <% end %>
+              </div>
+            </div>
+          </details>
+
+          <details class="group relative">
+            <summary class="cursor-pointer list-none rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+              Degree
+            </summary>
+            <div class="absolute left-0 z-20 mt-2 w-72 rounded-md border border-gray-200 bg-white p-3 shadow-lg">
+              <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-gray-700">
+                <% @degree_options.each do |degree| %>
+                  <label class="flex items-start gap-2">
+                    <input type="checkbox"
+                      value="<%= degree %>"
+                      class="mt-1 h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
+                      data-select-all-target="degreeCheckbox"
+                      data-action="change->select-all#applyFilters">
+                    <span><%= degree %></span>
+                  </label>
+                <% end %>
+              </div>
+            </div>
+          </details>
+          </div>
         </div>
 
         <div class="bg-white rounded-lg shadow-sm">
@@ -75,7 +117,13 @@
               <tbody class="bg-white divide-y divide-gray-200" data-select-all-target="tableBody">
                 <!-- Row 1 -->
                 <% @users.each do |user| %>
-                  <tr class="hover:bg-gray-50" data-status="<%= user.student_profile.status.downcase.gsub(' ', '-') %>" data-user-id="<%= user.id %>">
+                  <% degrees = user.student_profile.educations.map(&:degree).compact %>
+                  <% graduation_years = user.student_profile.educations.map(&:graduation_year).compact %>
+                  <tr class="hover:bg-gray-50"
+                    data-status="<%= user.student_profile.status.downcase.gsub(' ', '-') %>"
+                    data-user-id="<%= user.id %>"
+                    data-degree="<%= degrees.join('|') %>"
+                    data-grad-year="<%= graduation_years.join('|') %>">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <input type="checkbox" class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
                       data-select-all-target="checkboxRow"

@@ -12,51 +12,56 @@ export default class extends Controller {
     "actionsSelect",
     "statusModal",
     "tableBody",
-    "activeTab",
-    "tableTitle"
+    "tableTitle",
+    "degreeCheckbox",
+    "yearCheckbox",
+    "statusCheckbox"
   ]
 
   connect() {
     this.updateSelectionSummary()
     this.currentStatusElement = null
-    // Set the initial active tab
-    this.currentTab = "all"
+    this.filterRows()
   }
 
-  // Tab switching functionality
-  switchTab(event) {
-    const tab = event.currentTarget
-    this.currentTab = tab.dataset.tab;
-    
-    // Update active tab styling - first remove active styling from all tabs
-    document.querySelectorAll('[data-tab]').forEach(tabEl => {
-      tabEl.classList.remove('text-[#1499DC]', 'border-[#1499DC]')
-      tabEl.classList.add('text-gray-500', 'border-transparent')
-    })
-    
-    // Add active styling to the clicked tab
-    tab.classList.remove('text-gray-500', 'border-transparent')
-    tab.classList.add('text-[#1499DC]', 'border-[#1499DC]')
-    
-    // Filter table rows
+  applyFilters() {
     this.filterRows()
-    
-    // Reset checkbox selection when switching tabs
     this.clearSelectedRows()
+    this.closeFilterDropdowns()
+  }
+
+  closeFilterDropdowns() {
+    this.element.querySelectorAll('details').forEach(details => {
+      details.removeAttribute('open')
+    })
   }
 
   // Filter table rows based on active tab
   filterRows() {
     const rows = this.tableBodyTarget.querySelectorAll('tr')
+    const selectedStatuses = this.statusCheckboxTargets
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value)
+    const selectedDegrees = this.degreeCheckboxTargets
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value)
+    const selectedYears = this.yearCheckboxTargets
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value)
     
     rows.forEach(row => {
       const status = row.dataset.status
+      const rowDegrees = (row.dataset.degree || "").split('|').filter(Boolean)
+      const rowYears = (row.dataset.gradYear || "").split('|').filter(Boolean)
+
+      const statusMatches = selectedStatuses.length === 0 || selectedStatuses.includes(status)
+
+      const degreeMatches = selectedDegrees.length === 0 ||
+        selectedDegrees.some(degree => rowDegrees.includes(degree))
+      const yearMatches = selectedYears.length === 0 ||
+        selectedYears.some(year => rowYears.includes(year))
       
-      if (this.currentTab === "all") {
-        row.classList.remove('hidden')
-      } else if (this.currentTab === "reviewed" && status === "reviewed") {
-        row.classList.remove('hidden')
-      } else if (this.currentTab === "not-reviewed" && status === "not-reviewed") {
+      if (statusMatches && degreeMatches && yearMatches) {
         row.classList.remove('hidden')
       } else {
         row.classList.add('hidden')
