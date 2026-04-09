@@ -1,17 +1,17 @@
-<div class="max-w-[1121px] mx-auto min-h-screen px-4 sm:px-6" data-controller="select-all">
+<div class="max-w-[1121px] mx-auto min-h-screen px-4 sm:px-6" data-controller="filter table-actions">
   <div>
       <!-- Selection Summary -->
-      <div data-select-all-target="selectionSummary" class="flex flex-wrap items-center gap-3 bg-gray-100 rounded-lg p-2" >
+      <div data-table-actions-target="selectionSummary" class="hidden flex flex-wrap items-center gap-3 bg-gray-100 rounded-lg p-2">
         <div class="bg-[#1499DC] text-white px-2 py-1 rounded text-sm font-medium">
-          <span data-select-all-target="selectedCount">0</span> selected
+          <span data-table-actions-target="selectedCount">0</span> selected
         </div>
 
-        <select data-select-all-target="actionsSelect" data-action="change->select-all#performAction" class="flex items-center bg-white border border-gray-300 rounded-md px-3 py-1 text-sm hover:bg-gray-50" >
+        <select data-table-actions-target="actionsSelect" data-action="change->table-actions#performAction" class="flex items-center bg-white border border-gray-300 rounded-md px-3 py-1 text-sm hover:bg-gray-50">
           <option value="" disabled selected>Actions</option>
           <option value="download_profiles">Download Profiles</option>
         </select>
 
-        <button data-select-all-target="clearSelection" data-action="click->select-all#clearSelectedRows" class="text-gray-500 hover:text-gray-700" >
+        <button data-table-actions-target="clearSelection" data-action="click->table-actions#clearSelectedRows" class="text-gray-500 hover:text-gray-700">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
           </svg>
@@ -20,25 +20,29 @@
 
       <!-- Table section -->
       <div class="p-6 bg-white rounded-md shadow-sm">
-        <!-- Status Filters + Degree/Year Filters -->
-        <div class="flex flex-wrap items-center justify-between gap-4 border border-slate-200 bg-gradient-to-r from-emerald-50 via-white to-slate-50 px-4 py-3 mb-4 rounded-xl shadow-sm">
+        <!-- Filters (server-side GET form) -->
+        <%= form_with url: career_officer_student_profiles_path, method: :get,
+                      data: { filter_target: "form" },
+                      class: "flex flex-wrap items-center justify-between gap-4 border border-slate-200 bg-gradient-to-r from-emerald-50 via-white to-slate-50 px-4 py-3 mb-4 rounded-xl shadow-sm" do %>
           <div class="flex flex-wrap items-center gap-4 text-sm text-slate-700">
             <div class="flex items-center gap-3 rounded-full border border-emerald-100 bg-white/90 px-3 py-1 shadow-sm">
               <label class="flex items-center gap-2">
                 <input type="checkbox"
-                  value="reviewed"
+                  name="status[]"
+                  value="Reviewed"
                   class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
-                  data-select-all-target="statusCheckbox"
-                  data-action="change->select-all#applyFilters">
+                  data-action="change->filter#applyFilters"
+                  <%= "checked" if Array(params[:status]).include?("Reviewed") %>>
                 <span class="font-medium">Reviewed</span>
               </label>
               <span class="h-4 w-px bg-slate-200"></span>
               <label class="flex items-center gap-2">
                 <input type="checkbox"
-                  value="not-reviewed"
+                  name="status[]"
+                  value="Not Reviewed"
                   class="h-4 w-4 text-rose-500 focus:ring-rose-400 border-slate-300 rounded"
-                  data-select-all-target="statusCheckbox"
-                  data-action="change->select-all#applyFilters">
+                  data-action="change->filter#applyFilters"
+                  <%= "checked" if Array(params[:status]).include?("Not Reviewed") %>>
                 <span class="font-medium">Not Reviewed</span>
               </label>
             </div>
@@ -46,47 +50,49 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
-          <details class="group relative">
-            <summary class="cursor-pointer list-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50 focus:outline-none">
-              Graduation Year
-            </summary>
-            <div class="absolute left-0 z-20 mt-2 w-56 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
-              <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-slate-700">
-                <% @graduation_year_options.each do |year| %>
-                  <label class="flex items-center gap-2">
-                    <input type="checkbox"
-                      value="<%= year %>"
-                      class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
-                      data-select-all-target="yearCheckbox"
-                      data-action="change->select-all#applyFilters">
-                    <span><%= year %></span>
-                  </label>
-                <% end %>
+            <details class="group relative">
+              <summary class="cursor-pointer list-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50 focus:outline-none">
+                Graduation Year
+              </summary>
+              <div class="absolute left-0 z-20 mt-2 w-56 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
+                <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-slate-700">
+                  <% @graduation_year_options.each do |year| %>
+                    <label class="flex items-center gap-2">
+                      <input type="checkbox"
+                        name="graduation_year[]"
+                        value="<%= year %>"
+                        class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+                        data-action="change->filter#applyFilters"
+                        <%= "checked" if Array(params[:graduation_year]).map(&:to_i).include?(year.to_i) %>>
+                      <span><%= year %></span>
+                    </label>
+                  <% end %>
+                </div>
               </div>
-            </div>
-          </details>
+            </details>
 
-          <details class="group relative">
-            <summary class="cursor-pointer list-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50 focus:outline-none">
-              Degree
-            </summary>
-            <div class="absolute left-0 z-20 mt-2 w-72 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
-              <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-slate-700">
-                <% @degree_options.each do |degree| %>
-                  <label class="flex items-start gap-2">
-                    <input type="checkbox"
-                      value="<%= degree %>"
-                      class="mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
-                      data-select-all-target="degreeCheckbox"
-                      data-action="change->select-all#applyFilters">
-                    <span><%= degree %></span>
-                  </label>
-                <% end %>
+            <details class="group relative">
+              <summary class="cursor-pointer list-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50 focus:outline-none">
+                Degree
+              </summary>
+              <div class="absolute left-0 z-20 mt-2 w-72 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
+                <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-slate-700">
+                  <% @degree_options.each do |degree| %>
+                    <label class="flex items-start gap-2">
+                      <input type="checkbox"
+                        name="degree[]"
+                        value="<%= degree %>"
+                        class="mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded"
+                        data-action="change->filter#applyFilters"
+                        <%= "checked" if Array(params[:degree]).include?(degree) %>>
+                      <span><%= degree %></span>
+                    </label>
+                  <% end %>
+                </div>
               </div>
-            </div>
-          </details>
+            </details>
           </div>
-        </div>
+        <% end %>
 
         <div class="bg-white rounded-lg shadow-sm">
           <!-- Table -->
@@ -95,10 +101,9 @@
               <thead class="bg-gray-50">
                 <tr>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8">
-                    <input type="checkbox" class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded "
-                    data-select-all-target="checkboxAll"
-                    data-action="change->select-all#toggleAll"
-                    >
+                    <input type="checkbox" class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
+                      data-table-actions-target="checkboxAll"
+                      data-action="change->table-actions#toggleAll">
                   </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Student Name
@@ -117,23 +122,21 @@
                   </th>
                 </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200" data-select-all-target="tableBody">
-                <!-- Row 1 -->
+              <tbody class="bg-white divide-y divide-gray-200" data-table-actions-target="tableBody">
                 <% @users.each do |user| %>
-                  <% primary_education = user.student_profile.educations.find do |education|
-                    education.degree.to_s.match?(/\ABS \(|\ABachelor of Business Administration/)
-                  end %>
+                  <% profile = user.student_profile %>
+                  <% primary_education = profile&.educations&.find { |e| e.degree.to_s.match?(/\ABS \(|\ABachelor of Business Administration/) } %>
                   <% primary_degree = primary_education&.degree %>
-                  <% graduation_year = primary_education ? (primary_education.graduation_year || Date.current.year) : nil %>
+                  <% graduation_year = primary_education&.graduation_year %>
                   <tr class="hover:bg-gray-50"
-                    data-status="<%= user.student_profile.status.downcase.gsub(' ', '-') %>"
+                    data-status="<%= profile&.status.to_s.downcase.gsub(' ', '-') %>"
                     data-user-id="<%= user.id %>"
                     data-degree="<%= primary_degree %>"
                     data-grad-year="<%= graduation_year %>">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <input type="checkbox" class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
-                      data-select-all-target="checkboxRow"
-                      data-action="change->select-all#checkRowSelection">
+                        data-table-actions-target="checkboxRow"
+                        data-action="change->table-actions#checkRowSelection">
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <%= user.full_name %>
@@ -142,14 +145,14 @@
                       <%= user.email %>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span data-action="click->select-all#openStatusModal" 
-                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        <%= user.student_profile.status == 'Not Reviewed' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800' %> cursor-pointer">
-                        <%= user.student_profile.status %>
+                      <span data-action="click->table-actions#openStatusModal"
+                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                        <%= profile&.status == 'Not Reviewed' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800' %> cursor-pointer">
+                        <%= profile&.status %>
                       </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= user.student_profile.updated_at %>
+                      <%= profile&.updated_at %>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center gap-2 w-56">
                       <%= link_to "View", career_officer_student_profile_path(user.id), class: "text-white bg-[#1499DC] border hover:border-[#1499DC] px-2 py-1 rounded text-xs" %>
@@ -158,17 +161,19 @@
                     </td>
                   </tr>
                 <% end %>
-
               </tbody>
             </table>
           </div>
+
+          <!-- Pagination -->
+          <% filter_params = params.permit(:status => [], :degree => [], :graduation_year => []).to_h %>
           <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-4 py-3 text-sm text-slate-600">
             <% start_index = (@page - 1) * @per_page + 1 %>
             <% end_index = [@page * @per_page, @total_count].min %>
             <span>Showing <%= @total_count.zero? ? 0 : start_index %>-<%= end_index %> of <%= @total_count %></span>
             <div class="flex items-center gap-2">
               <% if @page > 1 %>
-                <%= link_to "Previous", career_officer_student_profiles_path(page: @page - 1), class: "rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700 hover:bg-slate-50" %>
+                <%= link_to "Previous", career_officer_student_profiles_path(filter_params.merge(page: @page - 1)), class: "rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700 hover:bg-slate-50" %>
               <% else %>
                 <span class="rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-slate-400">Previous</span>
               <% end %>
@@ -176,7 +181,7 @@
               <span class="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700">Page <%= @page %> of <%= [@total_pages, 1].max %></span>
 
               <% if @page < @total_pages %>
-                <%= link_to "Next", career_officer_student_profiles_path(page: @page + 1), class: "rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700 hover:bg-slate-50" %>
+                <%= link_to "Next", career_officer_student_profiles_path(filter_params.merge(page: @page + 1)), class: "rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700 hover:bg-slate-50" %>
               <% else %>
                 <span class="rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-slate-400">Next</span>
               <% end %>
@@ -185,37 +190,33 @@
         </div>
       </div>
   </div>
+
   <!-- Status Change Modal -->
-  <div data-select-all-target="statusModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+  <div data-table-actions-target="statusModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
     <div class="bg-white rounded-lg shadow-xl p-6 w-96">
       <h2 class="text-lg font-semibold mb-4">Change status</h2>
       <div class="space-y-2">
-        <button data-action="click->select-all#changeStatus" data-status="Reviewed" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded flex items-center" >
+        <button data-action="click->table-actions#changeStatus" data-status="Reviewed" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded flex items-center">
           <span class="w-4 h-4 mr-2 rounded-full bg-gray-100"></span>
           Reviewed
         </button>
-        <button data-action="click->select-all#changeStatus" data-status="Not Reviewed" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded flex items-center" >
+        <button data-action="click->table-actions#changeStatus" data-status="Not Reviewed" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded flex items-center">
           <span class="w-4 h-4 mr-2 rounded-full bg-red-100"></span>
           Not Reviewed
         </button>
       </div>
       <div class="mt-4 flex justify-end space-x-2">
-        <button 
-          data-action="click->select-all#closeStatusModal"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded"
-        >
+        <button
+          data-action="click->table-actions#closeStatusModal"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded">
           Cancel
         </button>
-        <button 
-          data-action="click->select-all#applyStatus"
-          class="px-4 py-2 bg-indigo-600 text-white rounded"
-        >
+        <button
+          data-action="click->table-actions#applyStatus"
+          class="px-4 py-2 bg-indigo-600 text-white rounded">
           Apply
-        </button> 
+        </button>
       </div>
     </div>
   </div>
 </div>
-
-
-
