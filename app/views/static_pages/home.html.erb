@@ -1,64 +1,89 @@
 <% content_for :title, "Home | Virtual Job Fair Platform" %>
-<div class="relative min-h-screen px-16 py-28 flex flex-col items-baseline justify-center bg-cover bg-center" 
-     style="background-image: url('<%= asset_path('globe.jpg') %>');">
+<div class="relative min-h-screen px-16 py-28 flex flex-col items-baseline justify-center bg-cover bg-center"
+    style="background-image: url('<%= asset_path('globe.jpg') %>');">
 
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
   <!-- Overlay for better text contrast -->
-  <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-gray-900/70"></div> 
+    <div class="absolute inset-0 bg-gradient-to-r from-[#0B3A66]/95 via-[#0F4F86]/85 to-[#0F6DB5]/70"></div>
   
-  <div class="max-w-[915px] flex flex-col gap-8 text-white relative z-10 pt-20">
-    <div class="flex flex-col gap-6">
-        <h1 class="text-[96px] font-bold">Transform Your Career at <span class="text-[#60A5FA]">Job Fair</span></h1>
-        <p class="text-2xl font-normal">
-            Connect with top employers and discover exciting opportunities tailored just for you. 
-            Join us for an innovative networking experience that opens doors to your future.
-        </p>
+    <div class="max-w-[1040px] flex flex-col gap-10 text-white relative z-10 pt-20">
+        <div class="flex flex-col gap-6">
+            <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm tracking-wide uppercase">
+                Virtual Job Fair Experience
+            </span>
+            <h1 class="text-[84px] leading-[1.05] font-bold" style="font-family: 'Playfair Display', 'Georgia', serif;">
+                Transform Your Career at <span class="text-[#60A5FA]">Job Fair</span>
+            </h1>
+            <p class="text-2xl font-normal text-white/90 max-w-[860px]">
+                Connect with top employers and discover opportunities tailored to your goals.
+                Join a guided, high-impact networking experience that opens doors to your future.
+            </p>
+        </div>
+        <div class="flex flex-wrap gap-4">
+            <%= link_to 'Join Now', new_user_registration_path , class: 'px-8 py-4 bg-[#1569E0] border border-[#1569E0] hover:bg-[#0F5DC6] hover:border-[#0F5DC6] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
+            <%= link_to 'How it Works', '#how-it-works', class: 'px-8 py-4 border border-white/40 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-[860px]">
+            <div class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
+                <p class="text-sm uppercase tracking-wide text-white/70">Students</p>
+                <p class="text-2xl font-bold">500+ active</p>
+                <p class="text-sm text-white/70">Profiles ready for recruiters</p>
+            </div>
+            <div class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
+                <p class="text-sm uppercase tracking-wide text-white/70">Recruiters</p>
+                <p class="text-2xl font-bold">120+ companies</p>
+                <p class="text-sm text-white/70">Hiring across multiple fields</p>
+            </div>
+            <div class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
+                <p class="text-sm uppercase tracking-wide text-white/70">Events</p>
+                <p class="text-2xl font-bold">Live booths</p>
+                <p class="text-sm text-white/70">Real-time Q and A sessions</p>
+            </div>
+        </div>
     </div>
-    <div class="flex gap-4">
-        <%= link_to 'Join Now', new_user_registration_path , class: 'px-8 py-4 bg-[#1569E0] border border-[#1569E0] hover:bg-[#0F5DC6] hover:border-[#0F5DC6] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
-        <%= link_to 'How it Works', '#how-it-works', class: 'px-8 py-4 border border-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
-    </div>
-  </div>
-  
-  <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
-  <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
+    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
 </div>
 
-<div id="how-it-works" class="px-16 py-28 flex flex-col gap-10">
+<div id="how-it-works" class="px-16 py-28 flex flex-col gap-10 bg-slate-50">
     <div class="space-y-4">
         <span class="text-base font-semibold text-[#1569E0]">Connect</span>
         <div class="flex gap-6">
-            <h2 class="flex-1 font-bold text-5xl">Discover Opportunities with Our Virtual Job Fair</h2>
+            <h2 class="flex-1 font-bold text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Discover Opportunities with Our Virtual Job Fair</h2>
             <p class="flex-1 text-[#333333] text-lg">Our platform simplifies the job search process by connecting students with recruiters in real-time. Experience a seamless journey from application to interview.</p>
         </div>
     </div>
-    <div class="flex gap-12">
-        <div class="flex-1 px-8 py-[18px]" style="box-shadow: 0px 8px 32px 2px rgba(21, 105, 224, 0.25);">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="rounded-2xl border border-blue-100 bg-white px-8 py-6 shadow-lg">
             <div class="space-y-6">
                 <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M35.46 10.24L35.18 9.74C34.8188 9.13538 34.3094 8.63286 33.7 8.28L20.28 0.54C19.6724 0.1875 18.9826 0.00124 18.28 0H17.7C16.9974 0.00124 16.3076 0.1875 15.7 0.54L2.28 8.3C1.67394 8.65052 1.17052 9.15394 0.82 9.76L0.54 10.26C0.1875 10.8677 0.00124 11.5575 0 12.26V27.76C0.00124 28.4626 0.1875 29.1524 0.54 29.76L0.82 30.26C1.17958 30.859 1.68098 31.3604 2.28 31.72L15.72 39.46C16.3246 39.8198 17.0164 40.0066 17.72 40H18.28C18.9826 39.9988 19.6724 39.8126 20.28 39.46L33.7 31.7C34.312 31.3574 34.8174 30.852 35.16 30.24L35.46 29.74C35.8082 29.1306 35.9942 28.442 36 27.74V12.24C35.9988 11.5375 35.8126 10.8477 35.46 10.24ZM17.7 4H18.28L30 10.76L18 17.68L6 10.76L17.7 4ZM20 35L31.7 28.24L32 27.74V14.22L20 21.16V35Z" fill="#1569E0"/>
                 </svg>
-                <h4 class="text-[32px] font-bold">Create Your Profile</h4>
-                <p class="text-base text-[#333333]">Easily set up your profile to showcase your skills and qualifications to potential employers.</p>
+                <div class="text-xs uppercase tracking-wide text-[#1569E0]">Step 01</div>
+                <h4 class="text-[28px] font-bold">Create Your Profile</h4>
+                <p class="text-base text-[#333333]">Set up your profile to showcase skills, projects, and achievements to employers.</p>
             </div>
         </div>
-        <div class="flex-1 px-8 py-[18px]" style="box-shadow: 0px 8px 32px 2px rgba(21, 105, 224, 0.25);">
+        <div class="rounded-2xl border border-blue-100 bg-white px-8 py-6 shadow-lg">
             <div class="space-y-6">
                 <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M35.46 10.24L35.18 9.74C34.8188 9.13538 34.3094 8.63286 33.7 8.28L20.28 0.54C19.6724 0.1875 18.9826 0.00124 18.28 0H17.7C16.9974 0.00124 16.3076 0.1875 15.7 0.54L2.28 8.3C1.67394 8.65052 1.17052 9.15394 0.82 9.76L0.54 10.26C0.1875 10.8677 0.00124 11.5575 0 12.26V27.76C0.00124 28.4626 0.1875 29.1524 0.54 29.76L0.82 30.26C1.17958 30.859 1.68098 31.3604 2.28 31.72L15.72 39.46C16.3246 39.8198 17.0164 40.0066 17.72 40H18.28C18.9826 39.9988 19.6724 39.8126 20.28 39.46L33.7 31.7C34.312 31.3574 34.8174 30.852 35.16 30.24L35.46 29.74C35.8082 29.1306 35.9942 28.442 36 27.74V12.24C35.9988 11.5375 35.8126 10.8477 35.46 10.24ZM17.7 4H18.28L30 10.76L18 17.68L6 10.76L17.7 4ZM20 35L31.7 28.24L32 27.74V14.22L20 21.16V35Z" fill="#1569E0"/>
                 </svg>
-                <h4 class="text-[32px] font-bold">Join Virtual Booths</h4>
-                <p class="text-base text-[#333333]">Explore personalized job opportunities and connect with recruiters based on your interests.</p>
+                <div class="text-xs uppercase tracking-wide text-[#1569E0]">Step 02</div>
+                <h4 class="text-[28px] font-bold">Join Virtual Booths</h4>
+                <p class="text-base text-[#333333]">Explore opportunities and connect with recruiters based on your interests.</p>
             </div>
         </div>
-        <div class="flex-1 px-8 py-[18px]" style="box-shadow: 0px 8px 32px 2px rgba(21, 105, 224, 0.25);">
+        <div class="rounded-2xl border border-blue-100 bg-white px-8 py-6 shadow-lg">
             <div class="space-y-6">
                 <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M35.46 10.24L35.18 9.74C34.8188 9.13538 34.3094 8.63286 33.7 8.28L20.28 0.54C19.6724 0.1875 18.9826 0.00124 18.28 0H17.7C16.9974 0.00124 16.3076 0.1875 15.7 0.54L2.28 8.3C1.67394 8.65052 1.17052 9.15394 0.82 9.76L0.54 10.26C0.1875 10.8677 0.00124 11.5575 0 12.26V27.76C0.00124 28.4626 0.1875 29.1524 0.54 29.76L0.82 30.26C1.17958 30.859 1.68098 31.3604 2.28 31.72L15.72 39.46C16.3246 39.8198 17.0164 40.0066 17.72 40H18.28C18.9826 39.9988 19.6724 39.8126 20.28 39.46L33.7 31.7C34.312 31.3574 34.8174 30.852 35.16 30.24L35.46 29.74C35.8082 29.1306 35.9942 28.442 36 27.74V12.24C35.9988 11.5375 35.8126 10.8477 35.46 10.24ZM17.7 4H18.28L30 10.76L18 17.68L6 10.76L17.7 4ZM20 35L31.7 28.24L32 27.74V14.22L20 21.16V35Z" fill="#1569E0"/>
                 </svg>
-                <h4 class="text-[32px] font-bold">Engage in Real-Time</h4>
-                <p class="text-base text-[#333333]">Chat directly with recruiters, ask questions, and make meaningful connections instantly.</p>
+                <div class="text-xs uppercase tracking-wide text-[#1569E0]">Step 03</div>
+                <h4 class="text-[28px] font-bold">Engage in Real-Time</h4>
+                <p class="text-base text-[#333333]">Chat directly with recruiters, ask questions, and make meaningful connections.</p>
             </div>
         </div>
     </div>
@@ -72,18 +97,20 @@
                 <div class="space-y-4">
                     <span class="text-base font-semibold text-[#1569E0]">Empower</span>
                     <div class="space-y-6">
-                        <h2 class="font-bold text-5xl">Unlock Your Future with Our Platform</h2>
+                        <h2 class="font-bold text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Unlock Your Future with Our Platform</h2>
                         <p class="text-[#333333] text-lg">Our virtual job fair platform connects students, career officers, and recruiters seamlessly. Experience a dynamic environment that fosters meaningful networking and opportunities.</p>
                     </div>
                 </div>
-                <div class="flex gap-6 items-start">
-                    <div class="flex-1 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                         <h6 class="font-bold text-xl">For Students</h6>
-                        <p class="text-base ">Access tailored job opportunities and showcase your skills effectively.</p>
+                        <p class="text-base text-[#333333]">Access tailored job opportunities and showcase your skills effectively.</p>
+                        <p class="text-sm text-slate-500 mt-3">Build a portfolio, join booths, and get feedback fast.</p>
                     </div>
-                    <div class="flex-1 space-y-4">
+                    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                         <h6 class="font-bold text-xl">For Career Officers</h6>
-                        <p class="text-base ">Streamline career management and enhance student engagement with our tools.</p>
+                        <p class="text-base text-[#333333]">Streamline career management and enhance student engagement with our tools.</p>
+                        <p class="text-sm text-slate-500 mt-3">Track outcomes and surface high-potential candidates.</p>
                     </div>
                 </div>
             </div>
@@ -91,15 +118,15 @@
         </div>
         <div class="relative flex-1 h-[640px] shadow-lg">
             <img src="<%= asset_path('interview') %>" alt="Recruiter Conducting Interview" class="w-full h-full object-cover shadow-lg">
-            <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-gray-900/70 opacity-55"></div> 
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0B3A66]/90 to-[#0F6DB5]/60 opacity-55"></div>
         </div>
     </div>
 </div>
 
-<div class="px-16 py-28 flex items-center justify-center bg-[#0B4A78] text-white">
+<div class="px-16 py-28 flex items-center justify-center bg-gradient-to-r from-[#0B3A66] via-[#0F6DB5] to-[#0B3A66] text-white">
     <div class="space-y-8 text-center">
         <div class="space-y-6">
-            <h2 class="font-bold text-5xl">Join the Future of Networking</h2>
+            <h2 class="font-bold text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Join the Future of Networking</h2>
             <p class="text-lg">Unlock new career opportunities and connect with top employers at our virtual job fair.</p>
         </div>
            <div class="flex gap-3 text-base justify-center">

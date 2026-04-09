@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
-<body class="bg-gray-100">
+<body class="bg-[#0F6DB5]">
     <!-- Header -->
-    <nav class="absolute top-0 left-0 right-0 z-10 border-b border-white/10 bg-[#0F6DB5]/95 shadow-sm backdrop-blur">
+    <nav class="absolute top-0 left-0 right-0 z-10 bg-[#0F6DB5]">
         <div class="mx-auto max-w-7xl px-6 lg:px-12">
             <div class="flex items-center justify-between py-5 text-white">
                 <div class="flex items-center gap-8">
@@ -27,9 +27,9 @@
     </nav>
 
     <!-- Main Container -->
-    <div class="flex flex-col lg:flex-row min-h-screen pt-24">
+    <div class="flex flex-col lg:flex-row min-h-screen">
         <!-- Left Section -->
-        <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-12">
+        <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center px-12 pt-24 pb-12">
             <div class="text-center">
                 <h1 class="text-4xl font-extrabold mb-6">Get the job done</h1>
                 <div class="space-y-6">
@@ -51,7 +51,7 @@
         </div>
 
         <!-- Right Section -->
-        <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-12">
+        <div class="lg:w-1/2 w-full bg-white flex justify-center items-center px-12 pt-24 pb-12">
             <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'w-full max-w-sm bg-gray-50 p-6 rounded-lg shadow-lg' }) do |f| %>
                 <h2 class="text-2xl font-semibold mb-6 text-center">Login</h2>
 

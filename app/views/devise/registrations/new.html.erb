@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
 </head>
-<body class="bg-gray-100">
+<body class="bg-[#0F6DB5]">
   
   <!-- Header -->
-  <nav class="absolute top-0 left-0 right-0 z-10 border-b border-white/10 bg-[#0F6DB5]/95 shadow-sm backdrop-blur">
+  <nav class="absolute top-0 left-0 right-0 z-10 bg-[#0F6DB5]">
     <div class="mx-auto max-w-7xl px-6 lg:px-12">
       <div class="flex items-center justify-between py-5 text-white">
         <div class="flex items-center gap-8">
@@ -28,9 +28,9 @@
   </nav>
 
 <!-- Main Container -->
-  <div class="flex flex-col lg:flex-row min-h-screen pt-24">
+  <div class="flex flex-col lg:flex-row min-h-screen">
     <!-- Left Section (Welcome Message) -->
-    <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-12">
+    <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center px-12 pt-24 pb-12">
       <div class="text-center">
         <h1 class="text-4xl font-extrabold mb-6">Welcome to Our Platform</h1>
         <p class="text-lg mb-6">Join us to explore opportunities and grow your career.</p>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Right Section (Signup Form) -->
-    <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-12">
+    <div class="lg:w-1/2 w-full bg-white flex justify-center items-center px-12 pt-24 pb-12">
 
       <div class="w-full max-w-md">
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', class: 'bg-gray-50 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4', data: { controller: "toggle-fields" }, onsubmit: "return validateForm()" }) do |f| %>
