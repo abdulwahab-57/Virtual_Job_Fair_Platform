@@ -10,8 +10,8 @@
   <!-- Header -->
   <nav class="absolute top-0 left-0 right-0 z-10 bg-[#0F6DB5]">
     <div class="mx-auto max-w-7xl px-6 lg:px-12">
-      <div class="flex items-center justify-between py-5 text-white">
-        <div class="flex items-center gap-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 py-5 text-white">
+        <div class="flex items-center gap-6">
           <img src="<%= asset_path('logo') %>" alt="Fast Nuces Logo" style="height: 44px; width: auto;">
           <div class="hidden md:flex items-center gap-7 text-sm font-medium text-white/90">
             <%= link_to 'Home', root_path, class: 'hover:text-white transition-colors' %>
@@ -19,7 +19,7 @@
             <%= link_to 'Contact', '#footer', class: 'hover:text-white transition-colors' %>
           </div>
         </div>
-        <div class="flex items-center gap-3 text-sm">
+        <div class="flex flex-wrap items-center gap-3 text-sm">
           <%= link_to 'Log in', new_user_session_path , class: 'px-4 py-2 border border-white/70 rounded-full hover:border-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
           <%= link_to 'Sign up', new_user_registration_path , class: 'px-4 py-2 rounded-full bg-white text-[#0F6DB5] font-semibold hover:bg-white/90 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
         </div>
@@ -30,11 +30,25 @@
 <!-- Main Container -->
   <div class="flex flex-col lg:flex-row min-h-screen">
     <!-- Left Section (Welcome Message) -->
-    <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center px-12 pt-24 pb-12">
-      <div class="text-center">
-        <h1 class="text-4xl font-extrabold mb-6">Welcome to Our Platform</h1>
-        <p class="text-lg mb-6">Join us to explore opportunities and grow your career.</p>
-        <a href="#" class="mt-8 text-base underline hover:text-gray-200 block">Learn More</a>
+    <div class="lg:w-1/2 w-full bg-gradient-to-br from-[#1569E0] via-[#0F6DB5] to-[#0B3A66] text-white flex justify-center items-center px-12 pt-24 pb-12">
+      <div class="max-w-md text-left space-y-6">
+        <span class="inline-flex items-center rounded-full border border-white/30 px-3 py-1 text-xs uppercase tracking-wide">Join the Platform</span>
+        <h1 class="text-4xl font-extrabold">Welcome to our community</h1>
+        <p class="text-white/90">Create your account to explore opportunities and connect with recruiters.</p>
+        <div class="grid grid-cols-1 gap-4 text-sm">
+          <div class="rounded-xl border border-white/20 bg-white/10 p-4">
+            <p class="text-base font-semibold">Create your profile</p>
+            <p class="text-white/80">Showcase your skills and achievements.</p>
+          </div>
+          <div class="rounded-xl border border-white/20 bg-white/10 p-4">
+            <p class="text-base font-semibold">Join virtual booths</p>
+            <p class="text-white/80">Connect directly with employers.</p>
+          </div>
+          <div class="rounded-xl border border-white/20 bg-white/10 p-4">
+            <p class="text-base font-semibold">Track progress</p>
+            <p class="text-white/80">Stay on top of applications.</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -42,8 +56,9 @@
     <div class="lg:w-1/2 w-full bg-white flex justify-center items-center px-12 pt-24 pb-12">
 
       <div class="w-full max-w-md">
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', class: 'bg-gray-50 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4', data: { controller: "toggle-fields" }, onsubmit: "return validateForm()" }) do |f| %>
-          <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Create Your Account</h2>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { id: 'signupForm', class: 'bg-white shadow-xl rounded-2xl px-8 pt-8 pb-8 mb-4 border border-slate-100', data: { controller: "toggle-fields" }, onsubmit: "return validateForm()" }) do |f| %>
+          <h2 class="text-3xl font-bold text-gray-800 text-center mb-2">Create Your Account</h2>
+          <p class="text-center text-sm text-slate-500 mb-6">Use your institutional email to register.</p>
 
           <!-- User Type Dropdown -->
                                         <!-- Add this for the career_officer field inisde Drop down  <%# ["Career Officer", "career_officer"] %>-->
@@ -73,7 +88,7 @@
           <!-- Email Field -->
 <div class="mb-6">
   <%= f.label :email, "Institutional/Organizational Email", class: "block text-gray-700 text-sm font-bold mb-2" %>
-  <%= f.email_field :email, id: 'user_email', placeholder: 'john.doe@university.edu', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true %>
+  <%= f.email_field :email, id: 'user_email', placeholder: 'f123456@cfd.nu.edu.pk', class: "w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500", required: true %>
   <p id="emailError" class="text-red-500 text-sm mt-2 hidden"></p>
   <!-- Display server-side validation errors -->
   <% if resource.errors[:email].any? %>
@@ -130,7 +145,7 @@
 
           <!-- Submit Button -->
           <div class="mb-6">
-            <%= f.submit "Sign Up", class: "w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" %>
+            <%= f.submit "Sign Up", class: "w-full bg-[#1569E0] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0F5DC6] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" %>
         <% end %>
       </div>
     </div>

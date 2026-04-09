@@ -1,5 +1,5 @@
 <% content_for :title, "Home | Virtual Job Fair Platform" %>
-<div class="relative min-h-screen px-16 py-28 flex flex-col items-baseline justify-center bg-cover bg-center"
+<div class="relative min-h-screen px-6 md:px-16 py-24 md:py-28 flex flex-col items-baseline justify-center bg-cover bg-center"
     style="background-image: url('<%= asset_path('globe.jpg') %>');">
 
   <p class="notice"><%= notice %></p>
@@ -7,15 +7,15 @@
   <!-- Overlay for better text contrast -->
     <div class="absolute inset-0 bg-gradient-to-r from-[#0B3A66]/95 via-[#0F4F86]/85 to-[#0F6DB5]/70"></div>
   
-    <div class="max-w-[1040px] flex flex-col gap-10 text-white relative z-10 pt-20">
+    <div class="max-w-[1040px] flex flex-col gap-8 md:gap-10 text-white relative z-10 pt-16 md:pt-20">
         <div class="flex flex-col gap-6">
             <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm tracking-wide uppercase">
                 Virtual Job Fair Experience
             </span>
-            <h1 class="text-[84px] leading-[1.05] font-bold" style="font-family: 'Playfair Display', 'Georgia', serif;">
+            <h1 class="text-5xl md:text-7xl leading-[1.05] font-bold" style="font-family: 'Playfair Display', 'Georgia', serif;">
                 Transform Your Career at <span class="text-[#60A5FA]">Job Fair</span>
             </h1>
-            <p class="text-2xl font-normal text-white/90 max-w-[860px]">
+            <p class="text-lg md:text-2xl font-normal text-white/90 max-w-[860px]">
                 Connect with top employers and discover opportunities tailored to your goals.
                 Join a guided, high-impact networking experience that opens doors to your future.
             </p>
@@ -23,6 +23,11 @@
         <div class="flex flex-wrap gap-4">
             <%= link_to 'Join Now', new_user_registration_path , class: 'px-8 py-4 bg-[#1569E0] border border-[#1569E0] hover:bg-[#0F5DC6] hover:border-[#0F5DC6] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
             <%= link_to 'How it Works', '#how-it-works', class: 'px-8 py-4 border border-white/40 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70' %>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 text-sm text-white/70">
+            <span class="rounded-full border border-white/20 px-3 py-1">FAST-NU Chiniot Campus</span>
+            <span class="rounded-full border border-white/20 px-3 py-1">Career Services Office</span>
+            <span class="rounded-full border border-white/20 px-3 py-1">Industry Partners</span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-[860px]">
             <div class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
@@ -47,11 +52,11 @@
     <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
 </div>
 
-<div id="how-it-works" class="px-16 py-28 flex flex-col gap-10 bg-slate-50">
+<div id="how-it-works" class="px-6 md:px-16 py-24 md:py-28 flex flex-col gap-10 bg-slate-50">
     <div class="space-y-4">
         <span class="text-base font-semibold text-[#1569E0]">Connect</span>
-        <div class="flex gap-6">
-            <h2 class="flex-1 font-bold text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Discover Opportunities with Our Virtual Job Fair</h2>
+        <div class="flex flex-col md:flex-row gap-6">
+            <h2 class="flex-1 font-bold text-4xl md:text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Discover Opportunities with Our Virtual Job Fair</h2>
             <p class="flex-1 text-[#333333] text-lg">Our platform simplifies the job search process by connecting students with recruiters in real-time. Experience a seamless journey from application to interview.</p>
         </div>
     </div>
@@ -90,14 +95,14 @@
     <%= link_to 'Get Started', new_user_registration_path, class: 'self-start px-6 py-3 text-base border border-black hover:bg-black hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50' %>
 </div>
 
-<div class="px-16 py-28">
-    <div class="flex gap-20">
+<div class="px-6 md:px-16 py-24 md:py-28">
+    <div class="flex flex-col lg:flex-row gap-20">
         <div class="self-start flex-1 space-y-8">
             <div class="space-y-8">
                 <div class="space-y-4">
                     <span class="text-base font-semibold text-[#1569E0]">Empower</span>
                     <div class="space-y-6">
-                        <h2 class="font-bold text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Unlock Your Future with Our Platform</h2>
+                        <h2 class="font-bold text-4xl md:text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Unlock Your Future with Our Platform</h2>
                         <p class="text-[#333333] text-lg">Our virtual job fair platform connects students, career officers, and recruiters seamlessly. Experience a dynamic environment that fosters meaningful networking and opportunities.</p>
                     </div>
                 </div>
@@ -116,17 +121,17 @@
             </div>
             <%= link_to 'Sign Up Now', new_user_registration_path, class: 'inline-block px-6 py-3 text-base border border-black hover:bg-black hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50' %>
         </div>
-        <div class="relative flex-1 h-[640px] shadow-lg">
+        <div class="relative flex-1 h-[460px] md:h-[640px] shadow-lg">
             <img src="<%= asset_path('interview') %>" alt="Recruiter Conducting Interview" class="w-full h-full object-cover shadow-lg">
             <div class="absolute inset-0 bg-gradient-to-r from-[#0B3A66]/90 to-[#0F6DB5]/60 opacity-55"></div>
         </div>
     </div>
 </div>
 
-<div class="px-16 py-28 flex items-center justify-center bg-gradient-to-r from-[#0B3A66] via-[#0F6DB5] to-[#0B3A66] text-white">
+<div class="px-6 md:px-16 py-24 md:py-28 flex items-center justify-center bg-gradient-to-r from-[#0B3A66] via-[#0F6DB5] to-[#0B3A66] text-white">
     <div class="space-y-8 text-center">
         <div class="space-y-6">
-            <h2 class="font-bold text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Join the Future of Networking</h2>
+            <h2 class="font-bold text-4xl md:text-5xl" style="font-family: 'Playfair Display', 'Georgia', serif;">Join the Future of Networking</h2>
             <p class="text-lg">Unlock new career opportunities and connect with top employers at our virtual job fair.</p>
         </div>
            <div class="flex gap-3 text-base justify-center">
