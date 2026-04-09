@@ -89,9 +89,24 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   private
 
   def set_users
-     @users = User.where(user_type: "student")
+     page = params[:page].to_i
+     page = 1 if page < 1
+     per_page = 50
+     offset = (page - 1) * per_page
+
+     base_scope = User.where(user_type: "student")
        .select(:id, :full_name, :email)
        .includes(student_profile: :educations)
+
+     @total_count = User.where(user_type: "student").count
+     @total_pages = (@total_count.to_f / per_page).ceil
+     @page = page
+     @per_page = per_page
+
+     @users = base_scope
+       .order(id: :desc)
+       .offset(offset)
+       .limit(per_page)
 
      @degree_options = [
        "BS (Computer Science)",
@@ -102,11 +117,15 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
        "Bachelor of Business Administration"
      ]
 
-     @graduation_year_options = @users.map { |user| user.student_profile&.educations&.first&.graduation_year }
-       .compact
-       .uniq
-       .sort
-       .reverse
+     data_years = @users.filter_map do |user|
+       educations = user.student_profile&.educations || []
+       primary_education = educations.find do |education|
+         education.degree.to_s.match?(/\ABS \(|\ABachelor of Business Administration/)
+       end
+       primary_education ? (primary_education.graduation_year || Date.current.year) : nil
+     end
+
+    @graduation_year_options = [ 2026, 2025 ]
   end
 
   def set_user

@@ -109,6 +109,7 @@
                                   pattern: "[A-Za-z\s]+", 
                                   title:"Only letters and spaces are allowed. Please remove numbers or special characters.",
                                   maxlength: 80 %>
+                <% fixed_graduation_year = ef.object.graduation_year || Date.current.year %>
                 <div class="flex flex-wrap gap-2 items-center">
                   <%= ef.select :degree, options_for_select([
                     "BS (Computer Science)",
@@ -119,7 +120,8 @@
                     "BS (Electrical Engineering)"
                   ], ef.object.degree), { prompt: "Select Degree" }, { class: "w-2/5 p-2 border border-gray-300 rounded-md", required: true } %>
                   <span>-</span>
-                  <%= ef.select :graduation_year, options_for_select((Date.today.year - 10..Date.today.year).to_a.reverse, Date.today.year), {}, { disabled: true, class: "w-1/4 p-2 border-none text-gray-600 bg-gray-200 rounded-md" } %>
+                  <%= ef.select :graduation_year, options_for_select((Date.current.year - 10..Date.current.year).to_a.reverse, fixed_graduation_year), {}, { disabled: true, class: "w-1/4 p-2 border-none text-gray-600 bg-gray-200 rounded-md" } %>
+                  <%= ef.hidden_field :graduation_year, value: fixed_graduation_year %>
                 </div>
               </div>
             <% end %>

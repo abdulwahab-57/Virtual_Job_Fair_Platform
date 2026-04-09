@@ -19,9 +19,21 @@ export default class extends Controller {
   ]
 
   connect() {
+    this.handleOutsideClick = this.handleOutsideClick.bind(this)
+    document.addEventListener('click', this.handleOutsideClick)
     this.updateSelectionSummary()
     this.currentStatusElement = null
     this.filterRows()
+  }
+
+  disconnect() {
+    document.removeEventListener('click', this.handleOutsideClick)
+  }
+
+  handleOutsideClick(event) {
+    if (!event.target.closest('details')) {
+      this.closeFilterDropdowns()
+    }
   }
 
   applyFilters() {
