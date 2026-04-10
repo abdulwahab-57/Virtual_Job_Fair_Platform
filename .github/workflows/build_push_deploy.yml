@@ -46,6 +46,11 @@ jobs:
           script: |
             cd /home/jobfair/
 
+            # 0. Persist secrets in .env so any manual docker compose command
+            #    on the server works without needing inline env vars every time.
+            #    Docker Compose reads .env automatically from the project directory.
+            echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" > .env
+
             # 1. Pull the new image
             docker pull wahab457/virtual_job_fair_platform:latest
 
