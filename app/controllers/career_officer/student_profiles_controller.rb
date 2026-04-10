@@ -1,6 +1,7 @@
 class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   include StudentProfileFilterable
-  include ReadOnlyProfile
+  # include ReadOnlyProfile  # Commented out to allow career officers to edit student profiles.
+                              # Re-enable to make the edit form view-only for career officers.
 
   before_action :set_users, only: [ :index ]
   before_action :set_user, only: [ :show, :edit, :update, :update_status ]
