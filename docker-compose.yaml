@@ -1,17 +1,31 @@
 name: "virtual_job_fair_platform_production"
 
 services:
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/maintenance.html:/usr/share/nginx/html/maintenance.html:ro
+    depends_on:
+      - rails-app
+
   rails-app:
     image: wahab457/virtual_job_fair_platform:latest
+    restart: unless-stopped
     environment:
       - RAILS_MASTER_KEY
       - DB_HOST=postgres
       - chrome_launchOptions_protocolTimeout=600000
-    ports:
-    - 3000:3000
-    depends_on: 
-    - redis
-    - postgres
+    # Port no longer exposed directly — Nginx is the only public entry point.
+    # Expose only on the internal Docker network so Nginx can reach Puma.
+    expose:
+      - "3000"
+    depends_on:
+      - redis
+      - postgres
     volumes:
       - rails-storage:/rails/storage
 
@@ -19,20 +33,18 @@ services:
     image: redis:7.2
     restart: unless-stopped
     volumes:
-    - redis-data:/data
+      - redis-data:/data
 
   postgres:
     image: postgres:16.1
     restart: unless-stopped
-    networks:
-    - default
     volumes:
-    - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-    - "5432:5432"
+      - "5432:5432"
 
 volumes:
   redis-data:

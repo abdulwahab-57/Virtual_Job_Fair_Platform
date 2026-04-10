@@ -24,7 +24,7 @@ jobs:
         run: |
           docker push wahab457/virtual_job_fair_platform:latest
 
-      - name: Copy docker-compose.yaml to server
+      - name: Copy config files to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "docker-compose.yaml"
+          source: "docker-compose.yaml,nginx/"
           target: "/home/jobfair/"
 
       - name: Deploy to Remote Server via SSH
@@ -43,9 +43,20 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          scp: 'docker-compose.yaml:/home/jobfair/'
           script: |
             cd /home/jobfair/
-            docker compose down || true
-            docker rmi wahab457/virtual_job_fair_platform:latest || true
-            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d
+
+            # Pull the new Rails image
+            docker pull wahab457/virtual_job_fair_platform:latest
+
+            # Ensure Nginx and supporting services are running (first deploy or after a full restart).
+            # --no-recreate means already-running containers (nginx, postgres, redis) are left untouched.
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-recreate
+
+            # Restart only the Rails container with the new image.
+            # Nginx stays up the entire time — it serves maintenance.html during the brief
+            # window while Puma is restarting, then resumes proxying automatically.
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-deps --force-recreate rails-app
+
+            # Remove the old dangling image to keep disk clean
+            docker image prune -f
