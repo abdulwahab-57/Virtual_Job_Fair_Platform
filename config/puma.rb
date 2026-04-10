@@ -30,11 +30,6 @@ port ENV.fetch("PORT", 3000)
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
 
-# Zero-downtime deploys: workers restart one at a time so the app stays up.
-# On the server, prefer:  bundle exec pumactl phased-restart
-# over a full stop/start.  Requires workers > 1 (already set above).
-# See: https://github.com/puma/puma/blob/master/docs/restart.md
-
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
