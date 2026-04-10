@@ -64,7 +64,7 @@
             <li>
               <% if index == 0 %>
                 <p class="font-medium">National University of Computer and Emerging Sciences, Chiniot-Faisalabad Campus</p>
-                <p class="text-sm"><%= "#{education.degree} - #{Date.today.year}" %></p>
+                <p class="text-sm"><%= "#{education.degree} - #{education.graduation_year || Date.current.year}" %></p>
               <% else %>
                 <p class="font-medium"><%= education.institution_name %></p>
                 <p class="text-sm"><%= "#{education.degree} - #{education.graduation_year}" %></p>

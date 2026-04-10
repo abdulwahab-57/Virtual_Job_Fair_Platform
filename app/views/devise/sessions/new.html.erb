@@ -5,47 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
-<body class="bg-gray-100">
-    <!-- Header -->
-     <div style="position: absolute; top: 1rem; right: 1.5rem; z-index: 10;">
-        <p style="white-space: nowrap; font-size: 0.875rem; color: #4b5563;">
-            No account? <a href="<%= new_user_registration_path %>" style="color: #2563eb; font-weight: 600; text-decoration: underline;">Sign up here</a>
-        </p>
-    </div>
+<body class="bg-[#0F6DB5]">
+    <%= render 'shared/public_navbar' %>
 
     <!-- Main Container -->
-    <div class="flex flex-col lg:flex-row h-screen">
+    <div class="flex flex-col lg:flex-row min-h-screen">
         <!-- Left Section -->
-        <div class="lg:w-1/2 w-full bg-blue-500 text-white flex justify-center items-center p-12">
-            <div class="text-center">
-                <h1 class="text-4xl font-extrabold mb-6">Get the job done</h1>
-                <div class="space-y-6">
-                    <div>
-                        <p class="text-xl font-bold">Student</p>
-                        <p class="text-base">Launch the next step in your career.</p>
+        <div class="lg:w-1/2 w-full bg-gradient-to-br from-[#1569E0] via-[#0F6DB5] to-[#0B3A66] text-white flex justify-center items-center px-12 pt-24 pb-12">
+            <div class="max-w-md text-left space-y-6">
+                <span class="inline-flex items-center rounded-full border border-white/30 px-3 py-1 text-xs uppercase tracking-wide">Welcome Back</span>
+                <h1 class="text-4xl font-extrabold">Get the job done</h1>
+                <p class="text-white/90">Log in to access your dashboard, manage profiles, and connect faster.</p>
+                <div class="grid grid-cols-1 gap-4 text-sm">
+                    <div class="rounded-xl border border-white/20 bg-white/10 p-4">
+                        <p class="text-base font-semibold">Students</p>
+                        <p class="text-white/80">Launch the next step in your career.</p>
                     </div>
-                    <div>
-                        <p class="text-xl font-bold">Employers</p>
-                        <p class="text-base">Hire the next generation of talent.</p>
+                    <div class="rounded-xl border border-white/20 bg-white/10 p-4">
+                        <p class="text-base font-semibold">Employers</p>
+                        <p class="text-white/80">Hire the next generation of talent.</p>
                     </div>
-                    <div>
-                        <p class="text-xl font-bold">Career Centers</p>
-                        <p class="text-base">Bring the best jobs to your students.</p>
+                    <div class="rounded-xl border border-white/20 bg-white/10 p-4">
+                        <p class="text-base font-semibold">Career Centers</p>
+                        <p class="text-white/80">Bring the best jobs to your students.</p>
                     </div>
                 </div>
-                <a href="#" class="mt-8 text-base underline hover:text-gray-200 block">Learn More</a>
             </div>
         </div>
 
         <!-- Right Section -->
-        <div class="lg:w-1/2 w-full bg-white flex justify-center items-center p-12">
-            <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'w-full max-w-sm bg-gray-50 p-6 rounded-lg shadow-lg' }) do |f| %>
-                <h2 class="text-2xl font-semibold mb-6 text-center">Login</h2>
+        <div class="lg:w-1/2 w-full bg-white flex justify-center items-center px-12 pt-24 pb-12">
+            <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'w-full max-w-sm bg-white p-8 rounded-2xl shadow-xl border border-slate-100' }) do |f| %>
+                <h2 class="text-2xl font-semibold mb-2 text-center">Login</h2>
+                <p class="text-center text-sm text-slate-500 mb-6">Use your institutional email to continue.</p>
 
                 <!-- Email Field -->
                 <div class="mb-4">
                     <%= f.label :email, "Email", class: 'block text-gray-700 text-sm font-bold mb-2' %>
-                    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder: "example@university.edu" %>
+                    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder: "f123456@cfd.nu.edu.pk" %>
                 </div>
 
                 <!-- Password Field -->
@@ -63,17 +60,18 @@
                 <% end %>
 
                 <!-- Forgot Password -->
-                <div class="mb-4">
-                    <a href="<%= new_user_password_path %>" class="text-sm text-blue-500 hover:underline">Forgot Password?</a>
+                <div class="mb-4 flex items-center justify-between text-sm">
+                    <a href="<%= new_user_password_path %>" class="text-blue-600 hover:underline">Forgot Password?</a>
+                    <%= link_to 'Create account', new_user_registration_path, class: 'text-slate-500 hover:text-blue-600' %>
                 </div>
 
                 <!-- Submit Button -->
                 <div>
-                    <%= f.submit 'Login', class: "w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" %>
+                    <%= f.submit 'Login', class: "w-full bg-[#1569E0] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0F5DC6] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" %>
                 </div>
 
                 <div class="mt-6">
-                    <p class="text-sm text-center text-gray-600">By logging in, you agree to our <a href="#" class="text-blue-500 hover:underline">Terms & Conditions</a>.</p>
+                    <p class="text-xs text-center text-gray-500">By logging in, you agree to our <a href="#" class="text-blue-600 hover:underline">Terms & Conditions</a>.</p>
                 </div>
             <% end %>
         </div>

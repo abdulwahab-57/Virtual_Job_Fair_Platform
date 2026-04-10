@@ -1,4 +1,7 @@
 class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
+  include StudentProfileFilterable
+  include ReadOnlyProfile
+
   before_action :set_users, only: [ :index ]
   before_action :set_user, only: [ :show, :edit, :update, :update_status ]
 
@@ -87,10 +90,6 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   end
 
   private
-
-  def set_users
-     @users = User.where(user_type: "student").select(:id, :full_name, :email).includes(:student_profile)
-  end
 
   def set_user
     @user = User.find(params[:id])

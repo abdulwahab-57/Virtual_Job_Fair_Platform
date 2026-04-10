@@ -1,5 +1,4 @@
 class AnalyticsController < ApplicationController
-  include EnhancedAnalyticsHelper
   before_action :authenticate_user!
   before_action :set_sidebar_and_paths
   layout "private"
@@ -10,14 +9,14 @@ class AnalyticsController < ApplicationController
     # Load enhanced analytics data based on user type
     case current_user.user_type
     when "student"
-      @analytics_data = student_additional_analytics(current_user)
+      @analytics_data = AnalyticsService.student_additional_analytics(current_user)
       @education_timeline = @analytics_data[:education_timeline]
     when "recruiter"
-      @analytics_data = recruiter_additional_analytics(current_user)
-      @industry_data = industry_distribution_data
+      @analytics_data = AnalyticsService.recruiter_additional_analytics(current_user)
+      @industry_data = AnalyticsService.industry_distribution_data
     when "career_officer"
-      @student_statuses = student_status_distribution
-      @completion_trends = profile_completion_distribution
+      @student_statuses = AnalyticsService.student_status_distribution
+      @completion_trends = AnalyticsService.profile_completion_distribution
     end
 
     respond_to do |format|
@@ -31,7 +30,7 @@ class AnalyticsController < ApplicationController
     authorize_student_view!(@student)
 
     begin
-      @analytics_data = student_additional_analytics(@student)
+      @analytics_data = AnalyticsService.student_additional_analytics(@student)
       @education_timeline = @analytics_data[:education_timeline]
     rescue => e
       Rails.logger.error "Error in student_analytics: #{e.message}"
@@ -52,8 +51,8 @@ class AnalyticsController < ApplicationController
     authorize_recruiter_view!(@recruiter)
 
     begin
-      @analytics_data = recruiter_additional_analytics(@recruiter)
-      @industry_data = industry_distribution_data
+      @analytics_data = AnalyticsService.recruiter_additional_analytics(@recruiter)
+      @industry_data = AnalyticsService.industry_distribution_data
     rescue => e
       Rails.logger.error "Error in recruiter_analytics: #{e.message}"
       @analytics_data = {
@@ -74,13 +73,16 @@ class AnalyticsController < ApplicationController
   def dashboard
     # Load enhanced analytics data for career officer dashboard
     begin
-      # No longer loading @top_skills and @education_timeline
-      @student_statuses = student_status_distribution
-      @completion_trends = profile_completion_distribution
+      @student_statuses = AnalyticsService.student_status_distribution
+      @completion_trends = AnalyticsService.profile_completion_distribution
+      @top_skills = AnalyticsService.top_skills_data
+      @education_timeline = AnalyticsService.education_timeline_data
     rescue => e
       Rails.logger.error "Error in dashboard: #{e.message}"
       @student_statuses = { labels: [ "No Data" ], values: [ 0 ] }
       @completion_trends = { students: [ 0, 0, 0, 0 ], recruiters: [ 0, 0, 0, 0 ] }
+      @top_skills = { labels: [], values: [] }
+      @education_timeline = { labels: [], values: [] }
       flash.now[:alert] = "There was an issue loading some analytics data."
     end
   end
@@ -89,15 +91,15 @@ class AnalyticsController < ApplicationController
     begin
       case params[:chart_type]
       when "skills"
-        render json: top_skills_data
+        render json: AnalyticsService.top_skills_data
       when "education"
-        render json: education_timeline_data
+        render json: AnalyticsService.education_timeline_data
       when "industry"
-        render json: industry_distribution_data
+        render json: AnalyticsService.industry_distribution_data
       when "status"
-        render json: student_status_distribution
+        render json: AnalyticsService.student_status_distribution
       when "completion"
-        render json: profile_completion_distribution
+        render json: AnalyticsService.profile_completion_distribution
       else
         render json: { error: "Unknown chart type" }, status: 400
       end
@@ -155,7 +157,7 @@ class AnalyticsController < ApplicationController
 
   def student_analytics_data(student)
     {
-      profile_completion: calculate_profile_completion(student),
+      profile_completion: AnalyticsService.calculate_profile_completion(student),
       skills: student.student_profile&.skills&.count || 0,
       educations: student.student_profile&.educations&.count || 0
     }
@@ -163,7 +165,7 @@ class AnalyticsController < ApplicationController
 
   def recruiter_analytics_data(recruiter)
     {
-      profile_completion: calculate_profile_completion(recruiter)
+      profile_completion: AnalyticsService.calculate_profile_completion(recruiter)
     }
   end
 
@@ -172,49 +174,6 @@ class AnalyticsController < ApplicationController
       total_students: User.where(user_type: "student").count,
       total_recruiters: User.where(user_type: "recruiter").count
     }
-  end
-
-  def calculate_profile_completion(user)
-    case user.user_type
-    when "student"
-      profile = user.student_profile
-      return 0 unless profile
-
-      # Calculate completion percentage based on filled fields
-      fields = [
-        profile.date_of_birth.present?,
-        profile.email_personal.present?,
-        profile.phone_number.present?,
-        profile.address.present?,
-        profile.linkedin_url.present?,
-        user.profile_picture.attached?,
-        profile.educations.any?,
-        profile.projects.any?,
-        profile.skills.any?
-      ]
-
-      completed = fields.count(true)
-      (completed.to_f / fields.size * 100).round
-    when "recruiter"
-      profile = user.recruiter_profile
-      return 0 unless profile
-
-      # Calculate completion percentage based on filled fields
-      fields = [
-        profile.company_name.present?,
-        profile.industry.present?,
-        profile.about_company.present?,
-        profile.office_location.present?,
-        profile.company_email.present?,
-        profile.company_website.present?,
-        profile.employee_count.present?
-      ]
-
-      completed = fields.count(true)
-      (completed.to_f / fields.size * 100).round
-    else
-      0
-    end
   end
 
   # Authorization methods
