@@ -28,6 +28,12 @@ services:
       - postgres
     volumes:
       - rails-storage:/rails/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/up || exit 1"]
+      interval: 10s   # check every 10 seconds
+      timeout: 5s     # fail if no response within 5 seconds
+      retries: 3      # mark unhealthy after 3 consecutive failures
+      start_period: 30s  # give Rails time to boot before checks begin
 
   redis:
     image: redis:7.2

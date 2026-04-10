@@ -35,7 +35,7 @@ jobs:
           source: "docker-compose.yaml,nginx/"
           target: "/home/jobfair/"
 
-      - name: Deploy to Remote Server via SSH
+      - name: Deploy to Remote Server via SSH (Blue-Green)
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -46,17 +46,70 @@ jobs:
           script: |
             cd /home/jobfair/
 
-            # Pull the new Rails image
+            # 1. Pull the new image
             docker pull wahab457/virtual_job_fair_platform:latest
 
-            # Ensure Nginx and supporting services are running (first deploy or after a full restart).
-            # --no-recreate means already-running containers (nginx, postgres, redis) are left untouched.
-            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-recreate
+            # 2. Ensure Nginx, Postgres, Redis are running — leave them untouched
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-recreate nginx postgres redis
 
-            # Restart only the Rails container with the new image.
-            # Nginx stays up the entire time — it serves maintenance.html during the brief
-            # window while Puma is restarting, then resumes proxying automatically.
-            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-deps --force-recreate rails-app
+            # 3. Start the NEW Rails container alongside the old one under a temporary name.
+            #    It joins the same Docker network so Nginx can reach it.
+            docker run -d \
+              --name rails-app-green \
+              --network virtual_job_fair_platform_production_default \
+              -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} \
+              -e DB_HOST=postgres \
+              -v rails-storage:/rails/storage \
+              wahab457/virtual_job_fair_platform:latest
 
-            # Remove the old dangling image to keep disk clean
+            # 4. Wait for the new container to pass its health check (/up endpoint).
+            #    Retries every 5 seconds for up to 2 minutes.
+            echo "Waiting for new container to be healthy..."
+            for i in $(seq 1 24); do
+              if docker exec rails-app-green curl -sf http://localhost:3000/up > /dev/null 2>&1; then
+                echo "New container is healthy after $((i * 5)) seconds."
+                break
+              fi
+              if [ $i -eq 24 ]; then
+                echo "New container failed health check. Aborting deploy."
+                docker stop rails-app-green && docker rm rails-app-green
+                exit 1
+              fi
+              echo "Not ready yet, retrying in 5 seconds... ($i/24)"
+              sleep 5
+            done
+
+            # 5. Switch Nginx upstream to the new container (zero dropped requests).
+            #    nginx -s reload is graceful — it finishes in-flight requests on old
+            #    workers before handing off to new ones.
+            docker exec virtual_job_fair_platform_production-nginx-1 \
+              sh -c 'sed -i "s/server rails-app:3000/server rails-app-green:3000/" /etc/nginx/conf.d/default.conf && nginx -s reload'
+
+            # 6. Stop and remove the OLD Rails container — Nginx is already off it
+            docker compose stop rails-app
+            docker compose rm -f rails-app
+
+            # 7. Bring a fresh rails-app container up under Compose management
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-deps rails-app
+
+            # 8. Wait for the Compose-managed container to be healthy
+            echo "Waiting for rails-app to be healthy..."
+            for i in $(seq 1 24); do
+              if docker exec virtual_job_fair_platform_production-rails-app-1 curl -sf http://localhost:3000/up > /dev/null 2>&1; then
+                echo "rails-app is healthy."
+                break
+              fi
+              if [ $i -eq 24 ]; then
+                echo "rails-app failed health check after green swap. Investigate manually."
+                exit 1
+              fi
+              sleep 5
+            done
+
+            # 9. Switch Nginx back to the standard rails-app service name and reload
+            docker exec virtual_job_fair_platform_production-nginx-1 \
+              sh -c 'sed -i "s/server rails-app-green:3000/server rails-app:3000/" /etc/nginx/conf.d/default.conf && nginx -s reload'
+
+            # 10. Remove the green container and clean up old images
+            docker stop rails-app-green && docker rm rails-app-green
             docker image prune -f
