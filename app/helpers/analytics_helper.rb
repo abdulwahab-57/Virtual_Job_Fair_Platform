@@ -4,6 +4,12 @@ module AnalyticsHelper
     number_to_percentage(percentage, precision: 1)
   end
 
+  # View-layer delegate so templates can call calculate_profile_completion(user)
+  # directly without knowing about the service layer.
+  def calculate_profile_completion(user)
+    AnalyticsService.calculate_profile_completion(user)
+  end
+
   # Create a simple progress bar
   def progress_bar(percentage, options = {})
     color = options[:color] || "blue"
