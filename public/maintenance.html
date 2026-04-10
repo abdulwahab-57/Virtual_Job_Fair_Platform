@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance — Virtual Job Fair Platform</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1569E0 0%, #0F6DB5 50%, #0B3A66 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 1.5rem;
+      padding: 3rem 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      height: 52px;
+      width: auto;
+      margin-bottom: 2rem;
+    }
+
+    .icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon svg {
+      width: 36px;
+      height: 36px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 0.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 99px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fbbf24;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      margin: 1.75rem 0;
+    }
+
+    .footer-note {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 2rem;
+    }
+
+    .reload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 0.65rem 1.5rem;
+      background: #fff;
+      color: #0F6DB5;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 99px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .reload-btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 5v5l3 3"/>
+      </svg>
+    </div>
+
+    <div class="badge">
+      <span class="dot"></span>
+      Scheduled Maintenance
+    </div>
+
+    <h1>We'll be right back</h1>
+
+    <p>
+      The Virtual Job Fair Platform is currently undergoing a scheduled update
+      to bring you new features and improvements.
+    </p>
+
+    <hr class="divider">
+
+    <p>
+      This usually takes only a few minutes. Thank you for your patience —
+      we appreciate your understanding as we continue to improve the platform.
+    </p>
+
+    <button class="reload-btn" onclick="location.reload()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+      Try Again
+    </button>
+  </div>
+
+  <p class="footer-note">FAST NUCES &mdash; Virtual Job Fair Platform</p>
+</body>
+</html>
