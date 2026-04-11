@@ -54,6 +54,9 @@ jobs:
             # 1. Pull the new image
             docker pull wahab457/virtual_job_fair_platform:latest
 
+            # 1b. Reload Nginx config if it changed (graceful — no downtime)
+            docker exec virtual_job_fair_platform_production-nginx-1 nginx -s reload 2>/dev/null || true
+
             # 2. Ensure Nginx, Postgres, Redis are running — leave them untouched
             RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-recreate nginx postgres redis
 
