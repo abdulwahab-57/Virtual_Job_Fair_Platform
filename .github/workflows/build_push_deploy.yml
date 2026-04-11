@@ -54,11 +54,14 @@ jobs:
             # 1. Pull the new image
             docker pull wahab457/virtual_job_fair_platform:latest
 
-            # 1b. Reload Nginx config if it changed (graceful — no downtime)
-            docker exec virtual_job_fair_platform_production-nginx-1 nginx -s reload 2>/dev/null || true
+            # 1b. Recreate Nginx to pick up any config changes from SCP.
+            #     SCP replaces the file on disk (new inode); Docker bind mounts track
+            #     the old inode, so nginx -s reload alone never sees the new file.
+            #     Recreating the container re-establishes the bind mount (~2s downtime).
+            docker compose up -d --no-deps --force-recreate nginx
 
-            # 2. Ensure Nginx, Postgres, Redis are running — leave them untouched
-            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-recreate nginx postgres redis
+            # 2. Ensure Postgres and Redis are running — leave them untouched
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-recreate postgres redis
 
             # 3. Start the NEW Rails container alongside the old one under a temporary name.
             #    It joins the same Docker network so Nginx can reach it.
