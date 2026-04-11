@@ -61,16 +61,15 @@ jobs:
             #     (Ubuntu has diff; the Alpine nginx image may not) using process
             #     substitution — recreate only when they differ, avoiding unnecessary
             #     ~2s downtime on every deploy.
-            if ! diff \
-                <(docker exec virtual_job_fair_platform_production-nginx-1 \
-                    cat /etc/nginx/conf.d/default.conf) \
-                /home/jobfair/nginx/nginx.conf \
-                > /dev/null 2>&1; then
+            docker exec virtual_job_fair_platform_production-nginx-1 \
+              cat /etc/nginx/conf.d/default.conf > /tmp/nginx_live.conf
+            if ! diff /tmp/nginx_live.conf /home/jobfair/nginx/nginx.conf > /dev/null 2>&1; then
               echo "Nginx config changed — recreating container."
               docker compose up -d --no-deps --force-recreate nginx
             else
               echo "Nginx config unchanged — skipping recreate."
             fi
+            rm -f /tmp/nginx_live.conf
 
             # 2. Ensure Postgres and Redis are running — leave them untouched
             RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} docker compose up -d --no-recreate postgres redis
