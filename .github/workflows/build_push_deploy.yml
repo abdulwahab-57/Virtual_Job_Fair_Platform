@@ -56,12 +56,16 @@ jobs:
 
             # 1b. Recreate Nginx only if the config changed.
             #     SCP replaces nginx.conf on disk (new inode); Docker bind mounts track
-            #     the old inode, so nginx -s reload won't see the update. We compare
-            #     what's live inside the container against the newly SCP'd host file —
-            #     recreate only when they differ, avoiding unnecessary ~2s downtime.
-            if ! docker exec virtual_job_fair_platform_production-nginx-1 \
-                 diff /etc/nginx/conf.d/default.conf /home/jobfair/nginx/nginx.conf \
-                 > /dev/null 2>&1; then
+            #     the old inode, so nginx -s reload won't see the update. We diff the
+            #     live container config against the newly SCP'd host file on the host
+            #     (Ubuntu has diff; the Alpine nginx image may not) using process
+            #     substitution — recreate only when they differ, avoiding unnecessary
+            #     ~2s downtime on every deploy.
+            if ! diff \
+                <(docker exec virtual_job_fair_platform_production-nginx-1 \
+                    cat /etc/nginx/conf.d/default.conf) \
+                /home/jobfair/nginx/nginx.conf \
+                > /dev/null 2>&1; then
               echo "Nginx config changed — recreating container."
               docker compose up -d --no-deps --force-recreate nginx
             else
