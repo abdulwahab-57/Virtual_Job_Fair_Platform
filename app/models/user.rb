@@ -13,6 +13,20 @@ class User < ApplicationRecord
   # Active storage association
   has_one_attached :profile_picture
 
+  ALLOWED_PROFILE_PICTURE_TYPES = %w[image/jpeg image/png image/gif image/webp].freeze
+
+  validate :acceptable_profile_picture
+
+  def acceptable_profile_picture
+    return unless profile_picture.attached? && profile_picture.changed?
+
+    unless ALLOWED_PROFILE_PICTURE_TYPES.include?(profile_picture.content_type)
+      type_label = profile_picture.content_type.split("/").last.upcase
+      errors.add(:profile_picture,
+        "must be a JPEG, PNG, GIF, or WebP image (you uploaded a #{type_label} file)")
+    end
+  end
+
   # Nested attributes
   accepts_nested_attributes_for :student_profile, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :recruiter_profile, allow_destroy: true, reject_if: :all_blank

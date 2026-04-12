@@ -5,9 +5,47 @@
     <% end %>
 
     <!-- Profile Picture -->
-    <div class="col-start-1 row-start-1 space-y-4">
+    <div class="col-start-1 row-start-1 space-y-4"
+         data-controller="profile-picture">
+
       <%= f.label :profile_picture, "Upload Profile Picture", class: "block font-medium" %>
-      <%= f.file_field :profile_picture, class: "w-full text-gray-700" %>
+
+      <%# Current picture preview %>
+      <% if @user.profile_picture.attached? && @user.profile_picture.variable? %>
+        <%= image_tag @user.profile_picture.variant(resize_to_fill: [80, 80]).processed,
+                      class: "rounded-full w-20 h-20 object-cover border border-gray-200 shadow-sm" %>
+      <% end %>
+
+      <%= f.file_field :profile_picture,
+                       class: "w-full text-gray-700",
+                       accept: "image/jpeg,image/png,image/gif,image/webp",
+                       data: { profile_picture_target: "input",
+                               action: "change->profile-picture#validate" } %>
+
+      <%# Accepted formats hint (hidden when error is shown) %>
+      <p class="text-xs text-gray-500"
+         data-profile-picture-target="hint">
+        Accepted formats: JPEG, PNG, GIF, WebP
+      </p>
+
+      <%# Client-side error — shown instantly when a bad file is chosen %>
+      <div class="hidden mt-1 flex items-start gap-2 p-3 bg-red-50 border border-red-300 rounded-md"
+           data-profile-picture-target="error">
+        <svg class="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.75-11.25a.75.75 0 011.5 0v4.5a.75.75 0 01-1.5 0v-4.5zm.75 7.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd"/>
+        </svg>
+        <span class="text-sm text-red-700"></span>
+      </div>
+
+      <%# Server-side error — shown after a failed form submission %>
+      <% if @user.errors[:profile_picture].any? %>
+        <div class="mt-1 flex items-start gap-2 p-3 bg-red-50 border border-red-300 rounded-md">
+          <svg class="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.75-11.25a.75.75 0 011.5 0v4.5a.75.75 0 01-1.5 0v-4.5zm.75 7.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd"/>
+          </svg>
+          <span class="text-sm text-red-700"><%= @user.errors[:profile_picture].first %></span>
+        </div>
+      <% end %>
     </div>
 
     <!-- Basic Info -->
