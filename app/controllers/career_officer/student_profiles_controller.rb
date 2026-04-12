@@ -5,6 +5,7 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
 
   before_action :set_users, only: [ :index ]
   before_action :set_user, only: [ :show, :edit, :update, :update_status ]
+  before_action :purge_missing_profile_picture, only: [ :show, :edit ]
 
   def index
     @header_text= "Student Profiles"
@@ -101,6 +102,13 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   end
 
   private
+
+  def purge_missing_profile_picture
+    return unless @user.profile_picture.attached?
+    return if ActiveStorage::Blob.service.exist?(@user.profile_picture.blob.key)
+
+    @user.profile_picture.purge
+  end
 
   def set_user
     @user = User.includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).find(params[:id])

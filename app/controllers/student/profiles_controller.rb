@@ -4,6 +4,10 @@ class Student::ProfilesController < Student::BaseController
   # Back button after a successful save shows the old cached form (which has
   # no IDs for newly created records), and resubmitting it creates duplicates.
   before_action :no_cache, only: [ :edit ]
+  # Purge the profile picture DB record if the backing file is missing from
+  # storage (e.g. manually deleted, or local dev without production files).
+  # Keeps DB and storage in sync automatically without crashing the view.
+  before_action :purge_missing_profile_picture, only: [ :show, :edit ]
   def show
     @header_text= "My Profile"
   end
@@ -60,6 +64,15 @@ class Student::ProfilesController < Student::BaseController
 
   def no_cache
     response.headers["Cache-Control"] = "no-store"
+  end
+
+  def purge_missing_profile_picture
+    return unless @user.profile_picture.attached?
+    return if ActiveStorage::Blob.service.exist?(@user.profile_picture.blob.key)
+
+    # File is gone from storage but DB record remains — purge the stale record
+    # so the view sees `attached? == false` and shows the placeholder instead.
+    @user.profile_picture.purge
   end
 
   def set_user
