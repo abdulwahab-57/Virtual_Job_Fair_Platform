@@ -1,4 +1,6 @@
 class Student::ProfilesController < Student::BaseController
+  include PurgesMissingProfilePicture
+
   before_action :set_user, only: [ :show, :edit, :update ]
   # Tell the browser never to cache the edit page. Without this, hitting the
   # Back button after a successful save shows the old cached form (which has
@@ -64,15 +66,6 @@ class Student::ProfilesController < Student::BaseController
 
   def no_cache
     response.headers["Cache-Control"] = "no-store"
-  end
-
-  def purge_missing_profile_picture
-    return unless @user.profile_picture.attached?
-    return if ActiveStorage::Blob.service.exist?(@user.profile_picture.blob.key)
-
-    # File is gone from storage but DB record remains — purge the stale record
-    # so the view sees `attached? == false` and shows the placeholder instead.
-    @user.profile_picture.purge
   end
 
   def set_user
