@@ -6,7 +6,7 @@
     </div>
     <div class="grid grid-cols-[20%_1fr] grid-rows-[auto] gap-x-4 gap-y-6">
       <div class="col-start-1 row-start-1 justify-self-center">
-        <% if user.profile_picture.attached? %>
+        <% if user.profile_picture.attached? && user.profile_picture.variable? %>
           <% resized = user.profile_picture.variant(resize_to_fill: [120, 120]).processed %>
           <% image_data = resized.download %>
           <% base64_image = Base64.strict_encode64(image_data) %>
