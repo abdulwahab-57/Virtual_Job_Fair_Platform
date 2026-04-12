@@ -18,9 +18,19 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   end
 
   def edit
-    @header_text= "Edit Student Profile"
+    @header_text = "Edit Student Profile"
+    @form_action = career_officer_student_profile_path(@user.id)
 
-    @form_action=career_officer_student_profile_path(@user.id)
+    # Same pre-building as Student::ProfilesController#edit — the shared view
+    # relies on these slots existing so it never calls .build itself.
+    sp = @user.student_profile
+    sp.location_preferences.build while sp.location_preferences.size < 3
+    sp.educations.build            while sp.educations.size < 2
+    sp.projects.build              while sp.projects.size < 5
+    sp.activities_honors.build     while sp.activities_honors.size < 3
+    sp.skills.build                while sp.skills.size < 2
+    sp.interests.build             if sp.interests.empty?
+
     render "student/profiles/edit"
   end
 
@@ -93,7 +103,7 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   private
 
   def set_user
-    @user = User.find(params[:id])
+    @user = User.includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).find(params[:id])
   end
 
   def user_params
