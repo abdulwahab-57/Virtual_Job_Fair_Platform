@@ -13,7 +13,7 @@ class User < ApplicationRecord
   # Active storage association
   has_one_attached :profile_picture
 
-  ALLOWED_PROFILE_PICTURE_TYPES = %w[image/jpeg image/png image/gif image/webp].freeze
+  ALLOWED_PROFILE_PICTURE_TYPES = %w[image/jpeg image/png].freeze
 
   validate :acceptable_profile_picture
 
@@ -23,7 +23,7 @@ class User < ApplicationRecord
     unless ALLOWED_PROFILE_PICTURE_TYPES.include?(profile_picture.content_type)
       type_label = profile_picture.content_type.split("/").last.upcase
       errors.add(:profile_picture,
-        "must be a JPEG, PNG, GIF, or WebP image (you uploaded a #{type_label} file)")
+        "must be a JPEG or PNG image (you uploaded a #{type_label} file)")
     end
   end
 

@@ -6,8 +6,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["input", "error", "hint"]
 
-  static ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"]
-  static ALLOWED_LABEL = "JPEG, PNG, GIF or WebP"
+  static ALLOWED_TYPES = ["image/jpeg", "image/png"]
+  static ALLOWED_LABEL = "JPEG or PNG"
 
   validate(event) {
     const file = event.target.files[0]

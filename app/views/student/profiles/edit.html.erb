@@ -18,14 +18,14 @@
 
       <%= f.file_field :profile_picture,
                        class: "w-full text-gray-700",
-                       accept: "image/jpeg,image/png,image/gif,image/webp",
+                       accept: "image/jpeg,image/png",
                        data: { profile_picture_target: "input",
                                action: "change->profile-picture#validate" } %>
 
       <%# Accepted formats hint (hidden when error is shown) %>
       <p class="text-xs text-gray-500"
          data-profile-picture-target="hint">
-        Accepted formats: JPEG, PNG, GIF, WebP
+        Accepted formats: JPEG, PNG
       </p>
 
       <%# Client-side error — shown instantly when a bad file is chosen %>
