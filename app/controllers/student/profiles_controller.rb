@@ -1,13 +1,30 @@
 class Student::ProfilesController < Student::BaseController
   before_action :set_user, only: [ :show, :edit, :update ]
+  # Tell the browser never to cache the edit page. Without this, hitting the
+  # Back button after a successful save shows the old cached form (which has
+  # no IDs for newly created records), and resubmitting it creates duplicates.
+  before_action :no_cache, only: [ :edit ]
   def show
     @header_text= "My Profile"
   end
 
   def edit
-    @header_text= "Edit My Profile"
+    @header_text = "Edit My Profile"
+    @form_action = student_profile_path(@user.id)
 
-    @form_action=student_profile_path(@user.id)
+    # Pre-build empty slots for every fixed-length nested section so the view
+    # never calls .build itself.  Calling .build inside the view mutates the
+    # in-memory association; when the same object is then re-rendered (e.g.
+    # after a validation failure) or processed by a later fields_for block,
+    # the ghost records get submitted without an id and Rails creates duplicate
+    # rows instead of updating the existing ones.
+    sp = @user.student_profile
+    sp.location_preferences.build while sp.location_preferences.size < 3
+    sp.educations.build            while sp.educations.size < 2
+    sp.projects.build              while sp.projects.size < 5
+    sp.activities_honors.build     while sp.activities_honors.size < 3
+    sp.skills.build                while sp.skills.size < 2
+    sp.interests.build             if sp.interests.empty?
   end
 
   def update
@@ -40,6 +57,11 @@ class Student::ProfilesController < Student::BaseController
   end
 
   private
+
+  def no_cache
+    response.headers["Cache-Control"] = "no-store"
+  end
+
   def set_user
     @user = User.select(:id, :full_name, :email).includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).find(current_user.id)
   end
