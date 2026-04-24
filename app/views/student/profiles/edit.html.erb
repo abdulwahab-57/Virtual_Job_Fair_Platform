@@ -12,7 +12,7 @@
 
       <%# Current picture preview %>
       <% if @user.profile_picture.attached? && @user.profile_picture.variable? %>
-        <%= image_tag @user.profile_picture.variant(resize_to_fill: [80, 80]).processed,
+        <%= image_tag @user.profile_picture.variant(resize_to_fill: [80, 80], convert: "jpg").processed,
                       class: "rounded-full w-20 h-20 object-cover border border-gray-200 shadow-sm" %>
       <% end %>
 
