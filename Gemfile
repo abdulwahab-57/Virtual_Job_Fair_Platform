@@ -79,3 +79,6 @@ gem "httparty", "~> 0.23.1"
 gem "csv", "~> 3.3", ">= 3.3.4"
 
 gem "jwt", "~> 1.5", ">= 1.5.4"
+
+gem "ransack", "~> 4.2"
+gem "pagy", "~> 9.0"
