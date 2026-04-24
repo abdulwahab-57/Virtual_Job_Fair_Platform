@@ -162,6 +162,14 @@ class User < ApplicationRecord
     token
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[full_name email]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[student_profile]
+  end
+
   private
 
   def password_match

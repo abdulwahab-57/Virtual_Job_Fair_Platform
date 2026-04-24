@@ -22,4 +22,12 @@ class StudentProfile < ApplicationRecord
              format: { with: /\A\+92\d{10}\z/ }
    validates :linkedin_url, allow_blank: true,
              format: { with: /\Ahttps?:\/\/(www\.)?linkedin\.com\/.*\z/ }
+
+   def self.ransackable_attributes(auth_object = nil)
+     %w[status]
+   end
+
+   def self.ransackable_associations(auth_object = nil)
+     %w[educations]
+   end
 end
