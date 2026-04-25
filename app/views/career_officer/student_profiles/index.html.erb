@@ -1,208 +1,243 @@
-<div class="max-w-[1121px] mx-auto min-h-screen px-4 sm:px-6" data-controller="table-actions">
-  <div>
-    <!-- Selection Summary -->
-    <div data-table-actions-target="selectionSummary" class="hidden flex flex-wrap items-center gap-3 bg-gray-100 rounded-lg p-2">
-      <div class="bg-[#1499DC] text-white px-2 py-1 rounded text-sm font-medium">
+<div class="flex flex-col" style="min-height: calc(100vh - 4rem);" data-controller="table-actions">
+
+  <%# ── Page header + bulk action bar ──────────────────────────────── %>
+  <div class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between gap-4">
+    <div>
+      <h1 class="text-lg font-bold text-slate-900">Student Profiles</h1>
+      <p class="text-sm text-slate-500 mt-0.5">Manage and review all student submissions</p>
+    </div>
+
+    <div data-table-actions-target="selectionSummary"
+         class="hidden flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+      <span class="bg-[#1499DC] text-white text-xs font-semibold px-2 py-1 rounded">
         <span data-table-actions-target="selectedCount">0</span> selected
-      </div>
-
-      <select data-table-actions-target="actionsSelect" data-action="change->table-actions#performAction" class="flex items-center bg-white border border-gray-300 rounded-md px-3 py-1 text-sm hover:bg-gray-50">
-        <option value="" disabled selected>Actions</option>
-        <option value="download_profiles">Download Profiles</option>
+      </span>
+      <select data-table-actions-target="actionsSelect"
+              data-action="change->table-actions#performAction"
+              class="border border-slate-300 rounded-md px-3 py-1 text-sm text-slate-700 bg-white focus:ring-[#1499DC] focus:border-[#1499DC]">
+        <option value="" disabled selected>Actions…</option>
+        <option value="download_profiles">Download PDFs</option>
       </select>
-
-      <button data-table-actions-target="clearSelection" data-action="click->table-actions#clearSelectedRows" class="text-gray-500 hover:text-gray-700">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+      <button data-action="click->table-actions#clearSelectedRows"
+              class="text-slate-400 hover:text-slate-600 focus:outline-none"
+              aria-label="Clear selection">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
         </svg>
       </button>
     </div>
+  </div>
 
-    <!-- Table section -->
-    <div class="p-6 bg-white rounded-md shadow-sm">
+  <%# ── Body: sidebar + table ───────────────────────────────────────── %>
+  <div class="flex flex-1">
 
-      <!-- Ransack filter form -->
-      <%= search_form_for @q, url: career_officer_student_profiles_path, method: :get,
-            html: { class: "flex flex-wrap items-center justify-between gap-4 border border-slate-200 bg-gradient-to-r from-emerald-50 via-white to-slate-50 px-4 py-3 mb-4 rounded-xl shadow-sm" } do |f| %>
+    <%# Left filter sidebar %>
+    <%= render Table::FilterSidebarComponent.new do |c| %>
+      <% c.with_form_content do %>
+        <%= search_form_for @q, url: career_officer_student_profiles_path, method: :get do |f| %>
 
-        <%# Text search — matches full_name OR email %>
-        <div class="flex items-center gap-2 rounded-full border border-emerald-100 bg-white/90 px-3 py-1 shadow-sm">
-          <%= f.search_field :full_name_or_email_cont,
-                placeholder: "Search name or email...",
-                class: "text-sm text-slate-700 focus:outline-none bg-transparent" %>
-        </div>
+          <%# Search input %>
+          <div class="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 mb-5 focus-within:ring-2 focus-within:ring-emerald-300 focus-within:border-emerald-400">
+            <svg class="w-3.5 h-3.5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <%= f.search_field :full_name_or_email_cont,
+                  placeholder: "Search name or email…",
+                  class: "flex-1 text-sm text-slate-700 bg-transparent focus:outline-none min-w-0" %>
+          </div>
 
-        <div class="flex flex-wrap items-center gap-3 text-sm text-slate-700">
-
-          <%# Status checkboxes %>
-          <div class="flex items-center gap-3 rounded-full border border-emerald-100 bg-white/90 px-3 py-1 shadow-sm">
-            <% [["Reviewed", "text-emerald-600 focus:ring-emerald-500"], ["Not Reviewed", "text-rose-500 focus:ring-rose-400"]].each_with_index do |(status, css), i| %>
-              <% if i > 0 %><span class="h-4 w-px bg-slate-200"></span><% end %>
-              <label class="flex items-center gap-2">
+          <%# Status filter %>
+          <div class="mb-5">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Status</p>
+            <% ["Reviewed", "Not Reviewed"].each do |status| %>
+              <label class="flex items-center gap-2 text-sm text-slate-700 mb-2 cursor-pointer">
                 <%= f.check_box :student_profile_status_in,
                       { multiple: true,
                         checked: Array(params.dig(:q, :student_profile_status_in)).include?(status),
-                        class: "h-4 w-4 border-slate-300 rounded #{css}" },
+                        class: "h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" },
                       status, nil %>
-                <span class="font-medium"><%= status %></span>
+                <%= status %>
               </label>
             <% end %>
           </div>
-          <span class="text-xs text-slate-500">Leave unchecked to show all</span>
 
-          <%# Graduation Year dropdown %>
-          <details class="group relative">
-            <summary class="cursor-pointer list-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50 focus:outline-none">
-              Graduation Year
-            </summary>
-            <div class="absolute left-0 z-20 mt-2 w-56 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
-              <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-slate-700">
-                <% @graduation_year_options.each do |year| %>
-                  <label class="flex items-center gap-2">
-                    <%= f.check_box :student_profile_educations_graduation_year_in,
-                          { multiple: true,
-                            checked: Array(params.dig(:q, :student_profile_educations_graduation_year_in)).include?(year.to_s),
-                            class: "h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded" },
-                          year, nil %>
-                    <span><%= year %></span>
-                  </label>
-                <% end %>
-              </div>
-            </div>
-          </details>
+          <hr class="border-slate-100 mb-5">
 
-          <%# Degree dropdown %>
-          <details class="group relative">
-            <summary class="cursor-pointer list-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50 focus:outline-none">
-              Degree
-            </summary>
-            <div class="absolute left-0 z-20 mt-2 w-72 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
-              <div class="max-h-56 overflow-y-auto space-y-2 text-sm text-slate-700">
-                <% @degree_options.each do |degree| %>
-                  <label class="flex items-start gap-2">
-                    <%= f.check_box :student_profile_educations_degree_in,
-                          { multiple: true,
-                            checked: Array(params.dig(:q, :student_profile_educations_degree_in)).include?(degree),
-                            class: "mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded" },
-                          degree, nil %>
-                    <span><%= degree %></span>
-                  </label>
-                <% end %>
-              </div>
-            </div>
-          </details>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <%= f.submit "Apply Filters",
-                class: "cursor-pointer rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700" %>
-          <%= link_to "Clear", career_officer_student_profiles_path,
-                class: "rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
-        </div>
-      <% end %>
-
-      <div class="bg-white rounded-lg shadow-sm">
-        <!-- Table -->
-        <div class="overflow-x-auto">
-          <table class="min-w-[900px] w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8">
-                  <input type="checkbox" class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
-                    data-table-actions-target="checkboxAll"
-                    data-action="change->table-actions#toggleAll">
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <%= sort_link @q, :full_name, "Student Name" %>
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <%= sort_link @q, :email, "Email" %>
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <%= sort_link @q, :student_profile_status, "Status" %>
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <%= sort_link @q, :updated_at, "Last Updated" %>
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-56">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200" data-table-actions-target="tableBody">
-              <% @users.each do |user| %>
-                <% profile = user.student_profile %>
-                <% primary_education = profile&.educations&.find { |e| e.degree.to_s.match?(/\ABS \(|\ABachelor of Business Administration/) } %>
-                <% primary_degree = primary_education&.degree %>
-                <% graduation_year = primary_education&.graduation_year %>
-                <tr class="hover:bg-gray-50"
-                  data-status="<%= profile&.status.to_s.downcase.gsub(' ', '-') %>"
-                  data-user-id="<%= user.id %>"
-                  data-degree="<%= primary_degree %>"
-                  data-grad-year="<%= graduation_year %>">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <input type="checkbox" class="h-4 w-4 text-[#1499DC] focus:ring-[#1499DC] border-gray-300 rounded"
-                      data-table-actions-target="checkboxRow"
-                      data-action="change->table-actions#checkRowSelection">
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= user.full_name %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= user.email %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span data-action="click->table-actions#openStatusModal"
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                      <%= profile&.status == 'Not Reviewed' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800' %> cursor-pointer">
-                      <%= profile&.status %>
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= profile&.updated_at&.strftime("%b %d, %Y") %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center gap-2 w-56">
-                    <%= link_to "View", career_officer_student_profile_path(user.id), class: "text-white bg-[#1499DC] border hover:border-[#1499DC] px-2 py-1 rounded text-xs" %>
-                    <%= link_to "Edit", edit_career_officer_student_profile_path(user.id), class: "text-white bg-[#272F33] border hover:border-[#272F33] px-2 py-1 rounded text-xs" %>
-                    <%= link_to "PDF", download_profiles_career_officer_student_profiles_path(format: :pdf, user_ids: [ user.id ]), class: "text-white bg-[#0f7d1a] border hover:border-[#0f7d1a] px-2 py-1 rounded text-xs" %>
-                  </td>
-                </tr>
+          <%# Graduation year filter %>
+          <div class="mb-5">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Graduation Year</p>
+            <div class="max-h-32 overflow-y-auto space-y-2">
+              <% @graduation_year_options.each do |year| %>
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <%= f.check_box :student_profile_educations_graduation_year_in,
+                        { multiple: true,
+                          checked: Array(params.dig(:q, :student_profile_educations_graduation_year_in)).include?(year.to_s),
+                          class: "h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" },
+                        year, nil %>
+                  <%= year %>
+                </label>
               <% end %>
-            </tbody>
-          </table>
-        </div>
+            </div>
+          </div>
 
-        <!-- Pagy pagination -->
-        <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-4 py-3 text-sm text-slate-600">
-          <span>Showing <%= @pagy.from %>–<%= @pagy.to %> of <%= @pagy.count %></span>
-          <%== pagy_nav(@pagy) %>
-        </div>
+          <hr class="border-slate-100 mb-5">
+
+          <%# Degree filter %>
+          <div class="mb-5">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Degree</p>
+            <div class="max-h-32 overflow-y-auto space-y-2">
+              <% @degree_options.each do |degree| %>
+                <label class="flex items-start gap-2 text-sm text-slate-700 cursor-pointer">
+                  <%= f.check_box :student_profile_educations_degree_in,
+                        { multiple: true,
+                          checked: Array(params.dig(:q, :student_profile_educations_degree_in)).include?(degree),
+                          class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" },
+                        degree, nil %>
+                  <span class="leading-snug"><%= degree %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+
+          <%# Submit / clear %>
+          <div class="flex flex-col gap-2 mt-2">
+            <%= f.submit "Apply Filters",
+                  class: "w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-2 rounded-lg transition-colors" %>
+            <%= link_to "Clear All", career_officer_student_profiles_path,
+                  class: "w-full text-center text-sm text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 py-2 rounded-lg transition-colors" %>
+          </div>
+
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%# ── Main table area ─────────────────────────────────────────────── %>
+    <div class="flex-1 p-5 bg-slate-50 overflow-x-auto">
+      <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+
+        <table class="w-full min-w-[700px]">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th class="px-4 py-3 w-10">
+                <input type="checkbox"
+                       class="h-4 w-4 rounded border-slate-300 text-[#1499DC] focus:ring-[#1499DC]"
+                       data-table-actions-target="checkboxAll"
+                       data-action="change->table-actions#toggleAll">
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <%= sort_link @q, :full_name, "Student" %>
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <%= sort_link @q, :email, "Email" %>
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <%= sort_link @q, :student_profile_status, "Status" %>
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <%= sort_link @q, :updated_at, "Last Updated" %>
+              </th>
+              <th class="px-4 py-3 w-12"></th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-slate-100" data-table-actions-target="tableBody">
+            <% @users.each do |user| %>
+              <% profile    = user.student_profile %>
+              <% primary_ed = profile&.educations&.find { |e| e.degree.to_s.match?(/\ABS \(|\ABachelor of Business Administration/) } %>
+              <% status     = profile&.status || "Not Reviewed" %>
+              <tr class="hover:bg-slate-50 transition-colors"
+                  data-user-id="<%= user.id %>"
+                  data-status="<%= status.downcase.gsub(/\s+/, "-") %>">
+
+                <%# Checkbox %>
+                <td class="px-4 py-3">
+                  <input type="checkbox"
+                         class="h-4 w-4 rounded border-slate-300 text-[#1499DC] focus:ring-[#1499DC]"
+                         data-table-actions-target="checkboxRow"
+                         data-action="change->table-actions#checkRowSelection">
+                </td>
+
+                <%# Avatar + name + degree/year %>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold <%= student_initials_color(user.id) %>">
+                      <%= student_initials(user.full_name) %>
+                    </div>
+                    <div class="min-w-0">
+                      <div class="text-sm font-semibold text-slate-900 truncate"><%= user.full_name %></div>
+                      <div class="text-xs text-slate-400 truncate">
+                        <%= [primary_ed&.degree, primary_ed&.graduation_year].compact.join(" · ").presence || "—" %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <%# Email %>
+                <td class="px-4 py-3 text-sm text-slate-600"><%= user.email %></td>
+
+                <%# Clickable status badge %>
+                <td class="px-4 py-3">
+                  <%= render StatusBadgeComponent.new(
+                        status: status,
+                        data: { action: "click->table-actions#openStatusModal" }
+                      ) %>
+                </td>
+
+                <%# Last updated %>
+                <td class="px-4 py-3 text-sm text-slate-500">
+                  <%= profile&.updated_at&.strftime("%b %d, %Y") || "—" %>
+                </td>
+
+                <%# Three-dot actions dropdown %>
+                <td class="px-4 py-3">
+                  <%= render Table::ActionsDropdownComponent.new(actions: [
+                        { label: "View Profile", url: career_officer_student_profile_path(user.id),      icon: :view },
+                        { label: "Edit Profile", url: edit_career_officer_student_profile_path(user.id), icon: :edit },
+                        { label: "Download PDF", url: download_profiles_career_officer_student_profiles_path(format: :pdf, user_ids: [user.id]),
+                          icon: :pdf, divider_before: true }
+                      ]) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <%# Pagy pagination footer %>
+        <%= render Table::PaginationComponent.new(pagy: @pagy) %>
+
       </div>
     </div>
   </div>
 
-  <!-- Status Change Modal (unchanged) -->
-  <div data-table-actions-target="statusModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-xl p-6 w-96">
-      <h2 class="text-lg font-semibold mb-4">Change status</h2>
-      <div class="space-y-2">
-        <button data-action="click->table-actions#changeStatus" data-status="Reviewed" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded flex items-center">
-          <span class="w-4 h-4 mr-2 rounded-full bg-gray-100"></span>
+  <%# ── Status change modal ─────────────────────────────────────────── %>
+  <div data-table-actions-target="statusModal"
+       class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center"
+       role="dialog" aria-modal="true" aria-labelledby="status-modal-title">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-80">
+      <h2 id="status-modal-title" class="text-base font-semibold text-slate-900 mb-4">Change Status</h2>
+      <div class="space-y-1">
+        <button data-action="click->table-actions#changeStatus" data-status="Reviewed"
+                class="w-full text-left px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg flex items-center gap-2 transition-colors">
+          <span class="w-3 h-3 rounded-full bg-green-400 flex-shrink-0"></span>
           Reviewed
         </button>
-        <button data-action="click->table-actions#changeStatus" data-status="Not Reviewed" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded flex items-center">
-          <span class="w-4 h-4 mr-2 rounded-full bg-red-100"></span>
+        <button data-action="click->table-actions#changeStatus" data-status="Not Reviewed"
+                class="w-full text-left px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg flex items-center gap-2 transition-colors">
+          <span class="w-3 h-3 rounded-full bg-red-400 flex-shrink-0"></span>
           Not Reviewed
         </button>
       </div>
-      <div class="mt-4 flex justify-end space-x-2">
-        <button data-action="click->table-actions#closeStatusModal" class="px-4 py-2 bg-gray-200 text-gray-700 rounded">
+      <div class="mt-5 flex justify-end gap-2">
+        <button data-action="click->table-actions#closeStatusModal"
+                class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
           Cancel
         </button>
-        <button data-action="click->table-actions#applyStatus" class="px-4 py-2 bg-indigo-600 text-white rounded">
+        <button data-action="click->table-actions#applyStatus"
+                class="px-4 py-2 text-sm text-white bg-[#1499DC] hover:bg-[#1187c3] rounded-lg transition-colors">
           Apply
         </button>
       </div>
     </div>
   </div>
+
 </div>
