@@ -8,7 +8,7 @@
     </div>
 
     <div data-table-actions-target="selectionSummary"
-         class="hidden flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+         class="hidden flex items-center gap-3 bg-[#EBF7FF] border border-[#1499DC]/30 rounded-lg px-3 py-2">
       <span class="bg-[#1499DC] text-white text-xs font-semibold px-2 py-1 rounded">
         <span data-table-actions-target="selectedCount">0</span> selected
       </span>
@@ -37,13 +37,13 @@
         <%= search_form_for @q, url: career_officer_student_profiles_path, method: :get do |f| %>
 
           <%# Search input %>
-          <div class="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 mb-5 focus-within:ring-2 focus-within:ring-emerald-300 focus-within:border-emerald-400">
+          <div class="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 mb-5 focus-within:ring-2 focus-within:ring-[#1499DC]/30 focus-within:border-[#1499DC] transition-colors">
             <svg class="w-3.5 h-3.5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
             <%= f.search_field :full_name_or_email_cont,
                   placeholder: "Search name or email…",
-                  class: "flex-1 text-sm text-slate-700 bg-transparent focus:outline-none min-w-0" %>
+                  class: "flex-1 text-sm text-slate-700 bg-transparent outline-none border-0 ring-0 focus:outline-none focus:ring-0 focus:border-0 min-w-0" %>
           </div>
 
           <%# Status filter %>
@@ -54,7 +54,7 @@
                 <%= f.check_box :student_profile_status_in,
                       { multiple: true,
                         checked: Array(params.dig(:q, :student_profile_status_in)).include?(status),
-                        class: "h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" },
+                        class: "h-4 w-4 rounded border-slate-300 text-[#1499DC] focus:ring-[#1499DC]" },
                       status, nil %>
                 <%= status %>
               </label>
@@ -72,7 +72,7 @@
                   <%= f.check_box :student_profile_educations_graduation_year_in,
                         { multiple: true,
                           checked: Array(params.dig(:q, :student_profile_educations_graduation_year_in)).include?(year.to_s),
-                          class: "h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" },
+                          class: "h-4 w-4 rounded border-slate-300 text-[#1499DC] focus:ring-[#1499DC]" },
                         year, nil %>
                   <%= year %>
                 </label>
@@ -91,7 +91,7 @@
                   <%= f.check_box :student_profile_educations_degree_in,
                         { multiple: true,
                           checked: Array(params.dig(:q, :student_profile_educations_degree_in)).include?(degree),
-                          class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" },
+                          class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-[#1499DC] focus:ring-[#1499DC]" },
                         degree, nil %>
                   <span class="leading-snug"><%= degree %></span>
                 </label>
@@ -102,7 +102,7 @@
           <%# Submit / clear %>
           <div class="flex flex-col gap-2 mt-2">
             <%= f.submit "Apply Filters",
-                  class: "w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-2 rounded-lg transition-colors" %>
+                  class: "w-full cursor-pointer bg-[#1499DC] hover:bg-[#1187c3] text-white text-sm font-semibold py-2 rounded-lg transition-colors" %>
             <%= link_to "Clear All", career_officer_student_profiles_path,
                   class: "w-full text-center text-sm text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 py-2 rounded-lg transition-colors" %>
           </div>
@@ -124,17 +124,41 @@
                        data-table-actions-target="checkboxAll"
                        data-action="change->table-actions#toggleAll">
               </th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                <%= sort_link @q, :full_name, "Student" %>
+              <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
+                <div class="flex items-center gap-1">
+                  <%= sort_link @q, :full_name, "Student",
+                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
+                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
+                  </svg>
+                </div>
               </th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                <%= sort_link @q, :email, "Email" %>
+              <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
+                <div class="flex items-center gap-1">
+                  <%= sort_link @q, :email, "Email",
+                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
+                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
+                  </svg>
+                </div>
               </th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                <%= sort_link @q, :student_profile_status, "Status" %>
+              <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
+                <div class="flex items-center gap-1">
+                  <%= sort_link @q, :student_profile_status, "Status",
+                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
+                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
+                  </svg>
+                </div>
               </th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                <%= sort_link @q, :updated_at, "Last Updated" %>
+              <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
+                <div class="flex items-center gap-1">
+                  <%= sort_link @q, :updated_at, "Last Updated",
+                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
+                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
+                  </svg>
+                </div>
               </th>
               <th class="px-4 py-3 w-12"></th>
             </tr>
