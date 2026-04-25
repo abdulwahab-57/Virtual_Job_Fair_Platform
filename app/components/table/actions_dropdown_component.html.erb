@@ -1,0 +1,27 @@
+<div class="relative" data-controller="dropdown">
+  <button type="button"
+          class="flex items-center justify-center w-7 h-7 rounded-md bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-[#1499DC] focus:ring-offset-1"
+          data-action="click->dropdown#toggle"
+          aria-haspopup="true"
+          aria-label="Row actions">
+    <svg width="14" height="14" viewBox="0 0 4 16" fill="currentColor" aria-hidden="true">
+      <circle cx="2" cy="2"  r="1.5"/>
+      <circle cx="2" cy="8"  r="1.5"/>
+      <circle cx="2" cy="14" r="1.5"/>
+    </svg>
+  </button>
+
+  <div class="absolute right-0 z-20 mt-1 w-44 rounded-lg border border-slate-200 bg-white shadow-lg py-1 hidden"
+       data-dropdown-target="menu">
+    <% @actions.each do |action| %>
+      <% if action[:divider_before] %>
+        <div class="my-1 border-t border-slate-100"></div>
+      <% end %>
+      <%= link_to action[:url],
+            class: "flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors" do %>
+        <%= icon_svg(action[:icon]) %>
+        <%= action[:label] %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

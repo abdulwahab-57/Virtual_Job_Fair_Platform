@@ -1,19 +1,17 @@
 class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
-  include StudentProfileFilterable
+  include Pagy::Backend
   include PurgesMissingProfilePicture
-  # include ReadOnlyProfile  # Commented out to allow career officers to edit student profiles.
-                              # Re-enable to make the edit form view-only for career officers.
 
   before_action :set_users, only: [ :index ]
   before_action :set_user, only: [ :show, :edit, :update, :update_status ]
   before_action :purge_missing_profile_picture, only: [ :show, :edit ]
 
   def index
-    @header_text= "Student Profiles"
+    @header_text = "Student Profiles"
   end
 
   def show
-    @header_text= "Student Profile"
+    @header_text = "Student Profile"
 
     @edit_profile_path = edit_career_officer_student_profile_path(params[:id])
     render "student/profiles/show"
@@ -38,7 +36,6 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
 
   def update
     ActiveRecord::Base.transaction do
-      # Purge the old profile picture if a new one is being uploaded
       if user_params[:profile_picture].present? && @user.profile_picture.attached?
         @user.profile_picture.purge
       end
@@ -80,7 +77,6 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
       return
     end
 
-    # Get users from selected IDs
     @users = User.includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).where(id: @user_ids)
 
     respond_to do |format|
@@ -103,6 +99,15 @@ class CareerOfficer::StudentProfilesController < CareerOfficer::BaseController
   end
 
   private
+
+  def set_users
+    query = StudentProfileQuery.new(params[:q])
+    @q    = query.ransack_object
+    @pagy, @users = pagy(query.results, items: 50)
+
+    @degree_options          = Education::DEGREE_OPTIONS
+    @graduation_year_options = Education.available_graduation_years
+  end
 
   def set_user
     @user = User.includes(student_profile: [ :educations, :projects, :activities_honors, :skills, :interests, :location_preferences ]).find(params[:id])

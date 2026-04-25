@@ -1,0 +1,47 @@
+<div class="flex items-center justify-between border-t border-slate-200 bg-white px-4 py-3">
+  <p class="text-sm text-slate-600">
+    Showing
+    <strong class="font-semibold text-slate-900"><%= @pagy.from %>–<%= @pagy.to %></strong>
+    of
+    <strong class="font-semibold text-slate-900"><%= @pagy.count %></strong>
+  </p>
+
+  <nav class="flex items-center gap-1" aria-label="Pagination">
+    <%# Previous button %>
+    <% if @pagy.prev %>
+      <%= link_to pagy_url_for(@pagy, @pagy.prev),
+            class: "flex items-center justify-center w-7 h-7 rounded-md border border-slate-200 text-slate-600 text-sm hover:bg-slate-50",
+            "aria-label": "Previous page" do %>‹<% end %>
+    <% else %>
+      <span class="flex items-center justify-center w-7 h-7 rounded-md border border-slate-200 text-slate-300 text-sm cursor-not-allowed"
+            aria-disabled="true">‹</span>
+    <% end %>
+
+    <%# Page number series
+        Pagy 9 returns series items as:
+          Integer → clickable page link
+          String  → current page (e.g. "2") — never link this
+          :gap    → ellipsis %>
+    <% @pagy.series.each do |item| %>
+      <% if item == :gap %>
+        <span class="flex items-center justify-center w-7 h-7 text-slate-400 text-sm">…</span>
+      <% elsif item.is_a?(String) %>
+        <span class="flex items-center justify-center w-7 h-7 rounded-md bg-[#1499DC] border border-[#1499DC] text-white text-xs font-bold"
+              aria-current="page"><%= item %></span>
+      <% else %>
+        <%= link_to item, pagy_url_for(@pagy, item),
+              class: "flex items-center justify-center w-7 h-7 rounded-md border border-slate-200 text-slate-600 text-xs hover:bg-slate-50" %>
+      <% end %>
+    <% end %>
+
+    <%# Next button %>
+    <% if @pagy.next %>
+      <%= link_to pagy_url_for(@pagy, @pagy.next),
+            class: "flex items-center justify-center w-7 h-7 rounded-md border border-slate-200 text-slate-600 text-sm hover:bg-slate-50",
+            "aria-label": "Next page" do %>›<% end %>
+    <% else %>
+      <span class="flex items-center justify-center w-7 h-7 rounded-md border border-slate-200 text-slate-300 text-sm cursor-not-allowed"
+            aria-disabled="true">›</span>
+    <% end %>
+  </nav>
+</div>
