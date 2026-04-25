@@ -125,40 +125,20 @@
                        data-action="change->table-actions#toggleAll">
               </th>
               <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
-                <div class="flex items-center gap-1">
-                  <%= sort_link @q, :full_name, "Student",
-                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
-                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
-                  </svg>
-                </div>
+                <%= sort_link @q, :full_name, "Student",
+                      class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
               </th>
               <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
-                <div class="flex items-center gap-1">
-                  <%= sort_link @q, :email, "Email",
-                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
-                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
-                  </svg>
-                </div>
+                <%= sort_link @q, :email, "Email",
+                      class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
               </th>
               <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
-                <div class="flex items-center gap-1">
-                  <%= sort_link @q, :student_profile_status, "Status",
-                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
-                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
-                  </svg>
-                </div>
+                <%= sort_link @q, :student_profile_status, "Status",
+                      class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
               </th>
               <th class="px-4 py-3 text-left cursor-pointer select-none hover:bg-slate-100 transition-colors group">
-                <div class="flex items-center gap-1">
-                  <%= sort_link @q, :updated_at, "Last Updated",
-                        class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
-                  <svg class="w-3 h-3 text-slate-400 group-hover:text-[#1499DC] transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/>
-                  </svg>
-                </div>
+                <%= sort_link @q, :updated_at, "Last Updated",
+                      class: "text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-[#1499DC] transition-colors" %>
               </th>
               <th class="px-4 py-3 w-12"></th>
             </tr>
