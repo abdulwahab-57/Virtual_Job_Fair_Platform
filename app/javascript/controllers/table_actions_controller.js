@@ -158,26 +158,24 @@ export default class extends Controller {
   }
 
   updateStatusElement(element, status) {
-    element.textContent = status
+    // Update only the text label inside the badge, preserving the SVG icon
+    const label = element.querySelector(".badge-label")
+    if (label) label.textContent = status
 
     const colorMap = {
-      "Reviewed": "bg-gray-100 text-gray-800",
-      "Not Reviewed": "bg-red-100 text-red-800"
+      "Reviewed":     ["bg-green-100", "text-green-800", "border-green-200"],
+      "Not Reviewed": ["bg-red-100",   "text-red-800",   "border-red-200"]
     }
 
-    // Remove existing bg-* and text-* color classes without a fragile regex
-    const filtered = element.className
-      .split(" ")
-      .filter(c => !c.match(/^bg-\w+-\d+$/) && !c.match(/^text-\w+-\d+$/))
-      .join(" ")
-    element.className = filtered
+    // Strip all existing color utility classes
+    const allColorClasses = Object.values(colorMap).flat()
+    allColorClasses.forEach(cls => element.classList.remove(cls))
 
+    // Apply new color classes
     const newClasses = colorMap[status]
-    if (newClasses) {
-      element.classList.add(...newClasses.split(" "))
-    }
+    if (newClasses) element.classList.add(...newClasses)
 
     const row = element.closest("tr")
-    if (row) row.dataset.status = status.toLowerCase().replace(" ", "-")
+    if (row) row.dataset.status = status.toLowerCase().replace(/\s+/, "-")
   }
 }
